@@ -31,6 +31,7 @@ use aieuo\ip\economy\MoneySystemLoader;
 use aieuo\ip\economy\PocketMoneyLoader;
 use aieuo\ip\ifAPI;
 use aieuo\ip\task\SaveTask;
+use aieuo\ip\variable\VariableHelper;
 
 class ifPlugin extends PluginBase implements Listener{
 
@@ -75,6 +76,8 @@ class ifPlugin extends PluginBase implements Listener{
     const SENDTITLE = 124;
     const MOTION = 125;
     const DELAYED_COMMAND = 126;
+    const CALCULATION = 127;
+    const ADD_VARIABLE = 128;
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
@@ -97,6 +100,8 @@ class ifPlugin extends PluginBase implements Listener{
         $this->event = new EventManager($this);
 
         $this->api = new ifAPI();
+
+        $this->variables = new VariableHelper($this);
 
         $savetime = (int)$this->config->get("save_time", 10*20*60);
         $savetask = new SaveTask($this);
@@ -123,10 +128,15 @@ class ifPlugin extends PluginBase implements Listener{
         return $this->api;
     }
 
+    public function getVariableHelper(){
+        return $this->variables;
+    }
+
     public function onDisable(){
         $this->command->save();
         $this->block->save();
         $this->event->save();
+        $this->variables->save();
     }
 
     public function loadEconomySystemPlugin(){

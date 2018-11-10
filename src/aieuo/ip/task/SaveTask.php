@@ -12,5 +12,6 @@ class SaveTask extends Task {
         $this->owner->getBlockManager()->save();
         $this->owner->getCommandManager()->save();
         $this->owner->getEventManager()->save();
+        $this->owner->getVariableHelper()->save();
 	}
 }

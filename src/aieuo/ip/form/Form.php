@@ -276,18 +276,18 @@ class Form {
         return $json;
     }
 
-    public static function getAddContentsForm($type, $defaultDrop = 0, $defaltInput = ""){
+    public static function getAddContentsForm($type, $event = false){
         if($type == "if"){
-            $list = Parts::getIflistDropdown($defaultDrop);
+            $list = Parts::getIflistDropdown();
         }else{
-            $list = Parts::getExelistDropdown($defaultDrop);
+            $list = Parts::getExelistDropdown(0, $event);
         }
         $data = [
             "type" => "custom_form",
             "title" => "追加",
             "content" => [
                 $list,
-                Elements::getInput("値を入力して下さい", "", $defaltInput)
+                Elements::getInput("値を入力して下さい")
             ]
         ];
         $json = self::encodeJson($data);
@@ -312,14 +312,14 @@ class Form {
         return $json;
     }
 
-    public static function getaddIfForm(){
+    public static function getAddIfForm($event = false){
         $data = [
             "type" => "custom_form",
             "title" => "追加",
             "content" => [
                 Parts::getIflistDropdown(),
-                Parts::getExelistDropdown(),
-                Parts::getExelistDropdown()
+                Parts::getExelistDropdown(0, $event),
+                Parts::getExelistDropdown(0, $event)
             ]
         ];
         $json = self::encodeJson($data);

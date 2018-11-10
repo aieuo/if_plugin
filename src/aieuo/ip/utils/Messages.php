@@ -80,7 +80,7 @@ class Messages {
                 }
                 break;
             case ifPlugin::IF_COMPARISON:
-                if(!preg_match("/([^>=<]+)([>=<]{1,2})([^>=<]+)/", $value, $matches)){
+                if(!preg_match("/([^!>=<]+)([!>=<]{1,2})([^!>=<]+)/", $value, $matches)){
                     $message = "§c[二つの値を比較する] 正しく入力できていません§f";
                 }else{
                     $operator = $matches[2];
@@ -90,6 +90,10 @@ class Messages {
                         case "=":
                         case "==":
                             $message = $val1."と".$val2."が等しい";
+                            break;
+                        case "!=":
+                        case "=!":
+                            $message = $val1."と".$val2."が等しくない";
                             break;
                         case ">":
                             $message = $val1."が".$val2."より大きい";
@@ -105,8 +109,14 @@ class Messages {
                         case "=<":
                             $message = $val1."が".$val2."以下";
                             break;
+                        case "><":
+                            $message = $val1."の中に".$val2."が含まれている";
+                            break;
+                        case "<>":
+                            $message = $val1."の中に".$val2."が含まれていない";
+                            break;
                         default:
-                            $message = "§cその組み合わせは使用できません 次の中から選んでください[==|>|>=|<|<=]§r";
+                            $message = "§cその組み合わせは使用できません 次の中から選んでください[==|>|>=|<|<=|!=]§r";
                             break;
                     }
                 }
@@ -146,9 +156,6 @@ class Messages {
                 $message = $matches[1]."秒後に/".$matches[2]."を実行する";
                 break;
             case ifPlugin::TELEPORT:
-                $message = "(".$value.")にテレポートする";
-                break;
-            case ifPlugin::TELEPORT:
                 $pos = explode(",", $value);
                 if(!isset($pos[1]))$pos[1] = 0;
                 if(!isset($pos[2]))$pos[2] = 0;
@@ -159,6 +166,47 @@ class Messages {
                 if(!isset($pos[1]))$pos[1] = 0;
                 if(!isset($pos[2]))$pos[2] = 0;
                 $message = "(".implode(",", $pos).")ブロック分動かす";
+                break;
+            case ifPlugin::CALCULATION:
+                if(!preg_match("/([^+＋-ー*\/%％×÷]+)([+＋-ー*\/%×÷])([^+＋-ー*\/%×÷]+)/", $value, $matches)){
+                    $message = "§c[計算する] 正しく入力できていません§f";
+                }else{
+                    $operator = $matches[2];
+                    $val1 = trim(rtrim($matches[1]));
+                    $val2 = trim(rtrim($matches[3]));
+                    switch ($operator){
+                        case "+":
+                        case "＋":
+                            $message = $val1."と".$val2."を足す";
+                            break;
+                        case "-":
+                        case "ー":
+                            $message = $val1."から".$val2."を引く";
+                            break;
+                        case "*":
+                        case "×":
+                            $message = $val1."と".$val2."を掛ける";
+                            break;
+                        case "/":
+                        case "÷":
+                            $message = $val1."を".$val2."で割る";
+                            break;
+                        case "%":
+                            $message = $val1."を".$val2."で割った余り";
+                            break;
+                        default:
+                            $message = "§cその組み合わせは使用できません 次の中から選んでください[+|-|*|/|%]§r";
+                            break;
+                    }
+                }
+                break;
+            case ifPlugin::ADD_VARIABLE:
+                $datas = explode(",", $value);
+                if(!isset($datas[1])){
+                    $message = "§c[変数を追加する] 正しく入力できていません§f";
+                    break;
+                }
+                $message = $datas[0]."という名前の変数(".$datas[1].")を追加する";
                 break;
             case ifPlugin::ADD_ITEM:
                 $ids = explode(":", $value);
@@ -273,7 +321,7 @@ class Messages {
                 $next = "§lなら\n\n";
                 $placeholder = "カッコ内のように入力してください";
             case ifPlugin::IF_COMPARISON:
-                $message = "もし\n§l二つの値を比較して条件を満たしている\n§r(値1 [== | > | < | >= | <=])\nイベントのブロックを触ったときにブロックのidが1か調べるなら:  {blockid}==1";
+                $message = "もし\n§l二つの値を比較して条件を満たしている\n§r(値1 [== | > | < | >= | <= | !=])\nイベントのブロックを触ったときにブロックのidが1か調べるなら:  {blockid}==1";
                 $next = "§lなら\n\n";
                 $placeholder = "カッコ内のように入力してください";
                 break;
@@ -331,6 +379,16 @@ class Messages {
                 $message = "(0,1,0  のように,で区切って)";
                 $next = "§lにテレポートする\n\n";
                 $placeholder = "上のカッコ内のように座標を入力してください";
+                break;
+            case ifPlugin::CALCULATION:
+                $message = "§l二つの値を計算する\n§r(+ | - | * | / | %)";
+                $next = "§l\n\n";
+                $placeholder = "カッコ内の演算子を使用できます";
+                break;
+            case ifPlugin::ADD_VARIABLE:
+                $message = "§l変数\n§r(名前,値  \n  aieuoという名前で値が100の変数を追加するなら:   aieuo,100)";
+                $next = "§lを追加する\n\n";
+                $placeholder = "上のカッコ内のようにidを入力してください";
                 break;
             case ifPlugin::ADD_ITEM:
                 $message = "§lインベントリにidが\n§r(id:meta:数 ,名前を付けるならid:meta:数:名前 のように)";
@@ -420,6 +478,9 @@ class Messages {
                 break;
             case ifPlugin::UNSET_IMMOBILE:
                 $message = "プレイヤーを動けるようにする";
+                break;
+            case ifPlugin::EVENT_CANCELL:
+                $message = "イベントをキャンセルする";
                 break;
         }
         return [
