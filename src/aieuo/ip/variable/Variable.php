@@ -27,7 +27,6 @@ class Variable {
 	}
 
 	public function Addition($value){
-		var_dump($this->getValue(), $value);
 		if(is_numeric($this->getValue()) and is_numeric($value)){
 			$result = (int)$this->getValue() + (int)$value;
 		}else{

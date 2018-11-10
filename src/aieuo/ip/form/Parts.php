@@ -42,6 +42,8 @@ class Parts {
             "遅れてコマンド実行",
             "テレポート",
             "動かす",
+            "計算する",
+            "変数を追加する",
             "インベントリにアイテムを追加する",
             "インベントリからアイテムを削除する",
             "プレイヤーを動けなくする",
@@ -59,8 +61,9 @@ class Parts {
         ];
         return $list;
     }
-    public static function getExelistDropdown($default = 0){
+    public static function getExelistDropdown($default = 0, $event = false){
     	$options = self::getExeList();
+        if($event)$options[] = "イベントをキャンセルする";
         $dropdown = Elements::getDropdown("条件に当てはまったら～をする", $options, $default);
     	return $dropdown;
     }

@@ -276,17 +276,19 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
+                $event = false;
                 if($type === Session::BLOCK){
                 	$manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
+                    $event = true;
                 }
                 $key = $session->getData("if_key");
                 $datas = $manager->get($key);
                 if($data == 0){
-                    $form = Form::getAddContentsForm($session->getData("type"));
+                    $form = Form::getAddContentsForm($session->getData("type"), $event);
                     Form::sendForm($player, $form, Form::getFormId("AddContentsForm"));
                 }else{
                 	$if = $datas[$session->getData("type")][--$data];
@@ -572,7 +574,7 @@ class EventListener implements Listener {
                 $manager->setOptions($eventname);
                 switch ($type) {
                     case 'add':
-                        $form = Form::getAddIfForm();
+                        $form = Form::getAddIfForm(true);
                         Form::sendForm($player, $form, Form::getFormId("AddIfForm"));
                         $session->setData("if_key", null);
                         break;
@@ -607,7 +609,7 @@ class EventListener implements Listener {
                 $manager->setOptions($session->getData("event"));
                 $datas = $manager->get($data);
                 if($data == $manager->getCount($session->getData("event"))){
-                    $form = Form::getAddIfForm();
+                    $form = Form::getAddIfForm(true);
                     Form::sendForm($player, $form, Form::getFormId("AddIfForm"));
                     $session->setData("if_key", null);
                     return;

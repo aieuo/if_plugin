@@ -21,6 +21,7 @@ use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\event\entity\EntityDamageEvent;
 
 use aieuo\ip\task\DelayedCommandTask;
+use aieuo\ip\variable\Variable;
 
 class ifAPI {
 
@@ -121,34 +122,38 @@ class ifAPI {
             case 11:
                 return ifPlugin::MOTION;
             case 12:
-                return ifPlugin::ADD_ITEM;
+                return ifPlugin::CALCULATION;
             case 13:
-                return ifPlugin::REMOVE_ITEM;
+                return ifPlugin::ADD_VARIABLE;
             case 14:
-                return ifPlugin::SET_IMMOBILE;
+                return ifPlugin::ADD_ITEM;
             case 15:
-                return ifPlugin::UNSET_IMMOBILE;
+                return ifPlugin::REMOVE_ITEM;
             case 16:
-                return ifPlugin::ADD_ENCHANTMENT;
+                return ifPlugin::SET_IMMOBILE;
             case 17:
-                return ifPlugin::ADD_EFFECT;
+                return ifPlugin::UNSET_IMMOBILE;
             case 18:
-                return ifPlugin::SET_NAMETAG;
+                return ifPlugin::ADD_ENCHANTMENT;
             case 19:
-                return ifPlugin::SET_SLEEPING;
+                return ifPlugin::ADD_EFFECT;
             case 20:
-                return ifPlugin::SET_SITTING;
+                return ifPlugin::SET_NAMETAG;
             case 21:
-                return ifPlugin::SET_GAMEMODE;
+                return ifPlugin::SET_SLEEPING;
             case 22:
-                return ifPlugin::SET_HEALTH;
+                return ifPlugin::SET_SITTING;
             case 23:
-                return ifPlugin::SET_MAXHEALTH;
+                return ifPlugin::SET_GAMEMODE;
             case 24:
-                return ifPlugin::ATTACK;
+                return ifPlugin::SET_HEALTH;
             case 25:
-                return ifPlugin::KICK;
+                return ifPlugin::SET_MAXHEALTH;
             case 26:
+                return ifPlugin::ATTACK;
+            case 27:
+                return ifPlugin::KICK;
+            case 28:
                 return ifPlugin::EVENT_CANCELL;
             default:
                 return false;
@@ -181,36 +186,40 @@ class ifAPI {
             	return 10;
             case ifPlugin::MOTION:
             	return 11;
+            case ifPlugin::CALCULATION:
+                return 12;
+            case ifPlugin::ADD_VARIABLE:
+                return 13;
             case ifPlugin::ADD_ITEM:
-            	return 12;
+                return 14;
             case ifPlugin::REMOVE_ITEM:
-            	return 13;
-            case ifPlugin::SET_IMMOBILE:
-            	return 14;
-            case ifPlugin::UNSET_IMMOBILE:
             	return 15;
-            case ifPlugin::ADD_ENCHANTMENT:
+            case ifPlugin::SET_IMMOBILE:
             	return 16;
-            case ifPlugin::ADD_EFFECT:
+            case ifPlugin::UNSET_IMMOBILE:
             	return 17;
-            case ifPlugin::SET_NAMETAG:
+            case ifPlugin::ADD_ENCHANTMENT:
             	return 18;
-            case ifPlugin::SET_SLEEPING:
+            case ifPlugin::ADD_EFFECT:
             	return 19;
-            case ifPlugin::SET_SITTING:
+            case ifPlugin::SET_NAMETAG:
             	return 20;
-            case ifPlugin::SET_GAMEMODE:
+            case ifPlugin::SET_SLEEPING:
             	return 21;
-            case ifPlugin::SET_HEALTH:
+            case ifPlugin::SET_SITTING:
             	return 22;
-            case ifPlugin::SET_MAXHEALTH:
+            case ifPlugin::SET_GAMEMODE:
             	return 23;
-            case ifPlugin::ATTACK:
+            case ifPlugin::SET_HEALTH:
             	return 24;
-            case ifPlugin::KICK:
+            case ifPlugin::SET_MAXHEALTH:
             	return 25;
-            case ifPlugin::EVENT_CANCELL:
+            case ifPlugin::ATTACK:
             	return 26;
+            case ifPlugin::KICK:
+            	return 27;
+            case ifPlugin::EVENT_CANCELL:
+            	return 28;
             default:
                 return false;
         }
@@ -366,7 +375,7 @@ class ifAPI {
                 if($rand == (int)$matches[3])$result = self::MATCHED;
                 break;
             case ifPlugin::IF_COMPARISON:
-                if(!preg_match("/([^>=<]+)([>=<]{1,2})([^>=<]+)/", $content, $matches)){
+                if(!preg_match("/([^!>=<]+)([!>=<]{1,2})([^!>=<]+)/", $content, $matches)){
                     $player->sendMessage("§c[二つの値を比較する] 正しく入力できていません§f");
                     break;
                 }
@@ -377,6 +386,10 @@ class ifAPI {
                     case "=":
                     case "==":
                         if($val1 == $val2)$result = self::MATCHED;
+                        break;
+                    case "!=":
+                    case "=!":
+                        if($val1 != $val2)$result = self::MATCHED;
                         break;
                     case ">":
                         if($val1 > $val2)$result = self::MATCHED;
@@ -392,8 +405,14 @@ class ifAPI {
                     case "=<":
                         if($val1 <= $val2)$result = self::MATCHED;
                         break;
+                    case "><":
+                        if(strpos($val1, $val2) !== false)$result = self::MATCHED;
+                        break;
+                    case "<>":
+                        if(strpos($val1, $val2) === false)$result = self::MATCHED;
+                        break;
                     default:
-                        $player->sendMessage("§c[二つの値を比較する] その組み合わせは使用できません 次の中から選んでください[==|>|>=|<|<=]§r");
+                        $player->sendMessage("§c[二つの値を比較する] その組み合わせは使用できません 次の中から選んでください[==|>|>=|<|<=|!=]§r");
                         break;
                 }
                 break;
@@ -457,6 +476,48 @@ class ifAPI {
                 if(!isset($pos[1]))$pos[1] = 0;
                 if(!isset($pos[2]))$pos[2] = 0;
                 $player->setMotion(new Vector3((int)$pos[0], (int)$pos[1], (int)$pos[2]));
+                break;
+            case ifPlugin::CALCULATION:
+                if(!preg_match("/([^+＋-ー*\/%％×÷]+)([+＋-ー*\/%×÷])([^+＋-ー*\/%×÷]+)/", $content, $matches)){
+                    $message = "§c[計算する] 正しく入力できていません§f";
+                    break;
+                }
+                $operator = $matches[2];
+                $val1 = trim(rtrim($matches[1]));
+                $val2 = trim(rtrim($matches[3]));
+                switch ($operator){
+                    case "+":
+                    case "＋":
+                        $val = (new Variable("input", $val1))->Addition($val2);
+                        break;
+                    case "-":
+                    case "ー":
+                        $val = (new Variable("input", $val1))->Subtraction($val2);
+                        break;
+                    case "*":
+                    case "×":
+                        $val = (new Variable("input", $val1))->Multiplication($val2);
+                        break;
+                    case "/":
+                    case "÷":
+                        $val = (new Variable("input", $val1))->Division($val2);
+                        break;
+                    case "%":
+                        $val = (new Variable("input", $val1))->Modulo($val2);
+                        break;
+                    default:
+                        $val = "§cその組み合わせは使用できません 次の中から選んでください[+|-|*|/|%]§r";
+                        break;
+                }
+                ifManager::getOwner()->getVariableHelper()->add($val);
+                break;
+            case ifPlugin::ADD_VARIABLE:
+                $datas = explode(",", $content);
+                if(!isset($datas[1])){
+                    $message = "§c[変数を追加する] 正しく入力できていません§f";
+                    break;
+                }
+                ifManager::getOwner()->getVariableHelper()->add(new Variable($datas[0], $datas[1]));
                 break;
             case ifPlugin::ADD_ITEM:
                 $ids = explode(":", $content);
@@ -586,7 +647,7 @@ class ifAPI {
     public function executeIfMatchCondition($player, $datas1, $datas2, $datas3){
         $stat = "2";
         foreach($datas1 as $datas){
-            $result = $this->checkMatchCondition($player, $datas["id"], $datas["content"]);
+            $result = $this->checkMatchCondition($player, $datas["id"], $this->replace($datas["content"]));
             if($result === self::NOT_FOUND){
                 $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
                 return false;
@@ -595,8 +656,20 @@ class ifAPI {
             }
         }
         foreach (${"datas".$stat} as $datas) {
-            $this->execute($player, $datas["id"], $datas["content"]);
+            $this->execute($player, $datas["id"], $this->replace($datas["content"]));
         }
         return true;
+    }
+
+    public function replace($string){
+        $count = 0;
+        while(preg_match_all("/({[^{}]+})/", $string, $matches)){
+            if(++$count >= 10) break;
+            foreach ($matches[0] as $name) {
+                $val = ifManager::getOwner()->getVariableHelper()->get(substr($name, 1, -1));
+                $string = str_replace($name, $val instanceof Variable ? $val->getValue(): $val, $string);
+            }
+        }
+        return $string;
     }
 }

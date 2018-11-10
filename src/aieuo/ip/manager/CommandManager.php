@@ -30,7 +30,6 @@ class CommandManager extends ifManager{
             $newCommand->setDescription($description);
             $newCommand->setPermission($permission);
             $this->getServer()->getCommandMap()->register("ifPlugin", $newCommand);
-            var_dump($command);
             $this->command_list[$command] = $newCommand;
             return true;
         }

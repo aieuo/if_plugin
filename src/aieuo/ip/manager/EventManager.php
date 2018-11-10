@@ -166,20 +166,24 @@ class EventManager extends ifManager{
         return $mes;
     }
 
+    public function execute($player, $type, $content){
+        switch ($type) {
+            case ifPlugin::EVENT_CANCELL:
+                $event = $this->tmp[1];
+                if($event instanceof Cancellable){
+                    $event->setCancelled();
+                }
+                return;
+        }
+        parent::execute($player, $type, $content);
+    }
+
     public function executeIfMatchCondition($player, $datas1, $datas2, $datas3){
-        $stat = "2";
-        foreach($datas1 as $datas){
-            $result = $this->checkMatchCondition($player, $datas["id"], $this->replaceVariable($this->tmp[1], $this->tmp[0], $datas["content"]));
-            if($result === self::NOT_FOUND){
-                $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
-                return false;
-            }elseif($result === self::NOT_MATCHED){
-                $stat = "3";
+        for($i = 1; $i <= 3; $i ++){
+            foreach(${"datas".$i} as $key => $datas){
+                ${"datas".$i}[$key]["content"] = $this->replaceVariable($this->tmp[1], $this->tmp[0], $datas["content"]);
             }
         }
-        foreach (${"datas".$stat} as $datas) {
-            $this->execute($player, $datas["id"], $this->replaceVariable($this->tmp[1], $this->tmp[0], $datas["content"]));
-        }
-        return true;
+        parent::executeIfMatchCondition($player, $datas1, $datas2, $datas3);
     }
 }
