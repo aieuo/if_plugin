@@ -175,8 +175,9 @@ class EventListener implements Listener {
         $name = $player->getName();
         if(!$player->isOp())return;
         if($pk instanceof ModalFormResponsePacket){
+            $json = str_replace([",]",",,"], [",\"\"]",",\"\","], $pk->formData);
+            $data = json_decode($json);
             if($pk->formId === Form::getFormId("SelectIfTypeForm")){
-                $data = json_decode($pk->formData);
                 if($data === null) {
                    return;
                 }
@@ -198,7 +199,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("SelectBlockActionForm")){
-                $data = json_decode($pk->formData);
                 if($data === null) {
                    return;
                 }
@@ -234,7 +234,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("EditIfForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                 	$session->setValid(false, false);
@@ -269,7 +268,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("EditIfContentsForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);
@@ -301,8 +299,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("AddContentsForm")){
-            	$json = str_replace([",]",",,"], [",\"\"]",",\"\","], $pk->formData);
-                $data = json_decode($json);
                 $session = $player->ifSession;
                 if($data === null) {
                 	$session->setValid(false, false);
@@ -326,7 +322,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("DetailForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                 	$session->setValid(false, false);
@@ -350,8 +345,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("UpdateContentsForm")){
-                $json = str_replace([",]",",,"], [",\"\"]",",\"\","], $pk->formData);
-                $data = json_decode($json);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);
@@ -371,15 +364,14 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("AddIfForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);
                     return;
                 }
-                $id_1 = ifAPI::getIfIdByListNumber($data[0]);
-                $id_2 = ifAPI::getExeIdByListNumber($data[1]);
-                $id_3 = ifAPI::getExeIdByListNumber($data[2]);
+                $id_1 = $this->getOwner()->getAPI()->getIfIdByListNumber($data[0]);
+                $id_2 = $this->getOwner()->getAPI()->getExeIdByListNumber($data[1]);
+                $id_3 = $this->getOwner()->getAPI()->getExeIdByListNumber($data[2]);
                 $form = Form::createIfContentForm($id_1, $id_2, $id_3);
                 Form::sendForm($player, $form, Form::getFormId("InputContentsForm"));
                 $session->setData("id_1", $id_1);
@@ -388,7 +380,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("InputContentsForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);
@@ -415,7 +406,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("SelectCommandActionForm")){
-                $data = json_decode($pk->formData);
                 if($data === null) {
                    return;
                 }
@@ -459,8 +449,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("AddCommandForm")){
-                $json = str_replace([",]",",,"], [",\"\"]",",\"\","], $pk->formData);
-                $data = json_decode($json);
                 $session = $player->ifSession;
                 $manager = $this->getOwner()->getCommandManager();
                 if($data === null) {
@@ -483,6 +471,7 @@ class EventListener implements Listener {
                 if($session->getData("type") == "add_empty"){
                     $manager->setOptions($data[0], $data[1], $data[2] == 0 ? "op" : "default");
                     $manager->set($data[0]);
+                    $manager->register($data[0], $data[1], $data[2] == 0 ? "op" : "default");
                     $player->sendMessage("追加しました");
                     $session->setValid(false);
                     return;
@@ -495,7 +484,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("SelectCommandForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);
@@ -528,7 +516,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("SelectEventActionForm")){
-                $data = json_decode($pk->formData);
                 if($data === null) {
                    return;
                 }
@@ -561,7 +548,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("SelectEventForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);
@@ -598,7 +584,6 @@ class EventListener implements Listener {
             }
 
             if($pk->formId === Form::getFormId("EditEventForm")){
-                $data = json_decode($pk->formData);
                 $session = $player->ifSession;
                 if($data === null) {
                     $session->setValid(false, false);

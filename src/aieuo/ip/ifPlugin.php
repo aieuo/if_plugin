@@ -79,6 +79,8 @@ class ifPlugin extends PluginBase implements Listener{
     const CALCULATION = 127;
     const ADD_VARIABLE = 128;
 
+    private static $instance;
+
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
 
@@ -104,32 +106,9 @@ class ifPlugin extends PluginBase implements Listener{
         $this->variables = new VariableHelper($this);
 
         $savetime = (int)$this->config->get("save_time", 10*20*60);
-        $savetask = new SaveTask($this);
-        $this->getScheduler()->scheduleRepeatingTask($savetask, (int)$savetime);
-    }
+        $this->getScheduler()->scheduleRepeatingTask(new SaveTask($this), (int)$savetime);
 
-    public function getBlockManager(){
-        return $this->block;
-    }
-
-    public function getCommandManager(){
-        return $this->command;
-    }
-
-    public function getEventManager(){
-        return $this->event;
-    }
-
-    public function getEcomony(){
-        return $this->economy;
-    }
-
-    public function getAPI(){
-        return $this->api;
-    }
-
-    public function getVariableHelper(){
-        return $this->variables;
+        self::$instance = $this;
     }
 
     public function onDisable(){
@@ -137,6 +116,34 @@ class ifPlugin extends PluginBase implements Listener{
         $this->block->save();
         $this->event->save();
         $this->variables->save();
+    }
+
+    public static function getInstance(){
+        return self::$instance;
+    }
+
+    public function getBlockManager() : BlockManager{
+        return $this->block;
+    }
+
+    public function getCommandManager() : CommandManager{
+        return $this->command;
+    }
+
+    public function getEventManager() : EventManager{
+        return $this->event;
+    }
+
+    public function getAPI() : ifAPI{
+        return $this->api;
+    }
+
+    public function getVariableHelper() : VariableHelper{
+        return $this->variables;
+    }
+
+    public function getEcomony(){
+        return $this->economy;
     }
 
     public function loadEconomySystemPlugin(){

@@ -4,15 +4,15 @@ namespace aieuo\ip\economy;
 
 class EconomyLoader {
 
-	public function getMoney($name){
+	public function getMoney(string $name){
 		return false;
 	}
 
-	public function addMoney($name, $money){
+	public function addMoney(string $name, int $money){
 		return false;
 	}
 
-	public function takeMoney($name, $money){
+	public function takeMoney(string $name, int $money){
 		return false;
 	}
 }

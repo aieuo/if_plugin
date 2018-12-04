@@ -39,7 +39,7 @@ class Variable {
 		if(is_numeric($this->getValue()) and is_numeric($value)){
 			$result = (int)$this->getValue() - (int)$value;
 		}else{
-			$result = str_replace($value, "", $value);
+			$result = str_replace($value, "", $this->getValue());
 		}
 		return new Variable("result", $result);
 	}
