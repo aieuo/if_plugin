@@ -14,19 +14,17 @@ class EconomyAPILoader extends EconomyLoader{
 		return $this->plugin;
 	}
 
-	public function getMoney($name){
-		return (int)$this->plugin->mymoney($name);
+	public function getMoney(string $name){
+		return (int)$this->getPlugin()->mymoney($name);
 	}
 
-	public function addMoney($name, $money){
-		$money = (int)$money;
-        $this->plugin->addMoney($name, $money);
+	public function addMoney(string $name, int $money){
+        $this->getPlugin()->addMoney($name, $money);
 		return true;
 	}
 
-	public function takeMoney($name, $money){
-		$money = (int)$money;
-        $this->plugin->reduceMoney($name, $money);
+	public function takeMoney(string $name, int $money){
+        $this->getPlugin()->reduceMoney($name, $money);
 		return true;
 	}
 }

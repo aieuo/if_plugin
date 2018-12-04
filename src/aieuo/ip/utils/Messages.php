@@ -168,12 +168,12 @@ class Messages {
                 $message = "(".implode(",", $pos).")ブロック分動かす";
                 break;
             case ifPlugin::CALCULATION:
-                if(!preg_match("/([^+＋-ー*\/%％×÷]+)([+＋-ー*\/%×÷])([^+＋-ー*\/%×÷]+)/", $value, $matches)){
+                if(!preg_match("/([^+＋\-\ー*\/%％×÷]+)\[([+＋\-\ー*\/%×÷])\]([^+＋\-\ー*\/%×÷]+)/", $value, $matches)){
                     $message = "§c[計算する] 正しく入力できていません§f";
                 }else{
                     $operator = $matches[2];
-                    $val1 = trim(rtrim($matches[1]));
-                    $val2 = trim(rtrim($matches[3]));
+                    $val1 = rtrim($matches[1]);
+                    $val2 = trim($matches[3]);
                     switch ($operator){
                         case "+":
                         case "＋":

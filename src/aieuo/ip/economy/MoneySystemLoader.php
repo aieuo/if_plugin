@@ -14,19 +14,17 @@ class MoneySystemLoader extends EconomyLoader{
 		return $this->plugin;
 	}
 
-	public function getMoney($name){
-		return (int)$this->plugin->check($name);
+	public function getMoney(string $name){
+		return (int)$this->getPlugin()->check($name);
 	}
 
-	public function addMoney($name, $money){
-		$money = (int)$money;
-		$this->plugin->addMoney($name, $money);
+	public function addMoney(string $name, int $money){
+		$this->getPlugin()->addMoney($name, $money);
 		return true;
 	}
 
-	public function takeMoney($name, $money){
-		$money = (int)$money;
-		$this->plugin->takeMoney($name, $money);
+	public function takeMoney(string $name, int $money){
+		$this->getPlugin()->takeMoney($name, $money);
 		return true;
 	}
 }

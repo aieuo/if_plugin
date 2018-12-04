@@ -29,7 +29,7 @@ class ifAPI {
 	const NOT_MATCHED = 1;
 	const NOT_FOUND = 2;
 
-    public static function getIfIdByListNumber($num){
+    public function getIfIdByListNumber($num){
         switch ($num){
             case 0:
                 return ifPlugin::IF_NO_CHECK;
@@ -478,13 +478,13 @@ class ifAPI {
                 $player->setMotion(new Vector3((int)$pos[0], (int)$pos[1], (int)$pos[2]));
                 break;
             case ifPlugin::CALCULATION:
-                if(!preg_match("/([^+＋-ー*\/%％×÷]+)([+＋-ー*\/%×÷])([^+＋-ー*\/%×÷]+)/", $content, $matches)){
+                if(!preg_match("/([^+＋\-\ー*\/%％×÷]+)\[([+＋\-\ー*\/%×÷])\]([^+＋\-\ー*\/%×÷]+)/", $content, $matches)){
                     $message = "§c[計算する] 正しく入力できていません§f";
                     break;
                 }
                 $operator = $matches[2];
-                $val1 = trim(rtrim($matches[1]));
-                $val2 = trim(rtrim($matches[3]));
+                $val1 = rtrim($matches[1]);
+                $val2 = trim($matches[3]);
                 switch ($operator){
                     case "+":
                     case "＋":

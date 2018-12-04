@@ -27,7 +27,6 @@ class Elements {
     }
 
     public static function getDropdown($text, $options, $default = 0){
-    	$default = $options[$default];
     	return [
             "type" => "dropdown",
             "text" => $text,
@@ -36,7 +35,7 @@ class Elements {
         ];
     }
 
-    public function getButton($text){
+    public static function getButton($text){
     	return [
     		"text" => $text
     	];

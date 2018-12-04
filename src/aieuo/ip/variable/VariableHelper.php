@@ -21,6 +21,7 @@ class VariableHelper {
 
 	/**
 	 * @param  string $name
+	 * @param  bool $save
 	 * @return bool
 	 */
 	public function exists(String $name, $save = false){
@@ -31,10 +32,11 @@ class VariableHelper {
 
 	/**
 	 * @param  string $name
+	 * @param  bool $save
 	 * @return string | Variable
 	 */
 	public function get(String $name, $save = false){
-		if(isset($this->variables[$name]) and !$save)return $this->variables[$name];
+		if(isset($this->variables[$name]) and !$save)return "";
 		if(!$this->exists($name, true))return "";
         $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
         return new Variable($datas["name"], $datas["value"], $datas["type"]);
@@ -66,7 +68,6 @@ class VariableHelper {
 	public function del(String $name){
 		if(isset($this->variables[$name])){
 			unset($this->variables[$name]);
-			return true;
 		}
 		if(!$this->exists($name))return false;
         $this->db->query("DELETE FROM variables WHERE name=\"$name\"");
