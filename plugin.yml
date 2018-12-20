@@ -1,0 +1,10 @@
+---
+name: if
+main: aieuo\ip\ifPlugin
+version: 2.4.0
+api:
+- 3.0.0
+- 4.0.0
+load: POSTWORLD
+author: aieuo
+...
