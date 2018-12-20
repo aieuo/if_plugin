@@ -14,7 +14,7 @@ class ifManager extends ifAPI{
 
 	public function __construct($owner, $type){
 		self::$owner = $owner;
-        $this->config = new Config($this->getDataFolder() . $type. ".yml", Config::YAML, []);
+        $this->config = new Config($owner->getDataFolder() . $type. ".yml", Config::YAML, []);
 	}
 
 	public static function getOwner(){
@@ -25,14 +25,17 @@ class ifManager extends ifAPI{
 		return self::getOwner()->getServer();
 	}
 
-	public function getDataFolder(){
-		return self::getOwner()->getDataFolder();
-	}
-
+    /**
+     * @return Config
+     */
     public function getConfig(){
         return $this->config;
     }
 
+    /**
+     * @param  string  $key
+     * @return boolean
+     */
     public function isAdded($key){
     	return $this->config->exists($key);
     }
@@ -63,6 +66,9 @@ class ifManager extends ifAPI{
         return $datas;
     }
 
+    /**
+     * @return array
+     */
     public function getAll(){
     	return $this->config->getAll();
     }
@@ -80,6 +86,9 @@ class ifManager extends ifAPI{
         return true;
     }
 
+    /**
+     * @param  string $key
+     */
     public function remove($key){
     	$this->config->remove($key);
     }

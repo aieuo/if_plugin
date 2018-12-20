@@ -447,6 +447,7 @@ class ifAPI {
             			$op->sendMessage($content);
             		}
             	}
+                break;
             case ifPlugin::SENDVOICEMESSAGE:
 		        $text = new TranslationContainer($content);
 		        $player->sendMessage($text);

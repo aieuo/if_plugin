@@ -320,6 +320,7 @@ class Messages {
                 $message = "もし\n§l乱数\n§r(最小値,最大値;確認する数)\n1~10の範囲の乱数が2の時に処理するなら:  1,10;2";
                 $next = "§lなら\n\n";
                 $placeholder = "カッコ内のように入力してください";
+                break;
             case ifPlugin::IF_COMPARISON:
                 $message = "もし\n§l二つの値を比較して条件を満たしている\n§r(値1 [== | > | < | >= | <= | !=])\nイベントのブロックを触ったときにブロックのidが1か調べるなら:  {blockid}==1";
                 $next = "§lなら\n\n";
