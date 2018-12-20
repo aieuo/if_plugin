@@ -70,7 +70,7 @@ class OverMoney extends IFs
 	public function check()
 	{
 		$player = $this->getPlayer();
-    	$mymoney = ifPlugin::getInstance()->getEcomony()->getMoney($player->getName());
+    	$mymoney = ifPlugin::getInstance()->getEconomy()->getMoney($player->getName());
         if($mymoney === false){
             $player->sendMessage("§c経済システムプラグインが見つかりません");
             return self::NOT_MATCHED;
