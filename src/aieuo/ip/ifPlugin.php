@@ -142,7 +142,7 @@ class ifPlugin extends PluginBase implements Listener{
         return $this->variables;
     }
 
-    public function getEcomony(){
+    public function getEconony(){
         return $this->economy;
     }
 
