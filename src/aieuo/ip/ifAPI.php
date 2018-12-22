@@ -23,6 +23,8 @@ use pocketmine\event\entity\EntityDamageEvent;
 use aieuo\ip\task\DelayedCommandTask;
 use aieuo\ip\variable\Variable;
 
+use aieuo\ip\conditions\Condition;
+
 class ifAPI {
 
 	const MATCHED = 0;
@@ -263,167 +265,7 @@ class ifAPI {
         return $eventname;
     }
 
-    public function checkMatchCondition($player, $type, $content, $eventname = null, $data = null){
-        $result = self::NOT_MATCHED;
-        $name = $player->getName();
-        switch ($type) {
-            case ifPlugin::IF_NO_CHECK:
-                $result = self::MATCHED;
-                break;
-            case ifPlugin::IF_TAKEMONEY:
-            	$mymoney = ifManager::getOwner()->getEcomony()->getMoney($name);
-                $money = (int)$content;
-                if($mymoney === false){
-                    $player->sendMessage("§c経済システムプラグインが見つかりません");
-                    break;
-                }
-                if($mymoney >= $money){
-                    ifManager::getOwner()->getEconomy()->reduceMoney($name, $money);
-                    $result = self::MATCHED;
-                }
-                break;
-            case ifPlugin::IF_OVERMONEY:
-            	$mymoney = ifManager::getOwner()->getEcomony()->getMoney($name);
-                $money = (int)$content;
-                if($mymoney === false){
-                    $player->sendMessage("§c経済システムプラグインが見つかりません");
-                    break;
-                }
-                if($mymoney >= $money){
-                    $result = self::MATCHED;
-                }
-                break;
-            case ifPlugin::IF_HAVEINGITEM:
-                $item = $player->getInventory()->getItemInHand();
-                $id = explode(":", $content);
-                if(!isset($id[1]))$id[1] = 0;
-                if(isset($id[2])){
-                    if($item->getId() == $id[0] and $item->getDamage() == $id[1] and $item->getCount() >= $id[2]){
-                        $result = self::MATCHED;
-                    }
-                }else{
-                    if($item->getId() == $id[0] and $item->getDamage() == $id[1] ){
-                        $result = self::MATCHED;
-                    }
-                }
-                break;
-            case ifPlugin::IF_EXISTITEM:
-                $id = explode(":", $content);
-                if(!isset($id[1]))$id[1] = 0;
-                if(!isset($id[2]))$id[2] = 1;
-                $item = Item::get((int)$id[0], (int)$id[1], (int)$id[2]);
-                if($player->getInventory()->contains($item))$result = self::MATCHED;
-                break;
-            case ifPlugin::IF_REMOVEITEM:
-                $ids = explode(":", $content);
-                if(!isset($ids[1]))$ids[1] == 0;
-                if(isset($ids[2])){
-                    $item = Item::get((int)$ids[0], (int)$ids[1], (int)$ids[2]);
-                    if($player->getInventory()->contains($item)){
-                        $player->getInventory()->removeItem($item);
-                        $result = self::MATCHED;
-                    }
-                }else{
-                    $count = 0;
-                    foreach ($player->getInventory()->getContents() as $item) {
-                        if($item->getId() == $ids[0] and $item->getDamage() == $ids[1]){
-                            $count += $item->getCount();
-                        }
-                    }
-                    if($count >= 1){
-                        $player->getInventory()->removeItem(Item::get($ids[0], $ids[1], $count));
-                        $result = self::MATCHED;
-                    }
-                }
-                break;
-            case ifPlugin::IF_IS_OP:
-                if($player->isOp())$result = self::MATCHED;
-                break;
-            case ifPlugin::IF_IS_SNEAKING:
-                if($player->isSneaking())$result = self::MATCHED;
-                break;
-            case ifPlugin::IF_IS_FLYING:
-                if($player->isFlying())$result = self::MATCHED;
-                break;
-            case ifPlugin::IF_GAMEMODE:
-                $gamemode = $player->getServer()->getGamemodeFromString($content);
-                if($player->getGamemode() == $gamemode)$result = self::MATCHED;
-                break;
-            case ifPlugin::IF_IN_AREA:
-                preg_match("/([xyz]\(-?[0-9\.]+,-?[0-9\.]+\))+/", $content, $matches);
-                array_shift($matches);
-                $checks = [];
-                foreach ($matches as $match) {
-                    if(!preg_match("/([xyz])\((-?[0-9\.]+),-?([0-9\.]+)\)/", $match, $matches1))continue;
-                    $min = min((float)$matches1[2], (float)$matches1[3]);
-                    $max = max((float)$matches1[2], (float)$matches1[3]);
-                    $checks[$matches1[1]] = [$min, $max];
-                }
-                if(count($checks) == 0)break;
-                $result = self::MATCHED;
-                foreach ($checks as $axis => $value) {
-                    if($player->$axis < $value[0] and $player->$axis > $value[1]){
-                        $result = self::NOT_MATCHED;
-                    }
-                }
-                break;
-            case ifPlugin::IF_RANDOM_NUMBER:
-                if(!preg_match("/(-?[0-9]+),(-?[0-9]+);(-?[0-9]+)/", $content, $matches)) break;
-                $min = min((int)$matches[1], (int)$matches[2]);
-                $max = max((int)$matches[1], (int)$matches[2]);
-                $rand = mt_rand($min, $max);
-                if($rand == (int)$matches[3])$result = self::MATCHED;
-                break;
-            case ifPlugin::IF_COMPARISON:
-                if(!preg_match("/([^!>=<]+)([!>=<]{1,2})([^!>=<]+)/", $content, $matches)){
-                    $player->sendMessage("§c[二つの値を比較する] 正しく入力できていません§f");
-                    break;
-                }
-                $operator = $matches[2];
-                $val1 = trim(rtrim($matches[1]));
-                $val2 = trim(rtrim($matches[3]));
-                switch ($operator){
-                    case "=":
-                    case "==":
-                        if($val1 == $val2)$result = self::MATCHED;
-                        break;
-                    case "!=":
-                    case "=!":
-                        if($val1 != $val2)$result = self::MATCHED;
-                        break;
-                    case ">":
-                        if($val1 > $val2)$result = self::MATCHED;
-                        break;
-                    case "<":
-                        if($val1 < $val2)$result = self::MATCHED;
-                        break;
-                    case ">=":
-                    case "=>":
-                        if($val1 >= $val2)$result = self::MATCHED;
-                        break;
-                    case "<=":
-                    case "=<":
-                        if($val1 <= $val2)$result = self::MATCHED;
-                        break;
-                    case "><":
-                        if(strpos($val1, $val2) !== false)$result = self::MATCHED;
-                        break;
-                    case "<>":
-                        if(strpos($val1, $val2) === false)$result = self::MATCHED;
-                        break;
-                    default:
-                        $player->sendMessage("§c[二つの値を比較する] その組み合わせは使用できません 次の中から選んでください[==|>|>=|<|<=|!=]§r");
-                        break;
-                }
-                break;
-            default:
-                $result = self::NOT_FOUND;
-                break;
-        }
-        return $result;
-    }
-
-    public function execute($player, $type, $content){
+    public function execute($player, $type, $content, $args = []){
         $name = $player->getName();
         switch ($type) {
             case ifPlugin::DO_NOTHING:
@@ -476,7 +318,7 @@ class ifAPI {
                 $pos = explode(",", $content);
                 if(!isset($pos[1]))$pos[1] = 0;
                 if(!isset($pos[2]))$pos[2] = 0;
-                $player->setMotion(new Vector3((int)$pos[0], (int)$pos[1], (int)$pos[2]));
+                $player->setMotion(new Vector3((float)$pos[0], (float)$pos[1], (float)$pos[2]));
                 break;
             case ifPlugin::CALCULATION:
                 if(!preg_match("/([^+＋\-\ー*\/%％×÷]+)\[([+＋\-\ー*\/%×÷])\]([^+＋\-\ー*\/%×÷]+)/", $content, $matches)){
@@ -648,11 +490,11 @@ class ifAPI {
     public function executeIfMatchCondition($player, $datas1, $datas2, $datas3){
         $stat = "2";
         foreach($datas1 as $datas){
-            $result = $this->checkMatchCondition($player, $datas["id"], $this->replace($datas["content"]));
-            if($result === self::NOT_FOUND){
+            $result = ($co = Condition::get($datas["id"]))->setPlayer($player)->setValues($co->parse($this->replace($datas["content"])))->check();
+            if($result === Condition::NOT_FOUND){
                 $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
                 return false;
-            }elseif($result === self::NOT_MATCHED){
+            }elseif($result === Condition::NOT_MATCHED){
                 $stat = "3";
             }
         }
