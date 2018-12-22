@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
-class IsOp extends IFs
+class IsOp extends Condition
 {
 	public $id = self::IS_OP;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
-class IfFactory
+class ConditionFactory
 {
 	private static $list = [];
 
@@ -25,7 +25,7 @@ class IfFactory
 	}
 	/**
 	 * @param  int $id
-	 * @return IFs | null
+	 * @return Condition | null
 	 */
 	public static function get($id)
 	{
@@ -33,14 +33,14 @@ class IfFactory
 		{
 			return clone self::$list[$id];
 		}
-		return null;
+		return new Condition();
 	}
 
 	/**
-	 * @param  IFs $ifs
+	 * @param  Condition $condition
 	 */
-	public static function register(IFs $ifs)
+	public static function register(Condition $condition)
 	{
-		self::$list[$ifs->getId()] = clone $ifs;
+		self::$list[$condition->getId()] = clone $condition;
 	}
 }

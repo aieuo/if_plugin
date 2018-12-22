@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
-class IsSneaking extends IFs
+class IsSneaking extends Condition
 {
 	public $id = self::IS_SNEAKING;
 

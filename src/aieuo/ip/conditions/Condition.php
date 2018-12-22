@@ -1,24 +1,27 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use pocketmine\Player;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class IFs implements IfIds
+class Condition implements ConditionIds
 {
 	const MATCHED = 0;
 	const NOT_MATCHED = 1;
 	const NOT_FOUND = 2;
-	const ERROR = 3;
+	const ERROR = -1;
 
 	/** @var int */
 	public $id;
 
 	/** @var Player */
 	private $player;
+
+	/** @var array */
+	private $values = [];
 
 	public function __construct($player = null)
 	{
@@ -35,6 +38,21 @@ class IFs implements IfIds
 		return $this->id;
 	}
 
+	public function getName()
+	{
+		return "";
+	}
+
+	public function getDescription()
+	{
+		return "";
+	}
+
+	public function parse(string $str)
+	{
+		return $str;
+	}
+
 	public function setPlayer(Player $player) : self
 	{
 		$this->player = $player;
@@ -46,9 +64,16 @@ class IFs implements IfIds
 		return $this->player;
 	}
 
-	public function getName() { return ""; }
+	public function setValues(...$values) : self
+	{
+		$this->values = $values;
+		return $this;
+	}
 
-	public function getDescription() { return ""; }
+	public function getValues()
+	{
+		return $this->values;
+	}
 
 	public function getEditForm(string $defaults = "", string $mes = "")
 	{
@@ -67,6 +92,6 @@ class IFs implements IfIds
 
 	public function check()
 	{
-		return Ifs::NOT_MATCHED;
+		return Ifs::NOT_FOUND;
 	}
 }

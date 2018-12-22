@@ -1,32 +1,30 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class OverMoney extends IFs
+class TakeMoney extends Condition
 {
-	public $id = self::OVERMONEY;
-
-	private $amount = 0;
+	public $id = self::TAKEMONEY;
 
 	public function __construct($player = null, $amount = 0)
 	{
 		parent::__construct($player);
-		$this->amount = $amount;
+		$this->setValues($amount);
 	}
 
-	public function getName() : string
+	public function getName()
 	{
-		return "指定した金額より所持金が多いか";
+		return "お金を減らす";
 	}
 
 	public function getDescription()
 	{
-		return "所持金が§7<amount>§f以上なら";
+		return "§7<amount>§f払えるなら";
 	}
 
 	public function getEditForm(string $defaults = "", string $mes = "")
@@ -59,12 +57,12 @@ class OverMoney extends IFs
 
 	public function getAmount() : int
 	{
-		return $this->amount;
+		return $this->getValues()[0];
 	}
 
 	public function setAmount(int $amount)
 	{
-		$this->amount = $amount;
+		$this->setValues($amount);
 	}
 
 	public function check()
@@ -76,6 +74,7 @@ class OverMoney extends IFs
             return self::NOT_MATCHED;
         }
         if($mymoney >= $this->getAmount()){
+            ifPlugin::getInstance()->getEconomy()->takeMoney($player->getName(), $this->getAmount());
             return self::MATCHED;
         }
         return self::NOT_MATCHED;

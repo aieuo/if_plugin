@@ -1,21 +1,20 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class ExistsVariable extends IFs
+class ExistsVariable extends Condition
 {
 	public $id = self::EXISTS_VARIABLE;
-	private $variable;
 
 	public function __construct($player = null, $variable = "")
 	{
 		parent::__construct($player);
-		$this->variable = $variable;
+		$this->setValues($variable);
 	}
 
 	public function getName() : string
@@ -46,12 +45,12 @@ class ExistsVariable extends IFs
 
 	public function getVariableName() : string
 	{
-		return $this->variable;
+		return $this->getValues()[0];
 	}
 
 	public function setVariableName(string $variable)
 	{
-		$this->variable = $variable;
+		$this->setValues($variable);
 	}
 
 	public function check()

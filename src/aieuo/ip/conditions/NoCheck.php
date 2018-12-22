@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
-class NoCheck extends IFs
+class NoCheck extends Condition
 {
 	public $id = self::NO_CHECK;
 
