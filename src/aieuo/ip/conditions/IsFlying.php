@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
-class IsFlying extends IFs
+class IsFlying extends Condition
 {
 	public $id = self::IS_FLYING;
 

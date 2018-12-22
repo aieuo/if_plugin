@@ -1,23 +1,20 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use pocketmine\math\Vector3;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class InArea extends IFs
+class InArea extends Condition
 {
 	public $id = self::IN_AREA;
-
-	private $area = [];
 
 	public function __construct($player = null, $area = [])
 	{
 		parent::__construct($player);
-
-		$this->area = $area;
+		$this->setValues($area);
 	}
 
 	public function getName()
@@ -73,17 +70,17 @@ class InArea extends IFs
 	/**
 	 * @return Array | bool
 	 */
-	public function getArea()
+	public function getArea() : array
 	{
-		return $this->area;
+		return $this->getValues()[0];
 	}
 
 	/**
 	 * @param Array | bool $area
 	 */
-	public function setArea($area)
+	public function setArea(array $area)
 	{
-		$this->area = $area;
+		$this->setValues($area);
 	}
 
 	public function check()

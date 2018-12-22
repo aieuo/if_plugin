@@ -1,30 +1,20 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use pocketmine\math\Vector3;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class RandomNumber extends IFs
+class RandomNumber extends Condition
 {
 	public $id = self::RANDOM_NUMBER;
-
-	/** @var int */
-	private $min;
-	/** @var int */
-	private $max;
-	/** @var int */
-	private $check;
 
 	public function __construct($player = null, $min = 0, $max = PHP_INT_MAX, $check = 0)
 	{
 		parent::__construct($player);
-
-		$this->min = $min;
-		$this->max = $max;
-		$this->check = $check;
+		$this->setValues($min, $max, $check, true);
 	}
 
 	public function getName()
@@ -83,34 +73,33 @@ class RandomNumber extends IFs
 
 	public function getMin() : int
 	{
-		return $this->min;
+		return $this->getValues()[0];
 	}
 
 	public function getMax() : int
 	{
-		return $this->max;
+		return $this->getValues()[1];
 	}
 
 	public function getCheck() : int
 	{
-		return $this->check;
+		return $this->getValues()[2];
 	}
 
-	/**
-	 * @param array $numbers[int $min, int $max, int $check]
-	 */
-	public function setNumbers(array $numbers)
+	public function isValid() : bool
 	{
-		$this->min = min($numbers[0], $numbers[1]);
-		$this->max = max($numbers[0], $numbers[1]);
-		$this->check = $numbers[2];
+		return $this->getValues()[3];
+	}
+
+	public function setNumbers(int $min, int $max, int $check, bool $valid = true)
+	{
+		$this->setValues($min, $max, $check, $valid);
 	}
 
 	public function check()
 	{
 		$player = $this->getPlayer();
-		$num = $this->getNumbers();
-		if($num === false)
+		if($this->isValid())
 		{
 			$player->sendMessage("§c[乱数が指定したものだったら] 正しく入力できていません§f");
 			return self::ERROR;

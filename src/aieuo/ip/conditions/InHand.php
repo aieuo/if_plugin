@@ -1,24 +1,20 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class InHand extends IFs
+class InHand extends Condition
 {
 	public $id = self::IN_HAND;
-
-	/** @var Item */
-	private $item;
 
 	public function __construct($player = null, $item = null)
 	{
 		parent::__construct($player);
-
-		$this->item = $item;
+		$this->setValues($item);
 	}
 
 	public function getName()
@@ -64,18 +60,18 @@ class InHand extends IFs
 	{
 		if($id === "" or (strpos($id, ":") === false and !is_numeric($id))) return false;
 		$ids = explode(":", $id);
-		$item = Item::get((int)$ids[0], empty($ids[1]) ? (int)$ids[1] : 0, empty($ids[2]) ? (int)$ids[2] : 0);
+		$item = Item::get((int)$ids[0], !empty($ids[1]) ? (int)$ids[1] : 0, !empty($ids[2]) ? (int)$ids[2] : 0);
 		return $item;
 	}
 
 	public function getItem() : Item
 	{
-		return $this->item;
+		return $this->getValues()[0];
 	}
 
 	public function setItem(Item $item)
 	{
-		$this->item = $item;
+		$this->setValues($item);
 	}
 
 	public function check()
@@ -85,7 +81,7 @@ class InHand extends IFs
 	    $item = $this->getItem();
         if(
         	$hand->getId() == $item->getId()
-        	and $hand->getDamage() == $item->getId()
+        	and $hand->getDamage() == $item->getDamage()
         	and $hand->getCount() >= $item->getCount()
         )
         {

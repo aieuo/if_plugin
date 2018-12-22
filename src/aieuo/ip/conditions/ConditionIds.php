@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
-interface IfIds {
+interface ConditionIds {
     const TAKEMONEY = 0;
     const IN_HAND = 1;
     const EXISTS_ITEM = 2;

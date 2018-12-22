@@ -1,23 +1,20 @@
 <?php
 
-namespace aieuo\ip\ifs;
+namespace aieuo\ip\conditions;
 
 use pocketmine\Server;
 
 use aieuo\ip\form\Form;
 use aieui\ip\form\Elements;
 
-class GameMode extends IFs
+class GameMode extends Condition
 {
 	public $id = self::GAMEMODE;
 
-	/** @var int */
-	private $gamemode;
-
-	public function __construct($player = null, $gamemode = 0)
+	public function __construct($player = null, int $gamemode = 0)
 	{
 		parent::__construct($player);
-		$this->gamemode = $gamemode;
+		$this->setValues($gamemode);
 	}
 
 	public function getName()
@@ -55,7 +52,7 @@ class GameMode extends IFs
 
 	public function getGamemode() : int
 	{
-		return $this->gamemode;
+		return $this->getValues()[0];
 	}
 
 	/**
@@ -63,11 +60,12 @@ class GameMode extends IFs
 	 */
 	public function setGamemode(int $gamemode)
 	{
-		$this->gamemode = $gamemode;
+		$this->setValues($gamemode);
 	}
 
 	public function check()
 	{
+		$player = $this->getPlayer();
         return $player->getGamemode() == $this->getGamemode() ? self::MATCHED : self::NOT_MATCHED;
 	}
 }
