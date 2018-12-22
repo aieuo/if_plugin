@@ -32,6 +32,7 @@ use aieuo\ip\economy\PocketMoneyLoader;
 use aieuo\ip\ifAPI;
 use aieuo\ip\task\SaveTask;
 use aieuo\ip\variable\VariableHelper;
+use aieuo\ip\conditions\IfFactory;
 
 class ifPlugin extends PluginBase implements Listener{
 
@@ -109,6 +110,8 @@ class ifPlugin extends PluginBase implements Listener{
         $this->getScheduler()->scheduleRepeatingTask(new SaveTask($this), (int)$savetime);
 
         self::$instance = $this;
+
+        IfFactory::init();
     }
 
     public function onDisable(){
