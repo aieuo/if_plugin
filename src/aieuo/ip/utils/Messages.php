@@ -150,7 +150,7 @@ class Messages {
                 break;
             case ifPlugin::DELAYED_COMMAND:
                 if(!preg_match("/([0-9]+),(.+)/", $value, $matches)){
-                    $player->sendMessage("§c[遅れてコマンド実行] 書き方が正しくありません§f");
+                    $message = "§c[遅れてコマンド実行] 書き方が正しくありません§f";
                     break;
                 }
                 $message = $matches[1]."秒後に/".$matches[2]."を実行する";
@@ -297,7 +297,7 @@ class Messages {
                 $placeholder = "上のカッコ内のようにidを入力してください";
                 break;
             case ifPlugin::IF_EXISTITEM:
-                $message = "もし\n§lidが\n§r(id:meta:数 のように安山岩が3個なら1:5:3, 1:5だけなら数は1個になります)";
+                $message = "もし\n§lidが\n§r(id:meta:数 のように安山岩が3個なら1:5:3, 1:5だけなら数は1個)";
                 $next = "§lのアイテムがインベントリにあるなら\n\n";
                 $placeholder = "上のカッコ内のようにidを入力してください";
                 break;
