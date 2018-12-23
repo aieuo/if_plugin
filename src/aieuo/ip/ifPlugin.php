@@ -32,7 +32,7 @@ use aieuo\ip\economy\PocketMoneyLoader;
 use aieuo\ip\ifAPI;
 use aieuo\ip\task\SaveTask;
 use aieuo\ip\variable\VariableHelper;
-use aieuo\ip\conditions\IfFactory;
+use aieuo\ip\conditions\ConditionFactory;
 
 class ifPlugin extends PluginBase implements Listener{
 
@@ -111,7 +111,7 @@ class ifPlugin extends PluginBase implements Listener{
 
         self::$instance = $this;
 
-        IfFactory::init();
+        ConditionFactory::init();
     }
 
     public function onDisable(){

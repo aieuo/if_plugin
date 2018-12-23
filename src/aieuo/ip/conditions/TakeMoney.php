@@ -5,7 +5,7 @@ namespace aieuo\ip\conditions;
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class TakeMoney extends Condition
 {
@@ -57,7 +57,7 @@ class TakeMoney extends Condition
 
 	public function getAmount() : int
 	{
-		return $this->getValues()[0];
+		return $this->getValues();
 	}
 
 	public function setAmount(int $amount)

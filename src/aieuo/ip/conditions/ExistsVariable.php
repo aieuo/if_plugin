@@ -5,7 +5,7 @@ namespace aieuo\ip\conditions;
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class ExistsVariable extends Condition
 {
@@ -45,7 +45,7 @@ class ExistsVariable extends Condition
 
 	public function getVariableName() : string
 	{
-		return $this->getValues()[0];
+		return $this->getValues();
 	}
 
 	public function setVariableName(string $variable)

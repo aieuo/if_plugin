@@ -5,7 +5,7 @@ namespace aieuo\ip\conditions;
 use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class InHand extends Condition
 {
@@ -66,7 +66,7 @@ class InHand extends Condition
 
 	public function getItem() : Item
 	{
-		return $this->getValues()[0];
+		return $this->getValues();
 	}
 
 	public function setItem(Item $item)

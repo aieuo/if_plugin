@@ -5,7 +5,7 @@ namespace aieuo\ip\conditions;
 use pocketmine\math\Vector3;
 
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class InArea extends Condition
 {

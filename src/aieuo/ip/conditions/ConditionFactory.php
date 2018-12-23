@@ -36,6 +36,11 @@ class ConditionFactory
 		return new Condition();
 	}
 
+	public static function getAll()
+	{
+		return self::$list;
+	}
+
 	/**
 	 * @param  Condition $condition
 	 */
