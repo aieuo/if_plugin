@@ -40,29 +40,15 @@ class ifManager extends ifAPI{
     	return $this->config->exists($key);
     }
 
-    public function get($key){
+    /**
+     * @param  strign $key
+     * @param  bool $args
+     * @return bool | array
+     */
+    public function get($key, $args = []){
         if(!$this->isAdded($key))return false;
         $datas = $this->config->get($key);
-        $change = false;
-        foreach ($datas as $type => $data) {
-            if(!is_array($data) or count($data) == 0)continue;
-            if(!isset($data[0])){
-                $datas[$type] = [];
-                foreach ($data as $key => $value) {
-                    $datas[$type][] = [
-                        "id" => str_replace("id", "", $key),
-                        "content" => $value
-                    ];
-                }
-                $change = true;
-            }
-        }
-        if(!isset($datas["if"]))$datas["if"] = [];
-        if(!isset($datas["match"]))$datas["match"] = [];
-        if(!isset($datas["else"]))$datas["else"] = [];
-        if($change){
-            $this->set($key, $datas);
-        }
+        $datas = $this->repairIF($datas);
         return $datas;
     }
 
@@ -73,16 +59,45 @@ class ifManager extends ifAPI{
     	return $this->config->getAll();
     }
 
-    public function set($key, $datas = []){
+    /**
+     * @param string $key
+     * @param string $type
+     * @param int $id
+     * @param string $content
+     * @param array  $args
+     */
+    public function add($key, $type, $id, $content, $args = []){
+        $datas = [];
+        if($this->isAdded($key))$datas = $this->get($key);
+        $datas = $this->repairIF($datas);
+        $datas[$type][] = [
+            "id" => $id,
+            "content" => $content
+        ];
+        $this->config->set($key, $datas);
+    }
+
+    /**
+     * @param string $key
+     * @param array  $datas
+     * @param array  $args
+     */
+    public function set($key, $datas = [], $args = []){
     	$this->config->set($key, $datas);
     }
 
-    public function del($key, $type, $num){
+    /**
+     * @param  string $key
+     * @param  string $type
+     * @param  int $num
+     * @return bool
+     */
+    public function del($key, $type, $num, $args = []){
         if(!$this->isAdded($key))return false;
         $datas = $this->get($key);
         unset($datas[$type][$num]);
         $datas[$type] = array_merge($datas[$type]);
-        $this->set($key, $datas);
+        $this->config->set($key, $datas);
         return true;
     }
 
@@ -97,16 +112,14 @@ class ifManager extends ifAPI{
 		$this->config->save();
 	}
 
-    public function add($key, $type, $id, $content){
-        $datas = [];
-        if($this->isAdded($key))$datas = $this->get($key);
+    /**
+     * @param  array $datas
+     * @return array
+     */
+    public function repairIF($datas){
         if(!isset($datas["if"]))$datas["if"] = [];
         if(!isset($datas["match"]))$datas["match"] = [];
         if(!isset($datas["else"]))$datas["else"] = [];
-        $datas[$type][] = [
-            "id" => $id,
-            "content" => $content
-        ];
-        $this->config->set($key, $datas);
+        return $datas;
     }
 }

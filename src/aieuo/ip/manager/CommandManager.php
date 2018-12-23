@@ -14,9 +14,34 @@ class CommandManager extends ifManager{
         $this->registerCommands();
 	}
 
+    public function set($key, $datas = [], $args = []){
+        if($args["desc"] == "")$args["desc"] = "ifPluginで追加したコマンドです";
+        if($args["perm"] == "")$args["perm"] = "op";
+        $datas["description"] = $args["desc"];
+        $datas["permission"] = $args["perm"];
+        $datas = $this->repairIF($datas);
+        parent::set($key, $datas);
+    }
+
+    public function add($key, $type, $id, $content, $args = []){
+        $datas = [];
+        if($this->isAdded($key))$datas = $this->get($key);
+        $datas[$type][] = [
+            "id" => $id,
+            "content" => $content
+        ];
+        $this->register($key, $args["desc"], $args["perm"]);
+        $this->set($key, $datas, $args);
+    }
+
+    public function remove($key){
+        $this->unregister($key);
+        parent::remove($key);
+    }
+
     public function registerCommands(){
         foreach($this->getAll() as $command => $value){
-    		if($this->isSubcommand($command))$command = $this->getOriginalCommand($command);
+            if($this->isSubcommand($command))$command = $this->getParentCommand($command);
             if(!$this->exists($command)){
                 $this->register($command, $value["permission"], $value["description"]);
             }
@@ -24,7 +49,7 @@ class CommandManager extends ifManager{
     }
 
     public function register($command, $permission = "default", $description = "ifPluginで追加したコマンドです"){
-    	if($this->isSubcommand($command))$command = $this->getOriginalCommand($command);
+        if($this->isSubcommand($command))$command = $this->getParentCommand($command);
         if(!$this->exists($command)){
             $newCommand = new PluginCommand($command, $this->getOwner());
             $newCommand->setDescription($description);
@@ -37,8 +62,15 @@ class CommandManager extends ifManager{
     }
 
     public function unregister($command){
-        if($this->isSubcommand($command))$command = $this->getOriginalCommand($command);
-        if($this->exists($command) or !isset($this->command_list[$command]))return false;
+        $commands = $this->getSubcommand($command);
+        if($this->isSubcommand($command)){
+            $subs = array_shift(explode(" ", $command));
+            unset($commands[implode(" ", $subs)]);
+            $command = $this->getParentCommand($command);
+        }
+        $count = count($commands);
+        if(!$this->isSubcommand($command) and $this->isAdded($command)) $count ++;
+        if($count >= 1)return false;
         $this->getServer()->getCommandMap()->unregister($this->command_list[$command]);
         unset($this->command_list[$command]);
     }
@@ -63,7 +95,7 @@ class CommandManager extends ifManager{
     		$cmds = explode(" ", $cmd);
     		if(array_shift($cmds) == $command){
     			if(isset($cmds[0])){
-    				$sub = implode(" " ,$cmds);
+    				$sub = implode(" ", $cmds);
         			$array[] = $sub;
     			}
     		}
@@ -71,51 +103,9 @@ class CommandManager extends ifManager{
     	return $array;
     }
 
-    public function getOriginalCommand($command){
+    public function getParentCommand($command){
     	if(!$this->isSubcommand($command))return $command;
     	$commands = explode(" ", $command);
     	return $commands[0];
-    }
-
-    public function setOptions($command, $description, $permission){
-        $this->tmp[$command] = [$description, $permission];
-    }
-
-    public function set($key, $data = []){
-        if(isset($this->tmp[$key])){
-            $data["description"] = $this->tmp[$key][0];
-            $data["permission"] = $this->tmp[$key][1];
-            unset($this->tmp[$key]);
-        }
-        if(!isset($datas["if"]))$datas["if"] = [];
-        if(!isset($datas["match"]))$datas["match"] = [];
-        if(!isset($datas["else"]))$datas["else"] = [];
-        parent::set($key, $data);
-    }
-
-    public function add($key, $type, $id, $content){
-        $datas = [];
-        if($this->isAdded($key))$datas = $this->get($key);
-        if(isset($this->tmp[$key])){
-            $datas["description"] = $this->tmp[$key][0];
-            $datas["permission"] = $this->tmp[$key][1];
-            unset($this->tmp[$key]);
-        }
-        if(!isset($datas["if"]))$datas["if"] = [];
-        if(!isset($datas["match"]))$datas["match"] = [];
-        if(!isset($datas["else"]))$datas["else"] = [];
-        if(!isset($datas["description"]))$datas["description"] = "ifPluginで追加したコマンドです";
-        if(!isset($datas["permission"]))$datas["permission"] = "op";
-        $datas[$type][] = [
-            "id" => $id,
-            "content" => $content
-        ];
-        $this->register($key, $datas["description"], $datas["permission"]);
-        parent::set($key, $datas);
-    }
-
-    public function remove($key){
-        $this->unregister($key);
-        parent::remove($key);
     }
 }

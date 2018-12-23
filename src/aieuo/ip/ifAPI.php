@@ -448,11 +448,11 @@ class ifAPI {
 		        $pk = new AddEntityPacket();
 		        $pk->entityRuntimeId = Entity::$entityCount++;
 		        $pk->type = 84;
-		        $pk->position = new Position((int)$pos[0], (int)$pos[1], (int)$pos[2], $pos[3]);
-		          $link = new EntityLink();
-				  $link->riddenId = $pk->entityRuntimeId;
-				  $link->riderId = $player->getId();
-				  $link->type = 1;
+		        $pk->position = new Position((int)$pos[0], (int)$pos[1], (int)$pos[2], $this->getServer()->getLevelByName($pos[3]));
+    		        $link = new EntityLink();
+    				$link->riddenId = $pk->entityRuntimeId;
+    				$link->riderId = $player->getId();
+    				$link->type = 1;
 		        $pk->links = [$link];
 		        $pk->metadata = [
 					Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_INVISIBLE]
@@ -487,19 +487,21 @@ class ifAPI {
         }
     }
 
-    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3){
+    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args = []){
         $stat = "2";
         foreach($datas1 as $datas){
             $result = ($co = Condition::get($datas["id"]))->setPlayer($player)->setValues($co->parse($this->replace($datas["content"])))->check();
             if($result === Condition::NOT_FOUND){
                 $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
                 return false;
+            }elseif($result === Condition::ERROR){
+                return false;
             }elseif($result === Condition::NOT_MATCHED){
                 $stat = "3";
             }
         }
         foreach (${"datas".$stat} as $datas) {
-            $this->execute($player, $datas["id"], $this->replace($datas["content"]));
+            $this->execute($player, $datas["id"], $this->replace($datas["content"]), $args);
         }
         return true;
     }
