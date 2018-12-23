@@ -91,10 +91,9 @@ class EventListener implements Listener {
         }
         $manager = $this->getOwner()->getEventManager();
         $datas = $manager->getByEvent($eventname);
-        $manager->setOptions($eventname, $event);
         foreach ($datas as $key => $data) {
-            $data = $manager->get($key);
-            $manager->executeIfMatchCondition($player, $data["if"], $data["match"], $data["else"]);
+            $data = $manager->get($key, ["eventname" => $eventname]);
+            $manager->executeIfMatchCondition($player, $data["if"], $data["match"], $data["else"], ["eventname" => $eventname, "event" => $event]);
         }
     }
 
@@ -240,15 +239,18 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
+                $args = [];
                 if($type === Session::BLOCK){
                 	$manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
+                    $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
+                    $args = ["eventname" => $session->getData("event")];
                 }
                 $key = $session->getData("if_key");
-                $datas = $manager->get($key);
+                $datas = $manager->get($key, $args);
                 if($data == 0){
                     $form = Form::getEditContentsForm($datas["if"]);
                     $session->setData("type", "if");
@@ -259,7 +261,7 @@ class EventListener implements Listener {
                     $form = Form::getEditContentsForm($datas["else"]);
                     $session->setData("type", "else");
                 }else{
-                    $manager->remove($key);
+                    $manager->remove($key, $args);
                     $player->sendMessage("削除しました");
                     $session->setValid(false);
                     return;
@@ -274,19 +276,20 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
-                $event = false;
+                $args = [];
                 if($type === Session::BLOCK){
                 	$manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
+                    $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
-                    $event = true;
+                    $args = ["eventname" => $session->getData("event")];
                 }
                 $key = $session->getData("if_key");
-                $datas = $manager->get($key);
+                $datas = $manager->get($key, $args);
                 if($data == 0){
-                    $form = Form::getAddContentsForm($session->getData("type"), $event);
+                    $form = Form::getAddContentsForm($session->getData("type"));
                     Form::sendForm($player, $form, Form::getFormId("AddContentsForm"));
                 }else{
                 	$if = $datas[$session->getData("type")][--$data];
@@ -305,19 +308,22 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
+                $args = [];
                 if($type === Session::BLOCK){
                 	$manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
+                    $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
+                    $args = ["eventname" => $session->getData("event")];
                 }
                 if($session->getData("type") == "if"){
                 	$id = $manager->getIfIdByListNumber($data[0]);
                 }else{
                 	$id = $manager->getExeIdByListNumber($data[0]);
                 }
-                $manager->add($session->getData("if_key"), $session->getData("type"), $id, $data[1]);
+                $manager->add($session->getData("if_key"), $session->getData("type"), $id, $data[1], $args);
                 $player->sendMessage("追加しました");
             }
 
@@ -328,18 +334,21 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
+                $args = [];
                 if($type === Session::BLOCK){
                     $manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
+                    $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
+                    $args = ["eventname" => $session->getData("event")];
                 }
                 if($data == 0){
                     $form = Form::getUpdateContentsForm($session->getData("type"), $session->getData("id"), $session->getData("content"));
                     Form::sendForm($player, $form, Form::getFormId("UpdateContentsForm"));
                 }elseif($data == 1){
-                    $manager->del($session->getData("if_key"), $session->getData("type"), $session->getData("num"));
+                    $manager->del($session->getData("if_key"), $session->getData("type"), $session->getData("num"), $args);
                     $player->sendMessage("削除しました");
                 }
             }
@@ -351,15 +360,18 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
+                $args = [];
                 if($type === Session::BLOCK){
                     $manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
+                    $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
+                    $args = ["eventname" => $session->getData("event")];
                 }
-                $manager->del($session->getData("if_key"), $session->getData("type"), $session->getData("num"));
-                $manager->add($session->getData("if_key"), $session->getData("type"), $session->getData("id"), $data[1]);
+                $manager->del($session->getData("if_key"), $session->getData("type"), $session->getData("num"), $args);
+                $manager->add($session->getData("if_key"), $session->getData("type"), $session->getData("id"), $data[1], $args);
                 $player->sendMessage("変更しました");
             }
 
@@ -386,21 +398,22 @@ class EventListener implements Listener {
                     return;
                 }
                 $type = $session->getIfType();
+                $args = [];
                 if($type === Session::BLOCK){
                     $manager = $this->getOwner()->getBlockManager();
                 }elseif($type === Session::COMMAND){
                     $manager = $this->getOwner()->getCommandManager();
-                    $manager->setOptions($session->getData("if_key"), $session->getData("description"), $session->getData("permission"));
+                    $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
                 }elseif($type === Session::EVENT){
                     $manager = $this->getOwner()->getEventManager();
-                    $manager->setOptions($session->getData("event"));
-                    $key = $manager->add_empty();
+                    $args = ["eventname" => $session->getData("event")];
+                    $key = $manager->add_empty($session->getData("event"));
                     $session->setData("if_key", $key);
                 }
                 $key = $session->getData("if_key");
-                $manager->add($key, "if", $session->getData("id_1"), (string)$data[0]);
-                $manager->add($key, "match", $session->getData("id_2"), (string)$data[1]);
-                $manager->add($key, "else", $session->getData("id_3"), (string)$data[2]);
+                $manager->add($key, "if", $session->getData("id_1"), (string)$data[0], $args);
+                $manager->add($key, "match", $session->getData("id_2"), (string)$data[1], $args);
+                $manager->add($key, "else", $session->getData("id_3"), (string)$data[2], $args);
                 $session->setValid(false);
                 $player->sendMessage("追加しました");
             }
@@ -469,8 +482,7 @@ class EventListener implements Listener {
                 }
                 if($data[1] === "")$data[1] = "ifPluginで追加したコマンドです";
                 if($session->getData("type") == "add_empty"){
-                    $manager->setOptions($data[0], $data[1], $data[2] == 0 ? "op" : "default");
-                    $manager->set($data[0]);
+                    $manager->set($data[0], [], ["desc" => $data[1], "perm" => $data[2]]);
                     $manager->register($data[0], $data[1], $data[2] == 0 ? "op" : "default");
                     $player->sendMessage("追加しました");
                     $session->setValid(false);
@@ -557,7 +569,6 @@ class EventListener implements Listener {
                 $session->setData("event", $eventname);
                 $type = $session->getData("type");
                 $manager = $this->getOwner()->getEventManager();
-                $manager->setOptions($eventname);
                 switch ($type) {
                     case 'add':
                         $form = Form::getAddIfForm(true);
@@ -565,7 +576,7 @@ class EventListener implements Listener {
                         $session->setData("if_key", null);
                         break;
                     case 'add_empty':
-                        $manager->add_empty();
+                        $manager->add_empty($eventname);
                         $player->sendMessage("追加しました");
                         $session->setValid(false);
                         break;
@@ -575,7 +586,7 @@ class EventListener implements Listener {
                         $all = $manager->getByEvent($eventname);
                         $datas = [];
                         foreach ($all as $key => $value) {
-                            $datas[] = $manager->get($key);
+                            $datas[] = $manager->get($key, ["eventname" => $eventname]);
                         }
                         $form = Form::getEditEventForm($eventname, $datas);
                         Form::sendForm($player, $form, Form::getFormId("EditEventForm"));
@@ -591,8 +602,7 @@ class EventListener implements Listener {
                 }
                 $type = $session->getData("type");
                 $manager = $this->getOwner()->getEventManager();
-                $manager->setOptions($session->getData("event"));
-                $datas = $manager->get($data);
+                $datas = $manager->get($data, ["eventname" => $session->getData("event")]);
                 if($data == $manager->getCount($session->getData("event"))){
                     $form = Form::getAddIfForm(true);
                     Form::sendForm($player, $form, Form::getFormId("AddIfForm"));
