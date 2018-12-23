@@ -468,7 +468,7 @@ class Messages {
             case ifPlugin::IF_IS_SNEAKING:
                 $message = "もし\nスニークしているなら";
                 break;
-            case ifPlugin::IF_IS_SNEAKING:
+            case ifPlugin::IF_IS_FLYING:
                 $message = "もし\n飛んでいるなら";
                 break;
             case ifPlugin::DO_NOTHING:

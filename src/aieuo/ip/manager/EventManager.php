@@ -29,57 +29,38 @@ class EventManager extends ifManager{
         $this->tmp = [$eventname, $event];
     }
 
-    public function get($key){
-        $datass = $this->getByEvent($this->tmp[0]);
+    public function get($key, $args = []){
+        $datass = $this->getByEvent($args["eventname"]);
         if(!isset($datass[$key]))return [];
         $datas = $datass[$key];
-        $change = false;
-        foreach ($datas as $type => $data) {
-            if(!is_array($data) or count($data) == 0)continue;
-            if(!isset($data[0])){
-                $datass[$key][$type] = [];
-                foreach ($data as $key => $value) {
-                    $datass[$key][$type][] = [
-                        "id" => str_replace("id", "", $key),
-                        "content" => $value
-                    ];
-                }
-                $change = true;
-            }
-        }
-        if(!isset($datas["if"]))$datas["if"] = [];
-        if(!isset($datas["match"]))$datas["match"] = [];
-        if(!isset($datas["else"]))$datas["else"] = [];
-        if($change){
-            $this->set($this->tmp[0], $datass);
-        }
+        $datas = $this->repairIF($datas);
         return $datas;
     }
 
+    public function add($key, $type, $id, $content, $args = []){
+        $datas = $this->getByEvent($args["eventname"]);
+        $datas[$key][$type][] = [
+            "id" => $id,
+            "content" => $content
+        ];
+        $this->set($args["eventname"], $datas);
+    }
+
     public function getCount($event){
-        $datas = $this->getByEvent($this->tmp[0]);
+        $datas = $this->getByEvent($event);
         return count($datas);
     }
 
-    public function add_empty(){
-        $datas = $this->getByEvent($this->tmp[0]);
+    public function add_empty($event){
+        $datas = $this->getByEvent($event);
         $data = [
             "if" => [],
             "match" => [],
             "else" => []
         ];
         $datas[] = $data;
-        $this->set($this->tmp[0], $datas);
+        $this->set($event, $datas);
         return count($datas) -1;
-    }
-
-    public function add($key, $type, $id, $content){
-        $datas = $this->getByEvent($this->tmp[0]);
-        $datas[$key][$type][] = [
-            "id" => $id,
-            "content" => $content
-        ];
-        $this->set($this->tmp[0], $datas);
     }
 
     public function getByEvent($event){
@@ -88,21 +69,21 @@ class EventManager extends ifManager{
         return $datas;
     }
 
-    public function del($key, $type, $num){
-        $datas = $this->getByEvent($this->tmp[0]);
+    public function del($key, $type, $num, $args = []){
+        $datas = $this->getByEvent($args["eventname"]);
         if(!isset($datas[$key]))return false;
         unset($datas[$key][$type][$num]);
         $datas[$key][$type] = array_merge($datas[$key][$type]);
-        $this->set($this->tmp[0], $datas);
+        $this->set($args["eventname"], $datas);
         return true;
     }
 
-    public function remove($key){
-        $datas = $this->getByEvent($this->tmp[0]);
+    public function remove($key, $args = []){
+        $datas = $this->getByEvent($args["eventname"]);
         if(!isset($datas[$key]))return false;
         unset($datas[$key]);
         $datas = array_merge($datas);
-        $this->set($this->tmp[0], $datas);
+        $this->set($args["eventname"], $datas);
         return true;
     }
 
@@ -151,6 +132,13 @@ class EventManager extends ifManager{
         ){
             $variables["{mes}"] = $event->getMessage();
         }
+        if($eventname == "PlayerCommandPreprocessEvent"){
+            $args = explode(" ", $variables["{mes}"]);
+            array_shift($args);
+            foreach($args as $key => $value){
+                $variables["{args".$key."}"] = $value;
+            }
+        }
         if($eventname == "EntityDamageEvent"){
             $entity = $event->getEntity();
             if($event instanceof EntityDamageByEntityEvent){
@@ -166,24 +154,23 @@ class EventManager extends ifManager{
         return $mes;
     }
 
-    public function execute($player, $type, $content){
+    public function execute($player, $type, $content, $args = []){
         switch ($type) {
             case ifPlugin::EVENT_CANCELL:
-                $event = $this->tmp[1];
-                if($event instanceof Cancellable){
-                    $event->setCancelled();
+                if($args["event"] instanceof Cancellable){
+                    $args["event"]->setCancelled();
                 }
                 return;
         }
         parent::execute($player, $type, $content);
     }
 
-    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3){
+    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args = []){
         for($i = 1; $i <= 3; $i ++){
             foreach(${"datas".$i} as $key => $datas){
-                ${"datas".$i}[$key]["content"] = $this->replaceVariable($this->tmp[1], $this->tmp[0], $datas["content"]);
+                ${"datas".$i}[$key]["content"] = $this->replaceVariable($args["event"], $args["eventname"], $datas["content"]);
             }
         }
-        parent::executeIfMatchCondition($player, $datas1, $datas2, $datas3);
+        parent::executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args);
     }
 }
