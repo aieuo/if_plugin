@@ -2,10 +2,8 @@
 
 namespace aieuo\ip\conditions;
 
-use pocketmine\math\Vector3;
-
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class RandomNumber extends Condition
 {
@@ -86,20 +84,15 @@ class RandomNumber extends Condition
 		return $this->getValues()[2];
 	}
 
-	public function isValid() : bool
+	public function setNumbers(int $min, int $max, int $check)
 	{
-		return $this->getValues()[3];
-	}
-
-	public function setNumbers(int $min, int $max, int $check, bool $valid = true)
-	{
-		$this->setValues($min, $max, $check, $valid);
+		$this->setValues([$min, $max, $check]);
 	}
 
 	public function check()
 	{
 		$player = $this->getPlayer();
-		if($this->isValid())
+		if($this->getValues() === false)
 		{
 			$player->sendMessage("§c[乱数が指定したものだったら] 正しく入力できていません§f");
 			return self::ERROR;

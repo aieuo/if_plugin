@@ -5,7 +5,7 @@ namespace aieuo\ip\conditions;
 use pocketmine\Server;
 
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class GameMode extends Condition
 {
@@ -52,7 +52,7 @@ class GameMode extends Condition
 
 	public function getGamemode() : int
 	{
-		return $this->getValues()[0];
+		return $this->getValues();
 	}
 
 	/**

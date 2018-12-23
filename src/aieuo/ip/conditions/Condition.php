@@ -5,7 +5,7 @@ namespace aieuo\ip\conditions;
 use pocketmine\Player;
 
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class Condition implements ConditionIds
 {
@@ -30,7 +30,7 @@ class Condition implements ConditionIds
 
 	public static function get($id)
 	{
-		return IfFactory::get($id);
+		return ConditionFactory::get($id);
 	}
 
 	public function getId()
@@ -64,7 +64,7 @@ class Condition implements ConditionIds
 		return $this->player;
 	}
 
-	public function setValues(...$values) : self
+	public function setValues($values) : self
 	{
 		$this->values = $values;
 		return $this;

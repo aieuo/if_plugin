@@ -2,10 +2,8 @@
 
 namespace aieuo\ip\conditions;
 
-use pocketmine\math\Vector3;
-
 use aieuo\ip\form\Form;
-use aieui\ip\form\Elements;
+use aieuo\ip\form\Elements;
 
 class Comparison extends Condition
 {
@@ -78,15 +76,15 @@ class Comparison extends Condition
         return $json;
 	}
 
-	public function parse(string $numbers) : Array
+	public function parse(string $numbers)
 	{
-        if(!preg_match("/(\.+)\[ope:([0-9])\](\.+)/", $content, $matches)) return false;
+        if(!preg_match("/(.+)\[ope:([0-9])\](.+)/", $numbers, $matches)) return false;
         $operator = (int)$matches[2];
         $value1 = trim(rtrim($matches[1]));
         if(is_numeric($value1)) $value1 = (int)$value1;
         $value2 = trim(rtrim($matches[3]));
         if(is_numeric($value2)) $value2 = (int)$value2;
-        return [$value1, $value2, $ope];
+        return [$value1, $value2, $operator];
 	}
 
 	public function getValue1()
@@ -106,39 +104,44 @@ class Comparison extends Condition
 
 	public function setNumbers($value1, $value2, int $ope)
 	{
-		$this->setValues($value1, $value2, $ope);
+		$this->setValues([$value1, $value2, $ope]);
 	}
 
 	public function check()
 	{
 		$player = $this->getPlayer();
+		if($this->getValues() === false)
+		{
+			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			return self::ERROR;
+		}
 		$value1 = $this->getValue1();
 		$value2 = $this->getValue2();
 		$result = self::NOT_MATCHED;
         switch ($this->getOperator()){
             case self::EQUAL:
-                if($values1 == $values2) $result = self::MATCHED;
+                if($value1 == $value2) $result = self::MATCHED;
                 break;
             case self::NOT_EQUAL:
-                if($values1 != $values2) $result = self::MATCHED;
+                if($value1 != $value2) $result = self::MATCHED;
                 break;
             case self::GREATER:
-                if($values1 > $values2) $result = self::MATCHED;
+                if($value1 > $value2) $result = self::MATCHED;
                 break;
             case self::LESS:
-                if($values1 < $values2) $result = self::MATCHED;
+                if($value1 < $value2) $result = self::MATCHED;
                 break;
             case self::GREATER_EQUAL:
-                if($values1 >= $values2) $result = self::MATCHED;
+                if($value1 >= $value2) $result = self::MATCHED;
                 break;
             case self::LESS_EQUAL:
-                if($values1 <= $values2) $result = self::MATCHED;
+                if($value1 <= $value2) $result = self::MATCHED;
                 break;
             case self::CONTAINS:
-                if(strpos($values1, $values2) !== false) $result = self::MATCHED;
+                if(strpos($value1, $value2) !== false) $result = self::MATCHED;
                 break;
             case self::NOT_CONTAINS:
-                if(strpos($values1, $values2) === false) $result = self::MATCHED;
+                if(strpos($value1, $value2) === false) $result = self::MATCHED;
                 break;
             default:
                 $player->sendMessage("§c[二つの値を比較する] 正しく入力できていません§r");
