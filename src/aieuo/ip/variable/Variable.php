@@ -26,43 +26,43 @@ class Variable {
 		return $this->type;
 	}
 
-	public function Addition($value){
-		if(is_numeric($this->getValue()) and is_numeric($value)){
-			$result = (int)$this->getValue() + (int)$value;
+	public function Addition(Variable $var){
+		if(is_numeric($this->getValue()) and is_numeric($var->getValue())){
+			$result = (int)$this->getValue() + (int)$var->getValue();
 		}else{
-			$result = $this->getValue().$value;
+			$result = $this->getValue().$var->getValue();
 		}
 		return new Variable("result", $result);
 	}
 
-	public function Subtraction($value){
-		if(is_numeric($this->getValue()) and is_numeric($value)){
-			$result = (int)$this->getValue() - (int)$value;
+	public function Subtraction(Variable $var){
+		if(is_numeric($this->getValue()) and is_numeric($var->getValue())){
+			$result = (int)$this->getValue() - (int)$var->getValue();
 		}else{
-			$result = str_replace($value, "", $this->getValue());
+			$result = str_replace($var->getValue(), "", $this->getValue());
 		}
 		return new Variable("result", $result);
 	}
 
-	public function Multiplication($value){
-		if(is_numeric($this->getValue()) and is_numeric($value)){
-			$result = (int)$this->getValue() * (int)$value;
+	public function Multiplication(Variable $var){
+		if(is_numeric($this->getValue()) and is_numeric($var->getValue())){
+			$result = (int)$this->getValue() * (int)$var->getValue();
 		}elseif(is_numeric($this->getValue())){
-			$result = str_repeat($value, abs((int)$this->getValue()));
-		}elseif(is_numeric($value)){
-			$result = str_repeat($this->getValue(), abs((int)$value));
+			$result = str_repeat($var->getValue(), abs((int)$this->getValue()));
+		}elseif(is_numeric($var->getValue())){
+			$result = str_repeat($this->getValue(), abs((int)$var->getValue()));
 		}else{
 			$result = "§c掛け算できません";
 		}
 		return new Variable("result", $result);
 	}
 
-	public function Division($value){
-		if(is_numeric($this->getValue()) and is_numeric($value)){
-			if((int)$value == 0){
+	public function Division(Variable $var){
+		if(is_numeric($this->getValue()) and is_numeric($var->getValue())){
+			if((int)$var->getValue() == 0){
 				$result = "§c0で割れません";
 			}else{
-				$result = (int)$this->getValue() / (int)$value;
+				$result = (int)$this->getValue() / (int)$var->getValue();
 			}
 		}else{
 			$result = "§c割り算できません";
@@ -70,9 +70,9 @@ class Variable {
 		return new Variable("result", $result);
 	}
 
-	public function Modulo($value){
-		if(is_numeric($this->getValue()) and is_numeric($value)){
-			$result = (int)$this->getValue() % (int)$value;
+	public function Modulo(Variable $var){
+		if(is_numeric($this->getValue()) and is_numeric($var->getValue())){
+			$result = (int)$this->getValue() % (int)$var->getValue();
 		}else{
 			$result = "§c数字ではありません";
 		}
