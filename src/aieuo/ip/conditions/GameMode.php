@@ -11,7 +11,7 @@ class GameMode extends Condition
 {
 	public $id = self::GAMEMODE;
 
-	public function __construct($player = null, int $gamemode = 0)
+	public function __construct($player = null, $gamemode = false)
 	{
 		parent::__construct($player);
 		$this->setValues($gamemode);
@@ -27,45 +27,57 @@ class GameMode extends Condition
 		return "プレーヤーのゲームモードが§7<gamemode>§fだったら";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
-	{
-		$gamemode = $this->parse($defaults);
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getDropdown("<gamemode>\nゲームモードを選択して下さい", ["サバイバル", "クリエイティブ", "アドベンチャー", "スペクテイター"], $gamemode),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
-	}
-
-	public function parse(string $gamemode) : int
-	{
-		$intGamemode = 	Server::getInstance()->getGamemodeFromString($gamemode);
-		return $intGamemode;
-	}
-
-	public function getGamemode() : int
+	public function getGamemode()
 	{
 		return $this->getValues();
 	}
 
-	/**
-	 * @param int $gamemode
-	 */
 	public function setGamemode(int $gamemode)
 	{
 		$this->setValues($gamemode);
 	}
 
+	public function parse(string $gamemode)
+	{
+		$intGamemode = Server::getInstance()->getGamemodeFromString($gamemode);
+		if($intGamemode === -1) return false;
+		return $intGamemode;
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();
-        return $player->getGamemode() == $this->getGamemode() ? self::MATCHED : self::NOT_MATCHED;
+		$gamemode = $this->getGamemode();
+		if($gamemode === false)
+		{
+			$player->sendMessage("§c[".$this->getName()."] ゲームモードが見つかりません");
+			return self::ERROR;
+		}
+        return $player->getGamemode() === $gamemode ? self::MATCHED : self::NOT_MATCHED;
+	}
+
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		if($default === "")
+		{
+			$gamemode = 0;
+		}
+		elseif(($gamemode = $this->parse($default)) === false)
+		{
+			$mes .= "§cゲームモードが見つかりません§f";
+			$gamemode = 0;
+		}
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getDropdown("\n§7<gamemode>§f ゲームモードを選択して下さい", ["サバイバル", "クリエイティブ", "アドベンチャー", "スペクテイター"], $gamemode),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }

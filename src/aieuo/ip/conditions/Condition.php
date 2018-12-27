@@ -77,12 +77,11 @@ class Condition implements ConditionIds
 
 	public function getEditForm(string $defaults = "", string $mes = "")
 	{
-		if($mes !== "") $mes = "\n".$mes;
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
-                Elements::getLabel($this->getDescription().$mes),
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getToggle("削除する")
             ]
         ];
