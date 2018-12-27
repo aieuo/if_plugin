@@ -35,58 +35,6 @@ class Comparison extends Condition
 		return "§7<value1>§rと§7<value2>§rが§7<operator>§rなら";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
-	{
-		$values = $this->parse($defaults);
-		if($values !== false)
-		{
-			$value1 = $values[0];
-			$operator = $values[2];
-			$value2 = $values[1];
-		}
-		else
-		{
-			$mes = "§c正しく入力できていません§f";
-			$value1 = $defaults;
-			$operator = self::EQUAL;
-			$value2 = "";
-		}
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<value1>\n一つ目の値を入力してください", "例) 100", $value1),
-                Elements::getDropdown("<operator>\n選んでください", [
-                	"二つの値が等しい (value1 == value2)",
-                	"二つの値が等しくない (value1 != value2)",
-                	"一つ目の値が二つ目の値より大きい (value1 > value2)",
-                	"一つ目の値が二つ目の値より小さい (value1 < value2)",
-                	"一つ目の値が二つ目の値以上 (value1 >= value2)",
-                	"一つ目の値が二つ目の値以上 (value1 <= value2)",
-                	"一つ目の値の中に二つ目の値が含まれている (value2 in value1)",
-                	"一つ目の値の中に二つ目の値が含まれていない (value2 not in value1)",
-                ], $operator),
-                Elements::getInput("<value2>\n二つ目の値を入力してください", "例) 50", $value2),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
-	}
-
-	public function parse(string $numbers)
-	{
-        if(!preg_match("/(.+)\[ope:([0-9])\](.+)/", $numbers, $matches)) return false;
-        $operator = (int)$matches[2];
-        $value1 = trim(rtrim($matches[1]));
-        if(is_numeric($value1)) $value1 = (int)$value1;
-        $value2 = trim(rtrim($matches[3]));
-        if(is_numeric($value2)) $value2 = (int)$value2;
-        return [$value1, $value2, $operator];
-	}
-
 	public function getValue1()
 	{
 		return $this->getValues()[0];
@@ -105,6 +53,17 @@ class Comparison extends Condition
 	public function setNumbers($value1, $value2, int $ope)
 	{
 		$this->setValues([$value1, $value2, $ope]);
+	}
+
+	public function parse(string $numbers)
+	{
+        if(!preg_match("/(.+)\[ope:([0-9])\](.+)/", $numbers, $matches)) return false;
+        $operator = (int)$matches[2];
+        $value1 = trim(rtrim($matches[1]));
+        if(is_numeric($value1)) $value1 = (int)$value1;
+        $value2 = trim(rtrim($matches[3]));
+        if(is_numeric($value2)) $value2 = (int)$value2;
+        return [$value1, $value2, $operator];
 	}
 
 	public function check()
@@ -148,5 +107,46 @@ class Comparison extends Condition
                 break;
         }
         return $result;
+	}
+
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		$values = $this->parse($default);
+		$value1 = $default;
+		$operator = self::EQUAL;
+		$value2 = "";
+		if($values !== false)
+		{
+			$value1 = $values[0];
+			$operator = $values[2];
+			$value2 = $values[1];
+		}
+		elseif($default !== "")
+		{
+			$mes .= "§c正しく入力できていません§f";
+		}
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<value1>§f 一つ目の値を入力してください", "例) 100", $value1),
+                Elements::getDropdown("\n§7<operator>§f 選んでください", [
+                	"二つの値が等しい (value1 == value2)",
+                	"二つの値が等しくない (value1 != value2)",
+                	"一つ目の値が二つ目の値より大きい (value1 > value2)",
+                	"一つ目の値が二つ目の値より小さい (value1 < value2)",
+                	"一つ目の値が二つ目の値以上 (value1 >= value2)",
+                	"一つ目の値が二つ目の値以上 (value1 <= value2)",
+                	"一つ目の値の中に二つ目の値が含まれている (value2 in value1)",
+                	"一つ目の値の中に二つ目の値が含まれていない (value2 not in value1)",
+                ], $operator),
+                Elements::getInput("\n§7<value2>§f 二つ目の値を入力してください", "例) 50", $value2),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }

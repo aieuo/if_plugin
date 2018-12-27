@@ -17,4 +17,6 @@ interface ConditionIds {
     const IN_AREA = 11;
     const RANDOM_NUMBER = 12;
     const EXISTS_VARIABLE = 13;
+    const LESSMONEY = 14;
+    const CAN_ADD_ITEM = 15;
 }

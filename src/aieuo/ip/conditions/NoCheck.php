@@ -18,6 +18,6 @@ class NoCheck extends Condition
 
 	public function check()
 	{
-		return self::MATCHED;
+		return self::ERROR;
 	}
 }

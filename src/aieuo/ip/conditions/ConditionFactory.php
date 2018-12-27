@@ -11,9 +11,11 @@ class ConditionFactory
 		self::register(new NoCheck());
 		self::register(new TakeMoney());
 		self::register(new OverMoney());
+		self::register(new LessMoney());
 		self::register(new InHand());
 		self::register(new ExistsItem());
 		self::register(new RemoveItem());
+		self::register(new CanAddItem());
 		self::register(new IsOp());
 		self::register(new IsSneaking());
 		self::register(new IsFlying());
