@@ -12,7 +12,7 @@ class AddVariable extends Process
 {
 	public $id = self::ADD_VARIABLE;
 
-	public function __construct($player = null, $variable = null)
+	public function __construct($player = null, $variable = false)
 	{
 		parent::__construct($player);
 		$this->setValues($variable);
@@ -28,7 +28,7 @@ class AddVariable extends Process
 		"§7<name>§rという名前で§7<value>§rという値の変数を追加する";
 	}
 
-	public function getVariable() :?Variable
+	public function getVariable()
 	{
 		return $this->getValues();
 	}
@@ -57,28 +57,28 @@ class AddVariable extends Process
         ifPlugin::getInstance()->getVariableHelper()->add($variable);
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
+
+	public function getEditForm(string $default = "", string $mes = "")
 	{
-		$var = $this->parse($defaults);
-		if($var === false)
-		{
-			$name = $defaults;
-			$value = "";
-			$mes = "§c正しく入力できていません§f";
-		}
-		else
+		$var = $this->parse($default);
+		$name = $default;
+		$value = "";
+		if($var instanceof Variable)
 		{
 			$name = $var->getName();
 			$value = $var->getValue();
 		}
-		if($mes !== "") $mes = "\n".$mes;
+		elseif($default !== "")
+		{
+			$mes .= "§c正しく入力できていません§f";
+		}
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<name>\n変数の名前を入力してください", "例) aieuo", $name),
-                Elements::getInput("<value>\n変数の値を入力してください", "例) 1000", $value),
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<name>§f 変数の名前を入力してください", "例) aieuo", $name),
+                Elements::getInput("\n§7<value>§f 変数の値を入力してください", "例) 1000", $value),
                 Elements::getToggle("削除する")
             ]
         ];

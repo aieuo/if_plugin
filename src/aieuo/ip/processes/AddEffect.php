@@ -28,49 +28,7 @@ class AddEffect extends Process
 		return "プレイヤーにidが§7<id>§fで強さが§7<power>§rのエフェクトを§7<time>§r秒間与える";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
-	{
-		$effect = $this->parse($defaults);
-		$id = $defaults;
-		$power = "";
-		$time = "";
-		if($effect instanceof EffectInstance)
-		{
-			$id = $effect->getId();
-			$power = $effect->getAmplifier();
-			$time = $effect->getDuration() / 20;
-		}
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<id>\nエフェクトの名前かidを入力してください", "例) 1", $id),
-                Elements::getInput("<power>\nエフェクトの強さを入力してください", "例) 5", $power),
-                Elements::getInput("<time>\nエフェクトを与える時間を入力してください", "例) 5", $time),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
-	}
-
-	public function parse(string $id)
-	{
-        $args = explode(",", $content);
-        if(!isset($args[1]) or (int)$args[1] <= 0) $args[1] = 1;
-        if(!isset($args[2]) or (float)$args[2] <= 0) $args[2] = 30;
-		$effect = Effect::getEffectByName($args[0]);
-        if($effect === null)
-        {
-            $effect = Effect::getEffect((int)$args[0]);
-        }
-        if($effect === null) return false;
-		return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
-	}
-
-	public function getEffect() : ?EffectInstance
+	public function getEffect()
 	{
 		return $this->getValues();
 	}
@@ -80,15 +38,60 @@ class AddEffect extends Process
 		$this->setValues($effect);
 	}
 
+	public function parse(string $content)
+	{
+        $args = explode(",", $content);
+        if(!isset($args[1]) or (int)$args[1] <= 0) $args[1] = 1;
+        if(!isset($args[2]) or (float)$args[2] <= 0) $args[2] = 30;
+		$effect = Effect::getEffectByName($args[0]);
+        if($effect === null) $effect = Effect::getEffect((int)$args[0]);
+        if($effect === null) return false;
+		return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();
 		$effect = $this->getEffect();
 		if(!($effect instanceof EffectInstance))
 		{
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			if($effect === null) $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			if($effect === false) $player->sendMessage("§c[".$this->getName()."] エフェクトが見つかりません");
 			return;
 		}
 		$player->addEffect($effect);
+	}
+
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		$effect = $this->parse($default);
+		$id = $default;
+		$power = "";
+		$time = "";
+		if($effect instanceof EffectInstance)
+		{
+			$id = $effect->getId();
+			$power = $effect->getAmplifier();
+			$time = $effect->getDuration() / 20;
+		}
+		elseif($default !== "")
+		{
+			if($effect === null)$mes .= "§c正しく入力できていません§f";
+			if($effect === false)$mes .= "§cエフェクトが見つかりません§f";
+		}
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<id>§f エフェクトの名前かidを入力してください", "例) 1", $id),
+                Elements::getInput("\n§7<power>§f エフェクトの強さを入力してください", "例) 5", $power),
+                Elements::getInput("\n§7<time>§f エフェクトを与える時間を入力してください", "例) 5", $time),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }

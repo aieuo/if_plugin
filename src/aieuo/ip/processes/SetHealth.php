@@ -11,7 +11,7 @@ class SetHealth extends Process
 {
 	public $id = self::SET_HEALTH;
 
-	public function __construct($player = null, $health = null)
+	public function __construct($player = null, $health = 0)
 	{
 		parent::__construct($player);
 		$this->setValues($health);
@@ -27,36 +27,7 @@ class SetHealth extends Process
 		return "プレイヤーの体力を§7<health>§fにする";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
-	{
-		$health = $this->parse($defaults);
-		if($health === false)
-		{
-			$mes = "§c体力は1以上にしてください§f";
-			$health = $defaults;
-		}
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<health>\n体力を入力してください", "例) 10", $health),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
-	}
-
-	public function parse(string $content)
-	{
-        $health = (int)$content;
-        if($health <= 0) return false;
-    	return $health;
-	}
-
-	public function getHealth() : ?int
+	public function getHealth()
 	{
 		return $this->getValues();
 	}
@@ -64,6 +35,13 @@ class SetHealth extends Process
 	public function setHealth(int $health)
 	{
 		$this->setValues($health);
+	}
+
+	public function parse(string $content)
+	{
+        $health = (int)$content;
+        if($health <= 0) return false;
+    	return $health;
 	}
 
 	public function execute()
@@ -76,5 +54,26 @@ class SetHealth extends Process
 			return;
 		}
 		$player->setHealth($health);
+	}
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		$health = $this->parse($default);
+		if($health === false)
+		{
+			$mes = "§c体力は1以上にしてください§f";
+			$health = $default;
+		}
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<health>§f 体力を入力してください", "例) 10", $health),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }
