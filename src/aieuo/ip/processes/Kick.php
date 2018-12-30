@@ -9,10 +9,10 @@ class Kick extends Process
 {
 	public $id = self::KICK;
 
-	public function __construct($player = null, $health = null)
+	public function __construct($player = null, $reason = "")
 	{
 		parent::__construct($player);
-		$this->setValues($health);
+		$this->setValues($reason);
 	}
 
 	public function getName()
@@ -25,23 +25,7 @@ class Kick extends Process
 		return "プレイヤーを§7<reason>§fでキックする";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
-	{
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<reason>\n理由を入力してください", "例) 悪いことをしたから", $defaults),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
-	}
-
-	public function getReason() : string
+	public function getReason()
 	{
 		return $this->getValues();
 	}
@@ -56,5 +40,20 @@ class Kick extends Process
 		$player = $this->getPlayer();
 		$reason = $this->getReason();
 		$player->kick($reason);
+	}
+
+	public function getEditForm(string $defaults = "", string $mes = "")
+	{
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<reason>§f 理由を入力してください", "例) 悪いことをしたから", $defaults),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }

@@ -28,30 +28,14 @@ class AddEnchantment extends Process
 		return "手に持ってるアイテムにidが§7<id>§fで強さが§7<power>§rのエンチャントを追加する";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
+	public function getEnchantment()
 	{
-		$enchant = $this->parse($defaults);
-		$id = $defaults;
-		$power = "";
-		if($enchant instanceof EnchantmentInstance)
-		{
-			$id = $enchant->getId();
-			$power = $enchant->getLevel();
-			$mes = "§cエンチャントが見つかりません§f";
-		}
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<id>\nエンチャントの名前かidを入力してください", "例) 1", $id),
-                Elements::getInput("<power>\nアイテムの数を入力してください", "例) 5", $name),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
+		return $this->getValues();
+	}
+
+	public function setEnchantment(EnchantmentInstance $enchant)
+	{
+		$this->setValues($enchant);
 	}
 
 	public function parse(string $content)
@@ -70,27 +54,48 @@ class AddEnchantment extends Process
         return new EnchantmentInstance($enchantment, (int)$args[1]);
 	}
 
-	public function getEnchantment() : ?EnchantmentInstance
-	{
-		return $this->getValues();
-	}
-
-	public function setEnchantment(EnchantmentInstance $enchant)
-	{
-		$this->setValues($enchant);
-	}
-
 	public function execute()
 	{
 		$player = $this->getPlayer();
 		$enchant = $this->getEnchantment();
 		if(!($enchant instanceof EnchantmentInstance))
 		{
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			if($enchant === null) $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			if($enchant === false) $player->sendMessage("§c[".$this->getName()."] エンチャントが見つかりません");
 			return;
 		}
 		$item = $player->getInventory()->getItemInHand();
         $item->addEnchantment($enchant);
 		$player->getInventory()->setItemInHand($item);
+	}
+
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		$enchant = $this->parse($default);
+		$id = $default;
+		$power = "";
+		if($enchant instanceof EnchantmentInstance)
+		{
+			$id = $enchant->getId();
+			$power = $enchant->getLevel();
+		}
+		elseif($default !== "")
+		{
+			if($enchant === null) $mes .= "§c正しく入力できていません§f";
+			if($enchant === false) $mes .= "§cエンチャントが見つかりません§f";
+		}
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<id>§f エンチャントの名前かidを入力してください", "例) 1", $id),
+                Elements::getInput("\n§7<power>§f エンチャントのレベルを入力してください", "例) 5", $name),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }

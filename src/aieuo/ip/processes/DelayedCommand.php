@@ -49,28 +49,44 @@ class DelayedCommand extends Process
 	    return [$matches[2], (int)$matches[1]];
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
+	public function excute()
 	{
-		if($mes !== "") $mes = "\n".$mes;
+		$player = $this->getPlayer();
+		if($this->getValues() === false)
+		{
+			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			return;
+		}
+		$time = $this->getTime();
+		$command = $this->getCommand();
+        ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask($player, $command), $time*20);
+	}
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		$commands = $this->parse($default);
+		$command = $default;
+		$time = "";
+		if($commands !== false)
+		{
+			$command = $commands[0];
+			$time = $commands[1];
+		}
+		elseif($default !== "")
+		{
+			$mes .= "§c正しく入力できていません§f";
+		}
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<command>\n実行するコマンドを入力してください", "例) help", $defaults),
-                Elements::getInput("<time>\n遅らせる時間を入力してください", "例) 10", $defaults),
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<command>§f 実行するコマンドを入力してください", "例) help", $command),
+                Elements::getInput("\n§7<time>§f 遅らせる時間を入力してください", "例) 10", $time),
                 Elements::getToggle("削除する")
             ]
         ];
         $json = Form::encodeJson($data);
         return $json;
-	}
-
-	public function excute()
-	{
-		$player = $this->getPlayer();
-		$time = $this->getTime();
-		$command = $this->getCommand();
-        ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask($player, $command), $time*20);
 	}
 }

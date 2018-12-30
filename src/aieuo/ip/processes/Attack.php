@@ -11,10 +11,10 @@ class Attack extends Process
 {
 	public $id = self::ATTACK;
 
-	public function __construct($player = null, $health = null)
+	public function __construct($player = null, $attack = 0)
 	{
 		parent::__construct($player);
-		$this->setValues($health);
+		$this->setValues($attack);
 	}
 
 	public function getName()
@@ -27,36 +27,7 @@ class Attack extends Process
 		return "プレイヤーにダメージを§7<damage>§f与える";
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
-	{
-		$damage = $this->parse($defaults);
-		if($damage === false)
-		{
-			$mes = "§c攻撃力は1以上にしてください§f";
-			$damage = $defaults;
-		}
-		if($mes !== "") $mes = "\n".$mes;
-        $data = [
-            "type" => "custom_form",
-            "title" => $this->getName(),
-            "content" => [
-                Elements::getLabel($this->getDescription().$mes),
-                Elements::getInput("<damage>\n攻撃力を入力してください", "例) 5", $damage),
-                Elements::getToggle("削除する")
-            ]
-        ];
-        $json = Form::encodeJson($data);
-        return $json;
-	}
-
-	public function parse(string $content)
-	{
-		$damage = (float)$content;
-		if($damage <= 0) return false;
-		return $damage;
-	}
-
-	public function getDamage() : ?float
+	public function getDamage()
 	{
 		return $this->getValues();
 	}
@@ -66,16 +37,44 @@ class Attack extends Process
 		$this->setValues($damage);
 	}
 
+	public function parse(string $content)
+	{
+		$damage = (float)$content;
+		if($damage <= 0) return false;
+		return $damage;
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();
 		$damage = $this->getDamage();
 		if($damage === false)
 		{
-			$player->sendMessage("§c[".$this->getName()."] 体力は1以上にしてください");
+			$player->sendMessage("§c[".$this->getName()."] 攻撃力は1以上にしてください");
 			return;
 		}
 		$event = new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $damage);
 		$player->attack($event);
+	}
+
+	public function getEditForm(string $default = "", string $mes = "")
+	{
+		$damage = $this->parse($default);
+		if($damage === false)
+		{
+			if($default !== "") $mes .= "§c攻撃力は1以上にしてください§f";
+			$damage = $default;
+		}
+        $data = [
+            "type" => "custom_form",
+            "title" => $this->getName(),
+            "content" => [
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("\n§7<damage>§f 攻撃力を入力してください", "例) 5", $damage),
+                Elements::getToggle("削除する")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
 	}
 }
