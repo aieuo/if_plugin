@@ -34,6 +34,7 @@ use aieuo\ip\task\SaveTask;
 use aieuo\ip\variable\VariableHelper;
 use aieuo\ip\conditions\ConditionFactory;
 
+use aieuo\ip\processes\ProcessFactory;
 class ifPlugin extends PluginBase implements Listener{
 
     const IF_TAKEMONEY = 0;
@@ -112,6 +113,7 @@ class ifPlugin extends PluginBase implements Listener{
         self::$instance = $this;
 
         ConditionFactory::init();
+        ProcessFactory::init();
     }
 
     public function onDisable(){

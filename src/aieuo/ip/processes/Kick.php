@@ -42,14 +42,14 @@ class Kick extends Process
 		$player->kick($reason);
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
+	public function getEditForm(string $default = "", string $mes = "")
 	{
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<reason>§f 理由を入力してください", "例) 悪いことをしたから", $defaults),
+                Elements::getInput("\n§7<reason>§f 理由を入力してください", "例) 悪いことをしたから", $default),
                 Elements::getToggle("削除する")
             ]
         ];

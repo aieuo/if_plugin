@@ -71,7 +71,7 @@ class Process implements ProcessIds
 		return $this->values;
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
+	public function getEditForm(string $default = "", string $mes = "")
 	{
 		if($mes !== "") $mes = "\n".$mes;
         $data = [
