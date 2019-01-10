@@ -75,7 +75,7 @@ class Condition implements ConditionIds
 		return $this->values;
 	}
 
-	public function getEditForm(string $defaults = "", string $mes = "")
+	public function getEditForm(string $default = "", string $mes = "")
 	{
         $data = [
             "type" => "custom_form",

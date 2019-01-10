@@ -32,4 +32,5 @@ interface ProcessIds {
     const DELAYED_COMMAND = 126;
     const CALCULATION = 127;
     const ADD_VARIABLE = 128;
+    const SET_SCALE = 129;
 }

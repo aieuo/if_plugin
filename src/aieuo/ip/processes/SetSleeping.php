@@ -7,7 +7,7 @@ use pocketmine\level\Position;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SetSleeping extends Process
+class SetSleeping extends TypePosition
 {
 	public $id = self::SET_SLEEPING;
 
