@@ -21,7 +21,7 @@ class SendVoiceMessage extends TypeMessage
 		"音声付きのメッセージ§7<message>§rを送る";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
         $text = new TranslationContainer($this->getMessage());

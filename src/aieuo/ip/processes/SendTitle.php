@@ -7,7 +7,7 @@ use aieuo\ip\form\Elements;
 
 class SendTitle extends TypeMessage
 {
-	public $id = self::SENDTIP;
+	public $id = self::SENDTITLE;
 
 	public function getName()
 	{
@@ -19,7 +19,7 @@ class SendTitle extends TypeMessage
 		"title欄にメッセージ§7<message>§rを送る";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
         $player->addTitle($this->getMessage(), "", 20, 100, 20);

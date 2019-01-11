@@ -21,7 +21,7 @@ class Teleport extends TypePosition
 		"§7<pos>§rにテレポートする";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
 		$pos = $this->getPosition();

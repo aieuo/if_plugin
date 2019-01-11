@@ -19,7 +19,7 @@ class SendMessage extends TypeMessage
 		"チャット欄にメッセージ§7<message>§rを送る";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
 		$player->sendMessage($this->getMessage());

@@ -217,8 +217,8 @@ class Messages {
                 break;
             case ifPlugin::REMOVE_ITEM:
                 $ids = explode(":", $value);
-                if(!isset($ids[1]))$ids[1] == 0;
-                if(!isset($ids[2]))$ids[2] == "全て";
+                if(!isset($ids[1]))$ids[1] = 0;
+                if(!isset($ids[2]))$ids[2] = "全て";
                 $message = "インベントリから($ids[0]:$ids[1] x$ids[2])を削除する";
                 break;
             case ifPlugin::SET_IMMOBILE:

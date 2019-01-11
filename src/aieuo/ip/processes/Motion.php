@@ -27,7 +27,7 @@ class Motion extends TypePosition
 		return "プレイヤーを§7<x> <y> <z>§rブロック動かす";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
 		$pos = $this->getPosition();

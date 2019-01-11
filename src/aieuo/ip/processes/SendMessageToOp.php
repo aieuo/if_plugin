@@ -2,6 +2,8 @@
 
 namespace aieuo\ip\processes;
 
+use pocketmine\Server;
+
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
@@ -19,9 +21,9 @@ class SendMessageToOp extends TypeMessage
 		"opだけにメッセージ§7<message>§rを送る";
 	}
 
-	public function excute()
+	public function execute()
 	{
-    	$players = $player->getServer()->getOnlinePlayers();
+    	$players = Server::getInstance()->getOnlinePlayers();
     	foreach ($players as $player) {
     		if($player->isOp()){
     			$player->sendMessage($this->getMessage());

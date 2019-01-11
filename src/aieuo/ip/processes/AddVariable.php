@@ -38,17 +38,17 @@ class AddVariable extends Process
 		$this->setValues($variable);
 	}
 
-	public function parse(string $default)
+	public function parse(string $content)
 	{
         $datas = explode(",", $content);
         if(!isset($datas[1])) return false;
         return new Variable($datas[0], $datas[1]);
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
-		$varibale = $this->getVariable();
+		$variable = $this->getVariable();
 		if($variable === false)
 		{
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");

@@ -19,7 +19,7 @@ class SendTip extends TypeMessage
 		"tip欄にメッセージ§7<message>§rを送る";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
 		$player->sendTip($this->getMessage());

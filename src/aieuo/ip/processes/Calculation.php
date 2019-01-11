@@ -77,16 +77,16 @@ class Calculation extends Process
 		$value2 = $this->getValue2();
 		$operator = $this->getOperator();
         switch ($operator){
-            case self::ADD:
+            case self::ADDITION:
                 $result = (new Variable("value1", $value1))->Addition(new Variable("value2", $value2));
                 break;
-            case self::SUB:
+            case self::SUBTRACTION:
                 $result = (new Variable("value1", $value1))->Subtraction(new Variable("value2", $value2));
                 break;
-            case self::MUL:
+            case self::MULTIPLICATION:
                 $result = (new Variable("value1", $value1))->Multiplication(new Variable("value2", $value2));
                 break;
-            case self::DIV:
+            case self::DIVISION:
                 $result = (new Variable("value1", $value1))->Division(new Variable("value2", $value2));
                 break;
             case self::MODULO:
