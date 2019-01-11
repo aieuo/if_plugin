@@ -2,6 +2,9 @@
 
 namespace aieuo\ip\processes;
 
+use aieuo\ip\ifPlugin;
+use aieuo\ip\task\KickTask;
+
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
@@ -39,7 +42,7 @@ class Kick extends Process
 	{
 		$player = $this->getPlayer();
 		$reason = $this->getReason();
-		$player->kick($reason);
+        ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new KickTask($player, $reason), 5);
 	}
 
 	public function getEditForm(string $default = "", string $mes = "")
