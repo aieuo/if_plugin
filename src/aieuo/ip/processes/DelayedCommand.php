@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use aieuio\ip\ifPlugin;
+use aieuo\ip\ifPlugin;
 use aieuo\ip\task\DelayedCommandTask;
 
 use aieuo\ip\form\Form;
@@ -49,7 +49,7 @@ class DelayedCommand extends Process
 	    return [$matches[2], (int)$matches[1]];
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
 		if($this->getValues() === false)

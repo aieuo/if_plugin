@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use pockemine\Server;
+use pocketmine\Server;
 use pocketmine\command\ConsoleCommandSender;
 
 use aieuo\ip\form\Form;
@@ -22,7 +22,7 @@ class CommandConsole extends TypeCommand
 		"コンソールからコマンド§7<command>§rを実行する";
 	}
 
-	public function excute()
+	public function execute()
 	{
         Server::getInstance()->dispatchCommand(new ConsoleCommandSender, $this->getCommand());
 	}

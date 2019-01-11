@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use pockemine\Server;
+use pocketmine\Server;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
@@ -21,7 +21,7 @@ class Command extends TypeCommand
 		"コマンド§7<command>§rを実行する";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
         Server::getInstance()->dispatchCommand($player, $this->getCommand());

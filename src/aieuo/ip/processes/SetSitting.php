@@ -4,7 +4,7 @@ namespace aieuo\ip\processes;
 
 use pocketmine\Server;
 use pocketmine\entity\Entity;
-use pocketmine\math\Position;
+use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 

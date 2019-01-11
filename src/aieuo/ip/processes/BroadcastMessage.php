@@ -21,7 +21,7 @@ class BroadcastMessage extends TypeMessage
 		"全員にメッセージ§7<message>§rを送る";
 	}
 
-	public function excute()
+	public function execute()
 	{
 		$player = $this->getPlayer();
         Server::getInstance()->broadcastMessage($this->getMessage());

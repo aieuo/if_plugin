@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\processes;
 
+use pocketmine\Server;
 use pocketmine\level\Position;
 
 use aieuo\ip\form\Form;
@@ -28,8 +29,8 @@ class TypePosition extends Process
 	public function parse(string $pos)
 	{
 	    if(!preg_match("/\s*([0-9]+\.?[0-9]*)\s*,\s*([0-9]+\.?[0-9]*)\s*,\s*([0-9]+\.?[0-9]*)\s*,?\s*(.*)\s*/", $pos, $matches)) return false;
-	    if(empty($metches[4])) $metches[4] = "world";
-        return new Position((float)$metches[1], (float)$metches[2], (float)$metches[3], Server::getInstance()->getLevelByName($metches[4]));
+	    if(empty($matches[4])) $matches[4] = "world";
+        return new Position((float)$matches[1], (float)$matches[2], (float)$matches[3], Server::getInstance()->getLevelByName($matches[4]));
 	}
 
 	public function getEditForm(string $default = "", string $mes = "")
