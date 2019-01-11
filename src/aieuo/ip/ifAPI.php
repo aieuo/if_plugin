@@ -24,6 +24,7 @@ use aieuo\ip\task\DelayedCommandTask;
 use aieuo\ip\variable\Variable;
 
 use aieuo\ip\conditions\Condition;
+use aieuo\ip\processes\Process;
 
 class ifAPI {
 
@@ -265,232 +266,13 @@ class ifAPI {
         return $eventname;
     }
 
-    public function execute($player, $type, $content, $args = []){
-        $name = $player->getName();
-        switch ($type) {
-            case ifPlugin::DO_NOTHING:
-                break;
-            case ifPlugin::SENDMESSAGE:
-                $player->sendMessage($content);
-                break;
-            case ifPlugin::SENDTIP:
-                $player->sendTip($content);
-                break;
-            case ifPlugin::SENDTITLE:
-                $player->addTitle($content, "", 20, 100, 20);
-                break;
-            case ifPlugin::BROADCASTMESSAGE:
-                $this->getServer()->broadcastMessage($content);
-                break;
-            case ifPlugin::SENDMESSAGE_TO_OP:
-            	$players = $player->getServer()->getOnlinePlayers();
-            	foreach ($players as $op) {
-            		if($op->isOp()){
-            			$op->sendMessage($content);
-            		}
-            	}
-                break;
-            case ifPlugin::SENDVOICEMESSAGE:
-		        $text = new TranslationContainer($content);
-		        $player->sendMessage($text);
-		        break;
-            case ifPlugin::COMMAND:
-                $this->getServer()->dispatchCommand($player, $content);
-                break;
-            case ifPlugin::COMMAND_CONSOLE:
-                $this->getServer()->dispatchCommand(new ConsoleCommandSender, $content);
-                break;
-            case ifPlugin::DELAYED_COMMAND:
-                if(!preg_match("/([0-9]+),(.+)/", $content, $matches)){
-                    $player->sendMessage("§c[遅れてコマンド実行] 書き方が正しくありません");
-                    break;
-                }
-                ifManager::getOwner()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask($player, $matches[2]), (int)$matches[1]*20);
-                break;
-            case ifPlugin::TELEPORT:
-                $pos = explode(",", $content);
-                if(!isset($pos[1]))$pos[1] = 0;
-                if(!isset($pos[2]))$pos[2] = 0;
-                if(!isset($pos[3]))$pos[3] = $player->level->getFolderName();
-                $player->teleport(new Position((int)$pos[0], (int)$pos[1], (int)$pos[2], $this->getServer()->getLevelByName($pos[3])));
-                break;
-            case ifPlugin::MOTION:
-                $pos = explode(",", $content);
-                if(!isset($pos[1]))$pos[1] = 0;
-                if(!isset($pos[2]))$pos[2] = 0;
-                $player->setMotion(new Vector3((float)$pos[0], (float)$pos[1], (float)$pos[2]));
-                break;
-            case ifPlugin::CALCULATION:
-                if(!preg_match("/([^+＋\-\ー*\/%％×÷]+)\[([+＋\-\ー*\/%×÷])\]([^+＋\-\ー*\/%×÷]+)/", $content, $matches)){
-                    $message = "§c[計算する] 正しく入力できていません§f";
-                    break;
-                }
-                $operator = $matches[2];
-                $val1 = rtrim($matches[1]);
-                $val2 = trim($matches[3]);
-                switch ($operator){
-                    case "+":
-                    case "＋":
-                        $val = (new Variable("input", $val1))->Addition($val2);
-                        break;
-                    case "-":
-                    case "ー":
-                        $val = (new Variable("input", $val1))->Subtraction($val2);
-                        break;
-                    case "*":
-                    case "×":
-                        $val = (new Variable("input", $val1))->Multiplication($val2);
-                        break;
-                    case "/":
-                    case "÷":
-                        $val = (new Variable("input", $val1))->Division($val2);
-                        break;
-                    case "%":
-                        $val = (new Variable("input", $val1))->Modulo($val2);
-                        break;
-                    default:
-                        $val = "§cその組み合わせは使用できません 次の中から選んでください[+|-|*|/|%]§r";
-                        break;
-                }
-                ifManager::getOwner()->getVariableHelper()->add($val);
-                break;
-            case ifPlugin::ADD_VARIABLE:
-                $datas = explode(",", $content);
-                if(!isset($datas[1])){
-                    $message = "§c[変数を追加する] 正しく入力できていません§f";
-                    break;
-                }
-                ifManager::getOwner()->getVariableHelper()->add(new Variable($datas[0], $datas[1]));
-                break;
-            case ifPlugin::ADD_ITEM:
-                $ids = explode(":", $content);
-                if(!isset($ids[1]))$ids[1] = 0;
-                if(!isset($ids[2]))$ids[2] = 1;
-                if(!isset($ids[3])){
-                    $player->getInventory()->addItem(Item::get((int)$ids[0], (int)$ids[1], (int)$ids[2]));
-                    break;
-                }
-                $player->getInventory()->addItem(Item::get((int)$ids[0], (int)$ids[1], (int)$ids[2])->setCustomName($ids[3]));
-                break;
-            case ifPlugin::REMOVE_ITEM:
-                $ids = explode(":", $content);
-                if(!isset($ids[1]))$ids[1] == 0;
-                if(isset($ids[2])){
-                    $item = Item::get((int)$ids[0], (int)$ids[1], (int)$ids[2]);
-                    $player->getInventory()->removeItem($item);
-                    break;
-                }
-                $count = 0;
-                foreach ($player->getInventory()->getContents() as $item) {
-                    if($item->getId() == $ids[0] and $item->getDamage() == $ids[1]){
-                        $count += $item->getCount();
-                    }
-                }
-                if($count >= 1){
-                    $player->getInventory()->removeItem(Item::get($ids[0], $ids[1], $count));
-                }
-                break;
-            case ifPlugin::SET_IMMOBILE:
-            	$player->setImmobile();
-            	break;
-            case ifPlugin::UNSET_IMMOBILE:
-            	$player->setImmobile(false);
-            	break;
-            case ifPlugin::ADD_ENCHANTMENT:
-                $args = explode(",", $content);
-                if(!isset($args[1]) or (int)$args[1] <= 0)$args[1] = 1;
-	            if(is_numeric($args[0])){
-		            $enchantment = Enchantment::getEnchantment((int)$args[0]);
-		        }else{
-		            $enchantment = Enchantment::getEnchantmentByName($args[0]);
-		        }
-		        if(!($enchantment instanceof Enchantment)){
-		            $sender->sendMessage("エンチャントが見つかりません");
-		            break;
-		        }
-		        $item = $player->getInventory()->getItemInHand();
-		        $item->addEnchantment(new EnchantmentInstance($enchantment, $args[1]));
-       			$player->getInventory()->setItemInHand($item);
-            	break;
-            case ifPlugin::ADD_EFFECT:
-                $args = explode(",", $content);
-                if(!isset($args[1]) or (int)$args[1] <= 0)$args[1] = 1;
-                if(!isset($args[2]) or (int)$args[2] <= 0)$args[2] = 30;
-        		$effect = Effect::getEffectByName($args[0]);
-		        if($effect === null){
-		            $effect = Effect::getEffect((int)$args[0]);
-		        }
-		        if($effect === null){
-		            $sender->sendMessage("エフェクトが見つかりません");
-		            break;
-		        }
-		        $power = (int)$args[1];
-		        $time = (int)$args[2] * 20;
-				$effect = new EffectInstance($effect, $time, $power, true);
-            	$player->addEffect($effect);
-            	break;
-            case ifPlugin::SET_NAMETAG:
-            	$player->setNametag($content);
-            	$player->setDisplayName($content);
-            	break;
-            case ifPlugin::SET_SLEEPING:
-                $pos = explode(",", $content);
-                if(!isset($pos[1]))$pos[1] = 0;
-                if(!isset($pos[2]))$pos[2] = 0;
-		    	$pos = new Vector3((int)$pos[0], (int)$pos[1], (int)$pos[2]);
-		    	$player->sleepOn($pos);
-            	break;
-            case ifPlugin::SET_SITTING:
-                $pos = explode(",", $content);
-                if(!isset($pos[1]))$pos[1] = 0;
-                if(!isset($pos[2]))$pos[2] = 0;
-                if(!isset($pos[3]))$pos[3] = $player->level;
-		        $pk = new AddEntityPacket();
-		        $pk->entityRuntimeId = Entity::$entityCount++;
-		        $pk->type = 84;
-		        $pk->position = new Position((int)$pos[0], (int)$pos[1], (int)$pos[2], $this->getServer()->getLevelByName($pos[3]));
-    		        $link = new EntityLink();
-    				$link->riddenId = $pk->entityRuntimeId;
-    				$link->riderId = $player->getId();
-    				$link->type = 1;
-		        $pk->links = [$link];
-		        $pk->metadata = [
-					Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_INVISIBLE]
-				];
-		        $player->dataPacket($pk);
-		        break;
-            case ifPlugin::SET_GAMEMODE:
-            	$gamemode = Server::getGamemodeFromString($content);
-            	if($gamemode === -1){
-            		$player->sendMessage("ゲームモードが見つかりません");
-            		break;
-            	}
-            	$player->setGamemode($gamemode);
-            	break;
-            case ifPlugin::SET_HEALTH:
-            	$health = (int)$content;
-            	if($health <= 0)$health = 1;
-            	$player->setHealth($health);
-            	break;
-            case ifPlugin::SET_MAXHEALTH:
-            	$health = (int)$content;
-            	if($health <= 0)$health = 1;
-            	$player->setMaxHealth($health);
-            	break;
-		    case ifPlugin::ATTACK:
-				$data = new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, (int)$content);
-				$player->attack($data);
-				break;
-			case ifPlugin::KICK:
-		    	$player->kick($content);
-		    	break;
-        }
-    }
-
     public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args = []){
         $stat = "2";
         foreach($datas1 as $datas){
-            $result = ($co = Condition::get($datas["id"]))->setPlayer($player)->setValues($co->parse($this->replace($datas["content"])))->check();
+            $result = ($co = Condition::get($datas["id"]))
+                        ->setPlayer($player)
+                        ->setValues($co->parse($this->replace($datas["content"])))
+                        ->check();
             if($result === Condition::NOT_FOUND){
                 $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
                 return false;
@@ -501,7 +283,10 @@ class ifAPI {
             }
         }
         foreach (${"datas".$stat} as $datas) {
-            $this->execute($player, $datas["id"], $this->replace($datas["content"]), $args);
+            ($pro = Process::get($datas["id"]))
+              ->setPlayer($player)
+              ->setValues($pro->parse($this->replace($datas["content"])))
+              ->execute();
         }
         return true;
     }
