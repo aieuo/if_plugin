@@ -33,6 +33,14 @@ class TypePosition extends Process
         return new Position((float)$matches[1], (float)$matches[2], (float)$matches[3], Server::getInstance()->getLevelByName($matches[4]));
 	}
 
+	public function toString() : string
+	{
+		$pos = $this->getPosition();
+		if(!($pos instanceof Position)) return (string)$pos;
+		$str = $pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName();
+		return $str;
+	}
+
 	public function getEditForm(string $default = "", string $mes = "")
 	{
 		$pos = $this->parse($default);

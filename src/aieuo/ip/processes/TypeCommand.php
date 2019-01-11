@@ -23,6 +23,11 @@ class TypeCommand extends Process
 		$this->setValues($command);
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getCommand();
+	}
+
 	public function getEditForm(string $default = "", string $mes = "")
 	{
 		if($default[0] === "/") $mes .= "§e一つ目の/は取ってください§f";

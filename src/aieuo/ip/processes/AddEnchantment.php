@@ -54,6 +54,14 @@ class AddEnchantment extends Process
         return new EnchantmentInstance($enchantment, (int)$args[1]);
 	}
 
+	public function toString() : string
+	{
+		$enchant = $this->getEnchantment();
+		if(!($enchant instanceof EnchantmentInstance)) return (string)$enchant;
+		$str = $enchant->getId().",".$enchant->getLevel();
+		return $str;
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

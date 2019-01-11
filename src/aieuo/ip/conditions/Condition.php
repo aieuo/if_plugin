@@ -53,6 +53,10 @@ class Condition implements ConditionIds
 		return $str;
 	}
 
+	public function toString() : string {
+		return "";
+	}
+
 	public function setPlayer(Player $player) : self
 	{
 		$this->player = $player;

@@ -53,6 +53,12 @@ class RandomNumber extends Condition
         return [$min, $max, (int)$matches[3]];
 	}
 
+	public function toString() : string
+	{
+		$str = $this->getMin().",".$this->getMax().",".$this->getCheck();
+		return $str;
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();
