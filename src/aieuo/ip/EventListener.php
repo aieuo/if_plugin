@@ -38,6 +38,7 @@ class EventListener implements Listener {
     public function commandProcess(PlayerCommandPreprocessEvent $event){
         $this->onEvent($event, "PlayerCommandPreprocessEvent");
 
+        if($event->isCancelled()) return;
         $manager = $this->getOwner()->getCommandManager();
         if($manager->isAdded(mb_substr($event->getMessage(), 1))){
             $datas = $manager->get(mb_substr($event->getMessage(), 1));
