@@ -31,6 +31,12 @@ class TypeMoney extends Condition
 		return $amount;
 	}
 
+	public function toString() : string
+	{
+		$str = (string)$this->getAmount();
+		return $str;
+	}
+
 	public function getEditForm(string $default = "", string $mes = "")
 	{
 		$money = $this->parse($default);

@@ -44,6 +44,11 @@ class SetGamemode extends Process
 		return $gamemode;
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getGamemode();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

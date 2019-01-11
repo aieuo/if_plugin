@@ -42,6 +42,11 @@ class SetScale extends Process
         return $scale;
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getScale();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

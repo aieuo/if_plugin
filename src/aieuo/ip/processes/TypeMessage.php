@@ -23,6 +23,11 @@ class TypeMessage extends Process
 		$this->setValues($message);
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getMessage();
+	}
+
 	public function getEditForm(string $default = "", string $mes = "")
 	{
         $data = [

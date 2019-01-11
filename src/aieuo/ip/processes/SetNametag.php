@@ -35,6 +35,11 @@ class SetNametag extends Process
 		$this->setValues($name);
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getChangeName();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

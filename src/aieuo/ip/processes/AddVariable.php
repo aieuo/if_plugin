@@ -45,6 +45,11 @@ class AddVariable extends Process
         return new Variable($datas[0], $datas[1]);
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getVariable();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

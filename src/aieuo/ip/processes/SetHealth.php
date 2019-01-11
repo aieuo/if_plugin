@@ -44,6 +44,11 @@ class SetHealth extends Process
     	return $health;
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getHealth();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

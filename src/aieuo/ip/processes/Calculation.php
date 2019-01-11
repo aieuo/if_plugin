@@ -65,6 +65,12 @@ class Calculation extends Process
         return [$value1, $value2, $operator];
 	}
 
+	public function toString() : string
+	{
+		$str = $this->getValue1()."[ope:".$this->getOperator()."]".$this->getValue2();
+		return $str;
+	}
+
 	public function execute()
 	{
 		if($this->getValues() === false)

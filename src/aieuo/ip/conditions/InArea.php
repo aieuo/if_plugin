@@ -51,6 +51,18 @@ class InArea extends Condition
         return $areas;
 	}
 
+	public function toString() : string
+	{
+		$str = "";
+		$areas = $this->getArea();
+		if($areas === false) return $str;
+        foreach ($areas as $axis => $area)
+        {
+        	$str .= $axis."(".$area[0].",".$area[1].")";
+        }
+        return $str;
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

@@ -44,6 +44,11 @@ class Attack extends Process
 		return $damage;
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getDamage();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

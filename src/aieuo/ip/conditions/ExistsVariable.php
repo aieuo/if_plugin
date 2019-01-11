@@ -37,6 +37,11 @@ class ExistsVariable extends Condition
 		$this->setValues($variable);
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getVariableName();
+	}
+
 	public function check()
 	{
 		if(ifPlugin::getInstance()->getVariableHelper()->exists($this->getVariableName())) return self::MATCHED;

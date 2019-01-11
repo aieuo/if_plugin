@@ -49,6 +49,14 @@ class AddEffect extends Process
 		return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
 	}
 
+	public function toString() : string
+	{
+		$effect = $this->getEffect();
+		if(!($effect instanceof EffectInstance)) return (string)$effect;
+		$str = $effect->getId().",".$effect->getAmplifier().",".($effect->getDuration() * 20);
+		return $str;
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();
@@ -73,7 +81,7 @@ class AddEffect extends Process
 		{
 			$id = $effect->getId();
 			$power = $effect->getAmplifier();
-			$time = $effect->getDuration() / 20;
+			$time = $effect->getDuration() * 20;
 		}
 		elseif($default !== "")
 		{

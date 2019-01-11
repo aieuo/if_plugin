@@ -38,6 +38,11 @@ class Kick extends Process
 		$this->setValues($reason);
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getReason();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

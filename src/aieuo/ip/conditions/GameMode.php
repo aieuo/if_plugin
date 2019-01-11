@@ -44,6 +44,11 @@ class GameMode extends Condition
 		return $intGamemode;
 	}
 
+	public function toString() : string
+	{
+		return (string)$this->getGamemode();
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();
