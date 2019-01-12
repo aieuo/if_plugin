@@ -103,6 +103,20 @@ class ifManager extends ifAPI{
 
     /**
      * @param  string $key
+     * @param  string $type
+     * @param  int $num
+     * @return bool
+     */
+    public function updateContent($key, $type, $num, $new, $args = []){
+        if(!$this->isAdded($key))return false;
+        $datas = $this->get($key);
+        $datas[$type][$num]["content"] = $new;
+        $this->config->set($key, $datas);
+        return true;
+    }
+
+    /**
+     * @param  string $key
      */
     public function remove($key){
     	$this->config->remove($key);
