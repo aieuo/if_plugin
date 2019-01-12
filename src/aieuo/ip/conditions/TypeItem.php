@@ -63,7 +63,8 @@ class TypeItem extends Condition
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
                 Elements::getInput("\n§7<count>§f アイテムの数を入力してください", "例) 5", $count),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

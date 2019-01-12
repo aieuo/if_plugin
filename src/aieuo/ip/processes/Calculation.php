@@ -135,7 +135,8 @@ class Calculation extends Process
                 	"一つ目の値を二つ目で値を割った余り (value1 % value2)",
                 ], $operator),
                 Elements::getInput("\n§7<value2>§f 二つ目の値を入力してください", "例) 50", $value2),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

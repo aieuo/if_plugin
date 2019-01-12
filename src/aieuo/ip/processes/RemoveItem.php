@@ -71,7 +71,8 @@ class RemoveItem extends TypeItem
                 Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
                 Elements::getInput("\n§7<count>§f アイテムの数を入力してください(全て消す場合は0を入力するか空白にしてください)", "例) 5", $count),
                 Elements::getInput("\n§7<name>§f アイテムに付けたい名前を入力してください(空白ならそのままの名前です)", "例) aieuo", $name),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

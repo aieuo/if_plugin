@@ -79,7 +79,8 @@ class Process implements ProcessIds
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().$mes),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

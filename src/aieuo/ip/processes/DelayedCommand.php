@@ -83,7 +83,8 @@ class DelayedCommand extends Process
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<command>§f 実行するコマンドを入力してください", "例) help", $command),
                 Elements::getInput("\n§7<time>§f 遅らせる時間を入力してください", "例) 10", $time),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

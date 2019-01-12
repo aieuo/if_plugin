@@ -57,7 +57,8 @@ class ExistsVariable extends Condition
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<variable>§f 変数の名前を入力してください", "例) aieuo", $default),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

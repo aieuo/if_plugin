@@ -101,7 +101,8 @@ class RandomNumber extends Condition
                 Elements::getInput("\n§7<min>§f 乱数の範囲の最小値を入力してください", "例) 1", $min),
                 Elements::getInput("\n§7<max>§f 乱数の範囲の最大値を入力してください", "例) 5", $max),
                 Elements::getInput("\n§7<check>§f 確認する数を入力してください", "例) 3", $check),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

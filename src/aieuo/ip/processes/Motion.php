@@ -63,7 +63,8 @@ class Motion extends TypePosition
                 Elements::getInput("\n§7<x>§f x軸方向に動かす値を入力してください", "例) 1", $x),
                 Elements::getInput("\n§7<y>§f y軸方向に動かす値を入力してください", "例) 10", $y),
                 Elements::getInput("\n§7<z>§f z軸方向に動かす値を入力してください", "例) 100", $z),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

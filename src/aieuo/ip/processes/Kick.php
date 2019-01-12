@@ -58,7 +58,8 @@ class Kick extends Process
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<reason>§f 理由を入力してください", "例) 悪いことをしたから", $default),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

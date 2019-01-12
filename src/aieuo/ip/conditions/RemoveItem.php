@@ -70,7 +70,8 @@ class RemoveItem extends TypeItem
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
                 Elements::getInput("\n§7<count>§f アイテムの数を入力してください(全て消す場合は0を入力するか空白にしてください)", "例) 5", $count),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

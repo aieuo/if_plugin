@@ -149,7 +149,8 @@ class Comparison extends Condition
                 	"一つ目の値の中に二つ目の値が含まれていない (value2 not in value1)",
                 ], $operator),
                 Elements::getInput("\n§7<value2>§f 二つ目の値を入力してください", "例) 50", $value2),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

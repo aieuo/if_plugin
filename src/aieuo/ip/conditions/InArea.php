@@ -96,6 +96,7 @@ class InArea extends Condition
 			$content[] = Elements::getInput("\n§7<".$axis.">§f ".$axis."軸の範囲を入力してください (指定しない場合は空白で)", "例) 0,100", $areas[$axis]);
 		}
 		$content[] = Elements::getToggle("削除する");
+		$content[] = Elements::getToggle("キャンセル");
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
