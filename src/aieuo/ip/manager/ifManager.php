@@ -136,4 +136,8 @@ class ifManager extends ifAPI{
         if(!isset($datas["else"]))$datas["else"] = [];
         return $datas;
     }
+
+    public function replaceDatas($string, $datas) {
+        return parent::replaceDatas($string, $datas);
+    }
 }

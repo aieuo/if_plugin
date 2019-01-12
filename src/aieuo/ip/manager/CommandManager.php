@@ -108,4 +108,15 @@ class CommandManager extends ifManager{
     	$commands = explode(" ", $command);
     	return $commands[0];
     }
+
+    public function replaceDatas($string, $datas) {
+        $string = parent::replaceDatas($string, $datas);
+        $command = $datas["command"];
+        $cmds = explode(" ", substr($command, 1));
+        $string = str_replace("{cmd}", array_shift($cmds), $string);
+        foreach ($cmds as $n => $cmd) {
+            $string = str_replace("{args_".$n."}", $cmd, $string);
+        }
+        return $string;
+    }
 }

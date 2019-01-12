@@ -271,7 +271,7 @@ class ifAPI {
         foreach($datas1 as $datas){
             $result = ($co = Condition::get($datas["id"]))
                         ->setPlayer($player)
-                        ->setValues($co->parse($this->replace($datas["content"])))
+                        ->setValues($co->parse($this->replaceVariable($this->replaceDatas($datas["content"], $args))))
                         ->check();
             if($result === Condition::NOT_FOUND){
                 $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
@@ -285,13 +285,13 @@ class ifAPI {
         foreach (${"datas".$stat} as $datas) {
             ($pro = Process::get($datas["id"]))
               ->setPlayer($player)
-              ->setValues($pro->parse($this->replace($datas["content"])))
+              ->setValues($pro->parse($this->replaceVariable($this->replaceDatas($datas["content"], $args))))
               ->execute();
         }
         return true;
     }
 
-    public function replace($string){
+    public function replaceVariable($string){
         $count = 0;
         while(preg_match_all("/({[^{}]+})/", $string, $matches)){
             if(++$count >= 10) break;
@@ -299,6 +299,41 @@ class ifAPI {
                 $val = ifManager::getOwner()->getVariableHelper()->get(substr($name, 1, -1));
                 $string = str_replace($name, $val instanceof Variable ? $val->getValue(): $val, $string);
             }
+        }
+        return $string;
+    }
+
+    public function replaceDatas($string, $datas) {
+        $player = $datas["player"];
+        $server = Server::getInstance();
+        $onlines = [];
+        foreach ($server->getOnlinePlayers() as $p) {
+            $onlines[] = $p->getName();
+        }
+        $ops = [];
+        foreach ($server->getOps() as $p) {
+            $ops[] = $p->getName();
+        }
+        $variables = [
+            "{player}" => $player->__toString(),
+            "{player_name}" => $player->getName(),
+            "{nametag}" => $player->getDisplayName(),
+            "{player_pos}" => $player->x.",".$player->y.",".$player->z.",".$player->level->getFolderName(),
+            "{player_x}" => $player->x,
+            "{player_y}" => $player->y,
+            "{player_z}" => $player->z,
+            "{player_level}" => $player->level->getFolderName(),
+            "{player_firstplayed}" => $player->getFirstPlayed(),
+            "{player_lastplayed}" => $player->getLastPlayed(),
+            "{player_lastplayed}" => $player->getLastPlayed(),
+            "{server_name}" => $server->getName(),
+            "{server_tick}" => $server->getTick(),
+            "{default_level}" => $server->getDefaultLevel()->getFolderName(),
+            "{online_players}" => implode(",", $onlines),
+            "{ops}" => implode(",", $ops),
+        ];
+        foreach ($variables as $key => $value) {
+            $string = str_replace($key, $value, $string);
         }
         return $string;
     }
