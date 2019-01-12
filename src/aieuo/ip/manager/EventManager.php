@@ -30,7 +30,8 @@ class EventManager extends ifManager{
     }
 
     public function get($key, $args = []){
-        $datass = $this->getByEvent($args["eventname"]);
+        $datass = $this->getFromEvent($args["eventname"]);
+        var_dump($datass);
         if(!isset($datass[$key]))return [];
         $datas = $datass[$key];
         $datas = $this->repairIF($datas);
@@ -38,7 +39,7 @@ class EventManager extends ifManager{
     }
 
     public function add($key, $type, $id, $content, $args = []){
-        $datas = $this->getByEvent($args["eventname"]);
+        $datas = $this->getFromEvent($args["eventname"]);
         $datas[$key][$type][] = [
             "id" => $id,
             "content" => $content
@@ -47,12 +48,12 @@ class EventManager extends ifManager{
     }
 
     public function getCount($event){
-        $datas = $this->getByEvent($event);
+        $datas = $this->getFromEvent($event);
         return count($datas);
     }
 
     public function add_empty($event){
-        $datas = $this->getByEvent($event);
+        $datas = $this->getFromEvent($event);
         $data = [
             "if" => [],
             "match" => [],
@@ -63,14 +64,14 @@ class EventManager extends ifManager{
         return count($datas) -1;
     }
 
-    public function getByEvent($event){
+    public function getFromEvent($event){
         $datas = [];
         if(isset(($all = $this->getAll())[$event]))$datas = $all[$event];
         return $datas;
     }
 
     public function del($key, $type, $num, $args = []){
-        $datas = $this->getByEvent($args["eventname"]);
+        $datas = $this->getFromEvent($args["eventname"]);
         if(!isset($datas[$key]))return false;
         unset($datas[$key][$type][$num]);
         $datas[$key][$type] = array_merge($datas[$key][$type]);
@@ -87,7 +88,7 @@ class EventManager extends ifManager{
     }
 
     public function remove($key, $args = []){
-        $datas = $this->getByEvent($args["eventname"]);
+        $datas = $this->getFromEvent($args["eventname"]);
         if(!isset($datas[$key]))return false;
         unset($datas[$key]);
         $datas = array_merge($datas);
