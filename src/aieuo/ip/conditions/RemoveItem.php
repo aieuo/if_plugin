@@ -21,6 +21,12 @@ class RemoveItem extends TypeItem
 		return "インベントリからidが§7<id>§fのアイテムを§7<count>§f個削除できるなら";
 	}
 
+	public function getMessage() {
+		$item = $this->getItem();
+		if(!($item instanceof Item)) return false;
+		return "インベントリから(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."個削除できるなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

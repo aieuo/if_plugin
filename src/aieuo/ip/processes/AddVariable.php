@@ -28,6 +28,12 @@ class AddVariable extends Process
 		return "§7<name>§fという名前で§7<value>§fという値の変数を追加する";
 	}
 
+	public function getMessage() {
+		$variable = $this->getVariable();
+		if($variable === false) return false;
+		return $variable->getName()."という名前で".$variable->getValue()."という値の変数を追加する";
+	}
+
 	public function getVariable()
 	{
 		return $this->getValues();
@@ -43,11 +49,6 @@ class AddVariable extends Process
         $datas = explode(",", $content);
         if(!isset($datas[1]) or $datas[1] === "") return false;
         return new Variable($datas[0], $datas[1]);
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getVariable();
 	}
 
 	public function execute()

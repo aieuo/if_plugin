@@ -22,6 +22,11 @@ class CommandConsole extends TypeCommand
 		return "コンソールからコマンド§7<command>§fを実行する";
 	}
 
+	public function getMessage() {
+		$command = $this->getCommand();
+		return "コンソールから/".$command." を実行する";
+	}
+
 	public function execute()
 	{
         Server::getInstance()->dispatchCommand(new ConsoleCommandSender, $this->getCommand());

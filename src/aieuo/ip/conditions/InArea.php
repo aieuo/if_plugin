@@ -27,6 +27,16 @@ class InArea extends Condition
 		return "プレイヤーが§7<x|y|z>§r軸が§7<min>§r～§7<max>§rの範囲にいたら";
 	}
 
+	public function getMessage() {
+		$areas = $this->getArea();
+		if($areas === false) return false;
+		$mes = [];
+		foreach ($areas as $axis => $area) {
+			$mes[] = $axis."軸が".$area[0]."~".$area[1]."の範囲";
+		}
+		return implode(",", $mes)."にいるなら";
+	}
+
 	public function getArea()
 	{
 		return $this->getValues();
@@ -49,18 +59,6 @@ class InArea extends Condition
             $areas[$matches1[1]] = [$min, $max];
         }
         return $areas;
-	}
-
-	public function toString() : string
-	{
-		$str = "";
-		$areas = $this->getArea();
-		if($areas === false) return $str;
-        foreach ($areas as $axis => $area)
-        {
-        	$str .= $axis."(".$area[0].",".$area[1].")";
-        }
-        return $str;
 	}
 
 	public function check()

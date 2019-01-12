@@ -236,7 +236,13 @@ class Form {
         ];
         $data["buttons"] = [["text" => "<1つ前のページに戻る>"], ["text" => "<追加する>"]];
         foreach ($datas as $key => $value) {
-            $data["buttons"][] = ["text" => Messages::getMessage($value["id"], $value["content"])];
+            if($value["id"] < 100) {
+                $content = Condition::get($value["id"]);
+            } else {
+                $content = Process::get($value["id"]);
+            }
+            $content->setValues($content->parse($value["content"]));
+            $data["buttons"][] = Elements::getButton($content->getMessage());
         }
         $data = self::encodeJson($data);
         return $data;

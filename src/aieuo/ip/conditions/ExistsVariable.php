@@ -27,6 +27,11 @@ class ExistsVariable extends Condition
 		return "変数§7<variable>§fが存在するか";
 	}
 
+	public function getMessage() {
+		$name = $this->getVariableName();
+		return $name."という名前の変数が存在するなら";
+	}
+
 	public function getVariableName()
 	{
 		return $this->getValues();
@@ -35,11 +40,6 @@ class ExistsVariable extends Condition
 	public function setVariableName(string $variable)
 	{
 		$this->setValues($variable);
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getVariableName();
 	}
 
 	public function check()

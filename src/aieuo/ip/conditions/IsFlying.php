@@ -16,6 +16,10 @@ class IsFlying extends Condition
 		return "プレイヤーが飛んでいるなら";
 	}
 
+	public function getMessage() {
+		return "プレイヤーが飛んでいるなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

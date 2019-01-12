@@ -16,6 +16,10 @@ class IsOp extends Condition
 		return "プレイヤーがopなら";
 	}
 
+	public function getMessage() {
+		return "プレイヤーがopなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

@@ -21,6 +21,12 @@ class CanAddItem extends TypeItem
 		return "インベントリにidが§7<id>§fのアイテムを§7<count>§f個追加できるスペースがあるなら";
 	}
 
+	public function getMessage() {
+		$item = $this->getItem();
+		if(!($item instanceof Item)) return false;
+		return "インベントリに(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."個追加できるなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

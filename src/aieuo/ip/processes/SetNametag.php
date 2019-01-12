@@ -25,6 +25,11 @@ class SetNametag extends Process
 		return "表示する名前を§7<name>§fに変える";
 	}
 
+	public function getMessage()
+	{
+		return "表示する名前を".$this->getChangeName()."にする";
+	}
+
 	public function getChangeName()
 	{
 		return $this->getValues();
@@ -33,11 +38,6 @@ class SetNametag extends Process
 	public function setChangeName(string $name)
 	{
 		$this->setValues($name);
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getChangeName();
 	}
 
 	public function execute()

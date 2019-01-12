@@ -27,6 +27,12 @@ class SetHealth extends Process
 		return "プレイヤーの体力を§7<health>§fにする";
 	}
 
+	public function getMessage() {
+		$health = $this->getHealth();
+		if($health === false) return false;
+		return "プレイヤーの体力を".$health."にする";
+	}
+
 	public function getHealth()
 	{
 		return $this->getValues();
@@ -42,11 +48,6 @@ class SetHealth extends Process
         $health = (int)$content;
         if($health <= 0) return false;
     	return $health;
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getHealth();
 	}
 
 	public function execute()

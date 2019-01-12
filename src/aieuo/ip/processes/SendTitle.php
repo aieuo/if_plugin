@@ -19,9 +19,14 @@ class SendTitle extends TypeMessage
 		return "title欄にメッセージ§7<message>§fを送る";
 	}
 
+	public function getMessage() {
+		$message = $this->getSendMessage();
+		return "title欄に".$message."と送る";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();
-        $player->addTitle($this->getMessage(), "", 20, 100, 20);
+        $player->addTitle($this->getSendMessage(), "", 20, 100, 20);
 	}
 }

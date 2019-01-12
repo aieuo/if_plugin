@@ -25,7 +25,11 @@ class EventCancel extends Process
 
 	public function getDescription()
 	{
-		return "イベントをキャンセルします";
+		return "イベントをキャンセルする";
+	}
+
+	public function getMessage() {
+		return "イベントをキャンセルする";
 	}
 
 	public function getEvent()

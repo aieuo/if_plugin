@@ -33,15 +33,6 @@ class TypeItem extends Process
 		return $item;
 	}
 
-	public function toString() : string
-	{
-		$item = $this->getItem();
-		if(!($item instanceof Item)) return (string)$item;
-		$str = $item->getId().":".$item->getDamage().":".$item->getCount().($item->hasCustomName() ? ":".$item->getName() : "");
-		return $str;
-	}
-
-
 	public function getEditForm(string $default = "", string $mes = "")
 	{
 		$item = $this->parse($default);

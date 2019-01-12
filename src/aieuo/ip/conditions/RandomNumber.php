@@ -25,6 +25,11 @@ class RandomNumber extends Condition
 		return "§7<min>§r～§7<max>§rの範囲で生成した乱数が§7<number>§7だったら";
 	}
 
+	public function getMessage() {
+		if($this->getValues() === false) return false;
+		return $this->getMin()."~".$this->getMax()."の範囲の乱数が".$this->getCheck()."なら";
+	}
+
 	public function getMin()
 	{
 		return $this->getValues()[0];
@@ -51,12 +56,6 @@ class RandomNumber extends Condition
         $min = min((int)$matches[1], (int)$matches[2]);
         $max = max((int)$matches[1], (int)$matches[2]);
         return [$min, $max, (int)$matches[3]];
-	}
-
-	public function toString() : string
-	{
-		$str = $this->getMin().",".$this->getMax().",".$this->getCheck();
-		return $str;
 	}
 
 	public function check()

@@ -16,6 +16,10 @@ class IsSneaking extends Condition
 		return "プレイヤーがスニークしているなら";
 	}
 
+	public function getMessage() {
+		return "プレイヤーがスニークしているなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

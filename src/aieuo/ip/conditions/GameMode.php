@@ -27,6 +27,12 @@ class GameMode extends Condition
 		return "プレーヤーのゲームモードが§7<gamemode>§fだったら";
 	}
 
+	public function getMessage() {
+		$gamemode = $this->getGamemode();
+		if($gamemode === false) return false;
+		return "ゲームモードが".$gamemode."なら";
+	}
+
 	public function getGamemode()
 	{
 		return $this->getValues();
@@ -42,11 +48,6 @@ class GameMode extends Condition
 		$intGamemode = Server::getInstance()->getGamemodeFromString($gamemode);
 		if($intGamemode === -1) return false;
 		return $intGamemode;
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getGamemode();
 	}
 
 	public function check()

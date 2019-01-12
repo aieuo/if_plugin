@@ -21,6 +21,10 @@ class TakeMoney extends TypeMoney
 		return "お金を§7<amount>§f払えるなら";
 	}
 
+	public function getMessage() {
+		return "お金を".$this->getAmount()."払えるなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

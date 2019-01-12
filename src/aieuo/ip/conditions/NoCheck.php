@@ -16,8 +16,12 @@ class NoCheck extends Condition
 		return "何も確認しない";
 	}
 
+	public function getMessage() {
+		return "何も確認しない";
+	}
+
 	public function check()
 	{
-		return self::ERROR;
+		return self::MATCHED;
 	}
 }

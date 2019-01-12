@@ -21,6 +21,13 @@ class SetItem extends Process
 		return "インベントリの§7<index>§fにidが§7<id>§fの§7<name>§fという名前のアイテムを§7<count>§f追加する";
 	}
 
+	public function getMessage() {
+		if($this->getValues()) return false;
+		$item = $this->getItem();
+		$index = $this->getIndex();
+		return "インベントリの".$index."に(".$item->getId().":".$item->getDamage().",".$item->getName().")"."を".$item->getCount()."個追加する";
+	}
+
 	public function getIndex()
 	{
 		return $this->getValues()[0];
@@ -47,13 +54,13 @@ class SetItem extends Process
 	public function execute()
 	{
 		$player = $this->getPlayer();
-		$item = $this->getItem();
-		$index = $this->getIndex();
-		if(!($item instanceof Item))
+		if($this->getValues() === false)
 		{
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}
+		$item = $this->getItem();
+		$index = $this->getIndex();
 		$player->getInventory()->setItem($index, $item);
 	}
 

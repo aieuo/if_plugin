@@ -21,6 +21,12 @@ class Teleport extends TypePosition
 		return "§7<pos>§fにテレポートする";
 	}
 
+	public function getMessage() {
+		$pos = $this->getPosition();
+		if($pos === false) return false;
+		return $pos->__toString()."にテレポートする";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

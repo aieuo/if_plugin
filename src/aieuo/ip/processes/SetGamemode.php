@@ -44,9 +44,10 @@ class SetGamemode extends Process
 		return $gamemode;
 	}
 
-	public function toString() : string
-	{
-		return (string)$this->getGamemode();
+	public function getMessage() {
+		$gamemode = $this->getGamemode();
+		if($gamemode === false) return false;
+		return "ゲームモードを".$gamemode."に変更する";
 	}
 
 	public function execute()
