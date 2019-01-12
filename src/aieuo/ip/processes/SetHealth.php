@@ -66,7 +66,7 @@ class SetHealth extends Process
 		$health = $this->parse($default);
 		if($health === false)
 		{
-			$mes = "§c体力は1以上にしてください§f";
+			if($default !== "") $mes = "§c体力は1以上にしてください§f";
 			$health = $default;
 		}
         $data = [
@@ -84,9 +84,13 @@ class SetHealth extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	$health = $this->parse($datas[1]);
-    	if($health === false) return false;
-    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    	$status = true;
+    	if($datas[1] === "") {
+    		$status = null;
+    	} else {
+	    	$health = $this->parse($datas[1]);
+	    	if($health === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

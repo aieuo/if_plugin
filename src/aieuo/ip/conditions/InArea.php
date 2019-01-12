@@ -107,12 +107,16 @@ class InArea extends Condition
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "" and $datas[2] === "" and $datas[3] === "") return null;
+    	$status = true;
     	$area_str = $datas[1] !== "" ? "x(".$datas[1].")" : "";
     	$area_str .= $datas[2] !== "" ? "y(".$datas[2].")" : "";
     	$area_str .= $datas[3] !== "" ? "z(".$datas[3].")" : "";
-    	$areas = $this->parse($area_str);
-    	if($areas == false) return false;
-    	return ["contents" => $area_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    	if($datas[1] === "" and $datas[2] === "" and $datas[3] === "") {
+    		$status = null;
+    	} else {
+	    	$areas = $this->parse($area_str);
+	    	if($areas == false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $area_str, "delete" => $datas[4], "cancel" => $datas[5]];
     }
 }

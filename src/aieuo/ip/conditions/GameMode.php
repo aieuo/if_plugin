@@ -88,9 +88,13 @@ class GameMode extends Condition
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	$gamemode = $this->parse((string)$datas[1]);
-    	if($gamemode === false) return false;
-    	return ["contents" => (string)$datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    	$status = true;
+    	if($datas[1] === "") {
+    		$status = null;
+    	} else {
+	    	$gamemode = $this->parse((string)$datas[1]);
+	    	if($gamemode === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => (string)$datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

@@ -57,7 +57,7 @@ class TypePosition extends Process
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
-                Elements::getLabel($this->getDescription().$mes),
+                Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<pos>§f 座標とワールド名を,で区切って入力してください", "例) 1,15,30,world", $position),
                 Elements::getToggle("削除する"),
                 Elements::getToggle("キャンセル")
@@ -68,9 +68,13 @@ class TypePosition extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	$pos = $this->parse($datas[1]);
-    	if($pos === false) return false;
-    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    	$status = true;
+    	if($datas[1] === "") {
+    		$status = null;
+    	} else {
+	    	$pos = $this->parse($datas[1]);
+	    	if($pos === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

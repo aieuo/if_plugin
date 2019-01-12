@@ -84,9 +84,13 @@ class SetGamemode extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	$gamemode = $this->parse($datas[1]);
-    	if($gamemode === false) return false;
-    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    	$status = true;
+    	if($datas[1] === "") {
+    		$status = null;
+    	} else {
+	    	$gamemode = $this->parse($datas[1]);
+	    	if($gamemode === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

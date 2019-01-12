@@ -65,7 +65,8 @@ class SetNametag extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	return ["contents" => $datas[1], "delete" => $datas[4], "cancel" => $datas[5]];
+    	$status = true;
+    	if($datas[1] === "") $status = null;
+    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

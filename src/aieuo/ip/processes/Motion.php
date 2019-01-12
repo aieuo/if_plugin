@@ -43,8 +43,8 @@ class Motion extends TypePosition
 	{
 		$pos = $this->parse($default);
 		$x = $default;
-		$y = 0;
-		$z = 0;
+		$y = "";
+		$z = "";
 		if($pos instanceof Vector3)
 		{
 			$x = $pos->x;
@@ -70,4 +70,15 @@ class Motion extends TypePosition
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	$status = true;
+    	if($datas[1] === "" and $datas[2] === "" and $datas[3] === "") {
+    		$status = null;
+    	} else {
+	    	$pos = $this->parse($datas[1].",".$datas[2].",".$datas[3]);
+	    	if($pos === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $datas[1].",".$datas[2].",".$datas[3], "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }
