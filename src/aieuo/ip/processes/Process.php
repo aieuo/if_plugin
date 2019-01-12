@@ -87,6 +87,10 @@ class Process implements ProcessIds
         return $json;
     }
 
+    public function parseFormData(array $datas) {
+    	return ["contents" => "", "delete" => $datas[1], "cancel" => $datas[2]];
+    }
+
 	public function execute()
 	{
 	}

@@ -83,4 +83,11 @@ class SetScale extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "") return null;
+    	$scale = $this->parse($datas[1]);
+    	if($scale === false) return false;
+    	return ["contents" => $datas[1], "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }

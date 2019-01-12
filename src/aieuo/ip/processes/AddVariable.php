@@ -41,7 +41,7 @@ class AddVariable extends Process
 	public function parse(string $content)
 	{
         $datas = explode(",", $content);
-        if(!isset($datas[1])) return false;
+        if(!isset($datas[1]) or $datas[1] === "") return false;
         return new Variable($datas[0], $datas[1]);
 	}
 
@@ -91,4 +91,12 @@ class AddVariable extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "") return null;
+    	$var_str = $datas[1].",".$datas[2];
+    	$var = $this->parse($var_str);
+    	if($var === false) return false;
+    	return ["contents" => $var_str, "delete" => $datas[3], "cancel" => $datas[4]];
+    }
 }

@@ -65,4 +65,9 @@ class Kick extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "") return null;
+    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    }
 }

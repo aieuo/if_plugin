@@ -49,6 +49,10 @@ class DelayedCommand extends Process
 	    return [$matches[2], (int)$matches[1]];
 	}
 
+	public function toString() : string {
+		return $this->getTime().",".$this->getCommand();
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();
@@ -90,4 +94,11 @@ class DelayedCommand extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "") return null;
+    	$value = $this->parse($datas[2].",".$datas[1]);
+    	if($value === false) return false;
+    	return ["contents" => $datas[2].",".$datas[1], "delete" => $datas[3], "cancel" => $datas[4]];
+    }
 }

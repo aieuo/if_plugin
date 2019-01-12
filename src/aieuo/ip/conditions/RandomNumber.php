@@ -108,4 +108,12 @@ class RandomNumber extends Condition
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") return null;
+    	$num_str = $datas[1].",".$datas[2].",".$datas[3];
+    	$num = $this->parse($num_str);
+    	if($num === false) return false;
+    	return ["contents" => $num_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }

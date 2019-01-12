@@ -70,4 +70,14 @@ class TypeItem extends Condition
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "") return null;
+    	$id = explode(":", $datas[1]);
+    	if(!isset($id[1])) $id[1] = 0;
+    	$ids_str = $id[0].":".$id[1].":".$datas[2];
+    	$ids = $this->parse($ids_str);
+    	if($ids === false) return false;
+    	return ["contents" => $ids_str, "delete" => $datas[3], "cancel" => $datas[4]];
+    }
 }

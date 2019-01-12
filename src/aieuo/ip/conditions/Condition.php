@@ -86,11 +86,16 @@ class Condition implements ConditionIds
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);
         return $json;
+    }
+
+    public function parseFormData(array $datas){
+    	return ["contents" => "", "delete" => $datas[1], "cancel" => $datas[2]];
     }
 
 	public function check()

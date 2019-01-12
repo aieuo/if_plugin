@@ -142,4 +142,12 @@ class Calculation extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") return null;
+    	$values_str = $datas[1]."[ope:".$datas[2]."]".$datas[3];
+    	$values = $this->parse($values_str);
+    	if($values === false) return false;
+    	return ["contents" => $values_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }
