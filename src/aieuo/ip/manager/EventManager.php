@@ -78,6 +78,14 @@ class EventManager extends ifManager{
         return true;
     }
 
+    public function updateContent($key, $type, $num, $new, $args = []){
+        $datas = $this->getFromEvent($args["eventname"]);
+        if(!isset($datas[$key]))return false;
+        $datas[$key][$type][$num]["content"] = $new;
+        $this->set($args["eventname"], $datas);
+        return true;
+    }
+
     public function remove($key, $args = []){
         $datas = $this->getByEvent($args["eventname"]);
         if(!isset($datas[$key]))return false;
