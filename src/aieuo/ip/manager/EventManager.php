@@ -31,7 +31,6 @@ class EventManager extends ifManager{
 
     public function get($key, $args = []){
         $datass = $this->getFromEvent($args["eventname"]);
-        var_dump($datass);
         if(!isset($datass[$key]))return [];
         $datas = $datass[$key];
         $datas = $this->repairIF($datas);
@@ -164,16 +163,5 @@ class EventManager extends ifManager{
             $string = str_replace($variable, $value, $string);
         }
         return $string;
-    }
-
-    public function execute($player, $type, $content, $args = []){
-        switch ($type) {
-            case ifPlugin::EVENT_CANCELL:
-                if($args["event"] instanceof Cancellable){
-                    $args["event"]->setCancelled();
-                }
-                return;
-        }
-        parent::execute($player, $type, $content);
     }
 }
