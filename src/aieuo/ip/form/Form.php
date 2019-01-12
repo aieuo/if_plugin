@@ -6,130 +6,37 @@ use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 
 use aieuo\ip\ifPlugin;
 use aieuo\ip\ifAPI;
+use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
+
+use aieuo\ip\conditions\Condition;
+use aieuo\ip\conditions\ConditionFactory;
+use aieuo\ip\processes\Process;
+use aieuo\ip\processes\ProcessFactory;
 
 class Form {
 
-    private static $formId;
+    private static $forms = [];
 
-    public static function sendForm($player, $data, $id){
+    public static function sendForm($player, $form, $class, $func){
+        while(true) {
+            $id = mt_rand(0, 999999999);
+            if(!isset(self::$forms[$id])) break;
+        }
+        self::$forms[$id] = [$class, $func];
         $pk = new ModalFormRequestPacket();
         $pk->formId = $id;
-        $pk->formData = $data;
+        $pk->formData = $form;
         $player->dataPacket($pk);
     }
 
-    public static function registerFormId($name){
-        self::$formId[$name] = mt_rand(1, 999999999);
+    public static function onRecive($id, $player, $datas) {
+        if(isset(self::$forms[$id])) {
+            call_user_func_array(self::$forms[$id], [$player, $datas]);
+            unset(self::$forms[$id]);
+        }
     }
 
-    public static function registerFormIds(){
-        self::registerFormId("SelectIfTypeForm");
-        self::registerFormId("SelectIfForm");
-        self::registerFormId("SelectBlockActionForm");
-        self::registerFormId("EditIfForm");
-        self::registerFormId("EditIfContentsForm");
-        self::registerFormId("AddContentsForm");
-        self::registerFormId("UpdateContentsForm");
-        self::registerFormId("DetailForm");
-        self::registerFormId("AddIfForm");
-        self::registerFormId("InputContentsForm");
-        self::registerFormId("SelectCommandActionForm");
-        self::registerFormId("AddCommandForm");
-        self::registerFormId("SelectCommandForm");
-        self::registerFormId("SelectEventActionForm");
-        self::registerFormId("SelectEventForm");
-        self::registerFormId("EditEventForm");
-    }
-
-    public static function getFormId($type){
-        return self::$formId[$type];
-    }
-
-////////////////////////////////block////////////////////////////////
-    public static function getSelectBlockActionForm(){
-        $data = [
-            "type" => "form",
-            "title" => "選択",
-            "content" => "§7ボタンを押してください",
-            "buttons" => [
-                [
-                    "text" => "追加する"
-                ],
-                [
-                    "text" => "空の物を追加する",
-                ],
-                [
-                    "text" => "編集する"
-                ],
-                [
-                    "text" => "確認する"
-                ],
-                [
-                    "text" => "削除する"
-                ],
-                [
-                    "text" => "キャンセルする"
-                ]
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
-    }
-////////////////////////////////command////////////////////////////////
-    public static function getSelectCommandActionForm(){
-        $data = [
-            "type" => "form",
-            "title" => "選択",
-            "content" => "§7ボタンを押してください",
-            "buttons" => [
-                [
-                    "text" => "追加する"
-                ],
-                [
-                    "text" => "コマンドだけ追加する",
-                ],
-                [
-                    "text" => "編集する"
-                ],
-                [
-                    "text" => "確認する"
-                ],
-                [
-                    "text" => "削除する"
-                ],
-                [
-                    "text" => "キャンセルする"
-                ]
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
-    }
-    public static function getAddCommandForm(){
-        $data = [
-            "type" => "custom_form",
-            "title" => "追加",
-            "content" => [
-                Elements::getInput("追加するコマンドの名前", "最初の/を外して"),
-                Elements::getInput("コマンドの説明"),
-                Elements::getDropdown("権限", ["opだけ", "全員使える"], 1)
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
-    }
-    public static function getSelectCommandForm(){
-        $data = [
-            "type" => "custom_form",
-            "title" => "コマンド選択",
-            "content" => [
-                Elements::getInput("コマンドの名前", "最初の/を外して"),
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
-    }
 ////////////////////////////////event////////////////////////////////
     public static function getSelectEventActionForm(){
         $data = [
@@ -187,8 +94,27 @@ class Form {
         $json = self::encodeJson($data);
         return $json;
     }
-////////////////////////////////all////////////////////////////////
-    public static function getSelectIfTypeForm(){
+
+//////////////////////////////////////////////////////////////
+    public static function encodeJson($data){
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+//////////////////////////////////////////////////////////////
+    public function getBlockForm() {
+        return new BlockForm();
+    }
+
+    public function getCommandForm() {
+        return new CommandForm();
+    }
+
+    public function getEventForm() {
+        return new EventForm();
+    }
+
+    public function getSelectIfTypeForm(){
         $data = [
             "type" => "form",
             "title" => "選択",
@@ -202,6 +128,9 @@ class Form {
                 ],
                 [
                     "text" => "イベント"
+                ],
+                [
+                    "text" => "終了"
                 ]
             ]
         ];
@@ -209,10 +138,32 @@ class Form {
         return $json;
     }
 
-    public static function getEditIfForm($mes){
+    public function onSelectIfType($player, $data) {
+        if($data === null) return;
+        $session = $player->ifSession;
+        switch ($data) {
+            case 0:
+                $form = $this->getBlockForm()->getSelectActionForm();
+                Form::sendForm($player, $form, $this->getBlockForm(), "onSelectAction");
+                break;
+            case 1:
+                $form = $this->getCommandForm()->getSelectActionForm();
+                Form::sendForm($player, $form, $this->getCommandForm(), "onSelectAction");
+                break;
+            case 2:
+                $form = $this->getEventForm()->getSelectEventForm();
+                Form::sendForm($player, $form, $this->getEventForm(), "onselectEvent");
+                break;
+            case 3:
+                $session->setValid(false);
+                break;
+        }
+    }
+
+    public function getEditIfForm($mes) {
         $data = [
             "type" => "form",
-            "title" => "編集",
+            "title" => "IF編集",
             "content" => $mes,
             "buttons" => [
                 [
@@ -226,20 +177,64 @@ class Form {
                 ],
                 [
                     "text" => "削除する"
+                ],
+                [
+                    "text" => "終了"
                 ]
             ]
         ];
         $data = self::encodeJson($data);
         return $data;
     }
-    public static function getEditContentsForm($datas){
+
+    public function onEditIf($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        }elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        }elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+        $key = $session->getData("if_key");
+        $datas = $manager->get($key, $args);
+        var_dump($datas);
+        if($data == 0) {
+            $form = $this->getEditContentsForm($datas["if"]);
+            $session->setData("type", "if");
+        } elseif($data == 1) {
+            $form = $this->getEditContentsForm($datas["match"]);
+            $session->setData("type", "match");
+        } elseif($data == 2) {
+            $form = $this->getEditContentsForm($datas["else"]);
+            $session->setData("type", "else");
+        } elseif($data == 3) {
+            $form = $this->getConfirmDeleteForm();
+            Form::sendForm($player, $form, $this, "onDeleteIf");
+            return;
+        } else {
+            $session->setValid(false);
+            return;
+        }
+        Form::sendForm($player, $form, $this, "onEditIfContents");
+    }
+
+    public function getEditContentsForm($datas, $mes = ""){
         $data = [
             "type" => "form",
             "title" => "編集",
-            "content" => "",
+            "content" => ($mes === "" ? "" : $mes."\n")."§7ボタンを押してください",
             "buttons" => []
         ];
-        $data["buttons"][] = ["text" => "追加する"];
+        $data["buttons"] = [["text" => "<1つ前のページに戻る>"], ["text" => "<追加する>"]];
         foreach ($datas as $key => $value) {
             $data["buttons"][] = ["text" => Messages::getMessage($value["id"], $value["content"])];
         }
@@ -247,124 +242,269 @@ class Form {
         return $data;
     }
 
-    public static function getDetailForm($id, $content){
-        $data = [
-            "type" => "form",
-            "title" => "詳細",
-            "content" => Messages::getMessage($id, $content),
-            "buttons" => [
-                ["text" => "編集する"],
-                ["text" => "削除する"]
-            ]
-        ];
-        $data = self::encodeJson($data);
-        return $data;
+    public function onEditIfContents($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        } elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        } elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+        $key = $session->getData("if_key");
+        $datas = $manager->get($key, $args);
+        if($data == 0) {
+            // ひとつ前のformに戻る
+            $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+            $form = $this->getEditIfForm($mes);
+            Form::sendForm($player, $form, $this, "onEditIf");
+            return;
+        }
+        if($data == 1) {
+            // 新しく追加する
+            $form = $this->getAddContentsForm($session->getData("type"));
+            Form::sendForm($player, $form, $this, "onAddContent");
+            return;
+        }
+
+        // 追加されているものを選択した
+        $ifData = $datas[$session->getData("type")][$data - 2];
+        if($session->getData("type") == "if") {
+            $datas = Condition::get($ifData["id"]);
+        } else {
+            $datas = Process::get($ifData["id"]);
+        }
+        $session->setData("contents", $datas);
+        $session->setData("num", $data - 2);
+        $form = $datas->getEditForm((string)$ifData["content"]);
+        Form::sendForm($player, $form, $this, "onUpdateContent");
     }
 
-    public static function getSelectIfForm($ifs){
-        $buttons = [];
-        foreach ($ifs as $if){
-            $buttons[] = ["text" => $if];
+    public function getAddContentsForm($type, $mes = ""){
+        if($type == "if"){
+            $datas = ConditionFactory::getAll();
+        }else{
+            $datas = ProcessFactory::getAll();
+        }
+        $buttons[] = ["text" => "<ひとつ前のページに戻る>"];
+        foreach ($datas as $data) {
+            $buttons[] = ["text" => $data->getName()];
         }
         $data = [
             "type" => "form",
-            "title" => "選択",
-            "content" => "§7ボタンを押してください",
+            "title" => "編集 > 追加",
+            "content" => ($mes === "" ? "" : $mes."\n")."§7ボタンを押してください",
             "buttons" => $buttons
         ];
         $json = self::encodeJson($data);
         return $json;
     }
 
-    public static function getAddContentsForm($type, $event = false){
-        if($type == "if"){
-            $list = Parts::getIflistDropdown();
-        }else{
-            $list = Parts::getExelistDropdown(0, $event);
+    public function onAddContent($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
         }
-        $data = [
-            "type" => "custom_form",
-            "title" => "追加",
-            "content" => [
-                $list,
-                Elements::getInput("値を入力して下さい")
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        } elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        } elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+        if($data == 0) {
+            $key = $session->getData("if_key");
+            $datas = $manager->get($key, $args);
+            $form = $this->getEditContentsForm($datas[$session->getData("type")]);
+            Form::sendForm($player, $form, $this, "onEditIfContents");
+            return;
+        }
+        if($session->getData("type") == "if") {
+            $all = ConditionFactory::getAll();
+            $datas = Condition::get(current(array_slice($all, $data-1, 1, true))->getId());
+        } else {
+            $all = ProcessFactory::getAll();
+            $datas = Process::get(current(array_slice($all, $data-1, 1, true))->getId());
+        }
+        $session->setData("contents", $datas);
+        $form = $datas->getEditForm();
+        Form::sendForm($player, $form, $this, "onEdit");
     }
 
-    public static function getUpdateContentsForm($type, $id, $defaltInput = ""){
-        if($type == "if"){
-            $mes = Parts::getIflist()[ifAPI::getListNumberByIfId($id)];
-        }else{
-            $mes = Parts::getExelist()[ifAPI::getListNumberByExeId($id)];
+    public function onEdit($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
         }
-        $data = [
-            "type" => "custom_form",
-            "title" => "追加",
-            "content" => [
-                Elements::getLabel($mes),
-                Elements::getInput("値を入力して下さい", "", $defaltInput)
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        } elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        } elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+        $content = $session->getData("contents");
+        $datas = $content->parseFormData($data);
+        var_dump($data, $datas);
+        if($datas["cancel"]) {
+            $form = $this->getAddContentsForm($session->getData("type"));
+            Form::sendForm($player, $form, $this, "onAddContent");
+            return;
+        }
+        if($datas["delete"]) {
+            $player->sendMessage("§cまだ追加していないので削除できません");
+            $form = $this->getAddContentsForm($session->getData("type"), "§cまだ追加していないので削除できません§f");
+            Form::sendForm($player, $form, $this, "onAddContent");
+            return;
+        }
+        if($datas["status"] === null) {
+            $form = $content->getEditForm($datas["contents"], "§c必要事項を記入してください§f\n");
+            Form::sendForm($player, $form, $this, "onEdit");
+            return;
+        }
+        $mes = "§b追加しました§f";
+        if($datas["status"] === false) $mes = "§e追加しましたが、正しく入力できていない可能性があります§f";
+        $key = $session->getData("if_key");
+        $manager->add($key, $session->getData("type"), $content->getId(), $datas["contents"], $args);
+        $contents = $manager->get($key, $args);
+        $form = $this->getEditContentsForm($contents[$session->getData("type")], $mes);
+        Form::sendForm($player, $form, $this, "onEditIfContents");
+        $player->sendMessage($mes);
     }
 
-    public static function getAddIfForm($event = false){
-        $data = [
-            "type" => "custom_form",
-            "title" => "追加",
-            "content" => [
-                Parts::getIflistDropdown(),
-                Parts::getExelistDropdown(0, $event),
-                Parts::getExelistDropdown(0, $event)
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
+    public function onUpdateContent($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        } elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        } elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+        $content = $session->getData("contents");
+        $datas = $content->parseFormData($data);
+        var_dump($data, $datas);
+        if($datas["cancel"]) {
+            $key = $session->getData("if_key");
+            $form = $this->getEditContentsForm($manager->get($key, $args)[$session->getData("type")]);
+            Form::sendForm($player, $form, $this, "onEditIfContents");
+            return;
+        }
+        if($datas["delete"]) {
+            $form = $this->getConfirmDeleteForm();
+            Form::sendForm($player, $form, $this, "onDeleteContent");
+            return;
+        }
+        if($datas["status"] === null) {
+            $form = $content->getEditForm($datas["contents"], "§c必要事項を記入してください§f\n");
+            Form::sendForm($player, $form, $this, "onEdit");
+            return;
+        }
+
+        $mes = "§b変更しました§f";
+        if($datas["status"] === false) $mes = "§e変更しましたが、正しく入力できていない可能性があります§f";
+        $key = $session->getData("if_key");
+        $manager->updateContent($key, $session->getData("type"), $session->getData("num"), $datas["contents"], $args);
+        $contents = $manager->get($key, $args);
+        $form = $this->getEditContentsForm($contents[$session->getData("type")], $mes);
+        Form::sendForm($player, $form, $this, "onEditIfContents");
+        $player->sendMessage($mes);
     }
-//////////////////////////////////////////////////////////
-    public static function createIfContentForm($type1, $type2, $type3, $encode = true, $event = false){
-        $messages1 = Messages::getFormMessage($type1, $event);//もし
-        $messages2 = Messages::getFormMessage($type2);//合ったら
-        $messages3 = Messages::getFormMessage($type3);//合わなかったら
 
-        if($messages1["type"] == "input"){
-            $input1 = Elements::getInput($messages1["message"], $messages1["placeholder"]);
-        }else{
-            $input1 = Elements::getLabel($messages1["message"]);
-        }
-        if($messages2["type"] == "input"){
-            $input2 = Elements::getInput($messages1["next"].$messages2["message"], $messages2["placeholder"]);
-        }else{
-            $input2 = Elements::getLabel($messages2["message"]);
-        }
-        if($messages3["type"] == "input"){
-            $input3 = Elements::getInput($messages2["next"]."合わなかったら\n".$messages3["message"], $messages3["placeholder"]);
-        }else{
-            $input3 = Elements::getLabel("合わなかったら\n".$messages3["message"]);
-        }
-
-        $content[] = $input1;
-        $content[] = $input2;
-        $content[] = $input3;
-
-        $content[] = Elements::getLabel($messages3["next"]);
-
+    public function getConfirmDeleteForm() {
         $data = [
-            "type" => "custom_form",
-            "title" => "ifPlugin",
-            "content" => $content
+            "type" => "modal",
+            "title" => "削除",
+            "content" => "本当に削除しますか?\n削除すると元に戻せません",
+            "button1" => "はい",
+            "button2" => "いいえ"
         ];
-        if($encode)$data = self::encodeJson($data);
+        $data = self::encodeJson($data);
         return $data;
     }
 
-//////////////////////////////////////////////////////////////
-    public static function encodeJson($data){
-        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
-        return $json;
+    public function onDeleteContent($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        } elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        } elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+
+        $key = $session->getData("if_key");
+        if($data) {
+            $manager->del($key, $session->getData("type"), $session->getData("num"), $args);
+            $form = $this->getEditContentsForm($manager->get($key, $args)[$session->getData("type")], "§b削除しました§f");
+            Form::sendForm($player, $form, $this, "onEditIfContents");
+            $player->sendMessage("削除しました");
+        } else {
+            $ifData = $contents[$session->getData("type")][$session->getData("num")];
+            $form = $manager->get($key, $args)->getEditForm($ifData["contents"], "§e削除キャンセルしました§f\n");
+            Form::sendForm($player, $form, $this, "onEdit");
+            $player->sendMessage("削除キャンセルしました");
+        }
+    }
+
+    public function onDeleteIf($player, $data) {
+        $session = $player->ifSession;
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = ifPlugin::getInstance()->getBlockManager();
+            $args = [];
+        } elseif($type === Session::COMMAND) {
+            $manager = ifPlugin::getInstance()->getCommandManager();
+            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        } elseif($type === Session::EVENT) {
+            $manager = ifPlugin::getInstance()->getEventManager();
+            $args = ["eventname" => $session->getData("eventname")];
+        }
+
+        if($data) {
+            $manager->remove($session->getData("if_key"), $args);
+            $player->sendMessage("削除しました");
+        } else {
+            $player->sendMessage("削除キャンセルしました");
+        }
+        $session->setValid(false);
     }
 }
