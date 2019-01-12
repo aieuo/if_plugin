@@ -34,4 +34,5 @@ interface ProcessIds {
     const ADD_VARIABLE = 128;
     const SET_SCALE = 129;
     const EVENT_CANCEL = 130;
+    const SET_ITEM = 131;
 }

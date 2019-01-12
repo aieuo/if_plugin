@@ -37,6 +37,7 @@ class ProcessFactory
 		self::register(new Attack());
 		self::register(new Kick());
 		self::register(new EventCancel());
+		self::register(new setItem());
 	}
 
 	/**
