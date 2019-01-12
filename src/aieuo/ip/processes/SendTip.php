@@ -11,12 +11,12 @@ class SendTip extends TypeMessage
 
 	public function getName()
 	{
-		"tip欄にメッセージを送る";
+		return "tip欄にメッセージを送る";
 	}
 
 	public function getDescription()
 	{
-		"tip欄にメッセージ§7<message>§rを送る";
+		return "tip欄にメッセージ§7<message>§fを送る";
 	}
 
 	public function execute()

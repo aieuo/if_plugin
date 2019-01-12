@@ -20,12 +20,12 @@ class AddVariable extends Process
 
 	public function getName()
 	{
-		"変数を追加する";
+		return "変数を追加する";
 	}
 
 	public function getDescription()
 	{
-		"§7<name>§rという名前で§7<value>§rという値の変数を追加する";
+		return "§7<name>§fという名前で§7<value>§fという値の変数を追加する";
 	}
 
 	public function getVariable()

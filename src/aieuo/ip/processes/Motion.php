@@ -24,7 +24,7 @@ class Motion extends TypePosition
 
 	public function getDescription()
 	{
-		return "プレイヤーを§7<x> <y> <z>§rブロック動かす";
+		return "プレイヤーを§7<x> <y> <z>§fブロック動かす";
 	}
 
 	public function execute()

@@ -11,12 +11,12 @@ class SendTitle extends TypeMessage
 
 	public function getName()
 	{
-		"title欄にメッセージを送る";
+		return "title欄にメッセージを送る";
 	}
 
 	public function getDescription()
 	{
-		"title欄にメッセージ§7<message>§rを送る";
+		return "title欄にメッセージ§7<message>§fを送る";
 	}
 
 	public function execute()

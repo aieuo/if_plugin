@@ -13,12 +13,12 @@ class Teleport extends TypePosition
 
 	public function getName()
 	{
-		"テレポートする";
+		return "テレポートする";
 	}
 
 	public function getDescription()
 	{
-		"§7<pos>§rにテレポートする";
+		return "§7<pos>§fにテレポートする";
 	}
 
 	public function execute()

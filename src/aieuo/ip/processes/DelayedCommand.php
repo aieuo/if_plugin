@@ -20,12 +20,12 @@ class DelayedCommand extends Process
 
 	public function getName()
 	{
-		"遅れてコマンドを実行する";
+		return "遅れてコマンドを実行する";
 	}
 
 	public function getDescription()
 	{
-		"§7<time>§r秒遅れてコマンド§7<command>§rを実行する";
+		return "§7<time>§f秒遅れてコマンド§7<command>§fを実行する";
 	}
 
 	public function getTime()

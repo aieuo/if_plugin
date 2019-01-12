@@ -25,7 +25,7 @@ class AddEnchantment extends Process
 
 	public function getDescription()
 	{
-		return "手に持ってるアイテムにidが§7<id>§fで強さが§7<power>§rのエンチャントを追加する";
+		return "手に持ってるアイテムにidが§7<id>§fで強さが§7<power>§fのエンチャントを追加する";
 	}
 
 	public function getEnchantment()

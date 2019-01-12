@@ -14,12 +14,12 @@ class CommandConsole extends TypeCommand
 
 	public function getName()
 	{
-		"コンソールからコマンドを実行する";
+		return "コンソールからコマンドを実行する";
 	}
 
 	public function getDescription()
 	{
-		"コンソールからコマンド§7<command>§rを実行する";
+		return "コンソールからコマンド§7<command>§fを実行する";
 	}
 
 	public function execute()
