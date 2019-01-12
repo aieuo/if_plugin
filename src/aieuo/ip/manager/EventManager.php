@@ -96,31 +96,10 @@ class EventManager extends ifManager{
         return true;
     }
 
-    public function replaceVariable($event, $eventname, $mes){
-        switch ($eventname) {
-            case 'PlayerInteractEvent':
-            case 'PlayerChatEvent':
-            case 'PlayerCommandPreprocessEvent':
-            case 'PlayerJoinEvent':
-            case 'PlayerQuitEvent':
-            case 'PlayerToggleFlightEvent':
-            case 'BlockBreakEvent':
-            case 'BlockPlaceEvent':
-                $player = $event->getPlayer();
-                break;
-            case 'EntityDamageEvent':
-            case 'EntityDeathEvent':
-                $player = $event->getEntity();
-                if(!$player instanceof Player)return $mes;
-                break;
-        }
-        $variables["{playername}"] = $player->getName();
-        $variables["{nametag}"] = $player->getDisplayName();
-        $variables["{playerpos}"] = $player->x." ".$player->y." ".$player->z." ".$player->level->getFolderName();
-        $variables["{player_x}"] = (int)$player->x;
-        $variables["{player_y}"] = (int)$player->y;
-        $variables["{player_z}"] = (int)$player->z;
-        $variables["{player_level}"] = $player->level->getFolderName();
+    public function replaceDatas($string, $datas){
+        $string = parent::replaceDatas($string, $datas);
+        $event = $datas["event"];
+        $eventname = $datas["eventname"];
         if(
             $eventname == "PlayerInteractEvent"
             or $eventname == "BlockBreakEvent"
@@ -132,7 +111,7 @@ class EventManager extends ifManager{
             $variables["{blockid}"] = $block->getId();
             $variables["{blockdamage}"] = $block->getDamage();
             $variables["{blockids}"] = $block->getId().":".$block->getDamage();
-            $variables["{blockpos}"] = $block->x." ".$block->y." ".$block->z." ".$block->level->getFolderName();
+            $variables["{blockpos}"] = $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
             $variables["{block_level}"] = $block->level->getFolderName();
         }
         if(
@@ -143,10 +122,30 @@ class EventManager extends ifManager{
         }
         if($eventname == "PlayerCommandPreprocessEvent"){
             $args = explode(" ", $variables["{mes}"]);
-            array_shift($args);
+            $variables["{cmd}"] = array_shift($args);
             foreach($args as $key => $value){
                 $variables["{args".$key."}"] = $value;
             }
+        }
+        if($eventname == "CraftItemEvent"){
+            $inputs = $event->getInputs();
+            $outputs = $event->getOutputs();
+            $inputnames = [];
+            $inputids = [];
+            foreach ($inputs as $input) {
+                $inputnames[] = $input->getName();
+                $inputids[] = $input->getId().":".$input->getDamage();
+            }
+            $outputnames = [];
+            $outputids = [];
+            foreach ($outputs as $output) {
+                $outputnames[] = $output->getName();
+                $outputids[] = $output->getId().":".$output->getDamage();
+            }
+            $variables["{input_name}"] = implode(",", $inputnames);
+            $variables["{input_id}"] = implode(",", $inputids);
+            $variables["{output_name}"] = implode(",", $outputnames);
+            $variables["{output_id}"] = implode(",", $outputids);
         }
         if($eventname == "EntityDamageEvent"){
             $entity = $event->getEntity();
@@ -157,10 +156,14 @@ class EventManager extends ifManager{
                 }
             }
         }
-        foreach ($variables as $variable => $value) {
-            $mes = str_replace($variable, $value, $mes);
+        if($eventname == "EntityLevelChangeEvent"){
+            $variables["{origin_level}"] = $event->getOrigin()->getFolderName();
+            $variables["{target_level}"] = $event->getTarget()->getFolderName();
         }
-        return $mes;
+        foreach ($variables as $variable => $value) {
+            $string = str_replace($variable, $value, $string);
+        }
+        return $string;
     }
 
     public function execute($player, $type, $content, $args = []){
@@ -172,14 +175,5 @@ class EventManager extends ifManager{
                 return;
         }
         parent::execute($player, $type, $content);
-    }
-
-    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args = []){
-        for($i = 1; $i <= 3; $i ++){
-            foreach(${"datas".$i} as $key => $datas){
-                ${"datas".$i}[$key]["content"] = $this->replaceVariable($args["event"], $args["eventname"], $datas["content"]);
-            }
-        }
-        parent::executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args);
     }
 }
