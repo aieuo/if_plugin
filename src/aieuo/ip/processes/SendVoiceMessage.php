@@ -13,12 +13,12 @@ class SendVoiceMessage extends TypeMessage
 
 	public function getName()
 	{
-		"音声付きのメッセージを送る";
+		return "音声付きのメッセージを送る";
 	}
 
 	public function getDescription()
 	{
-		"音声付きのメッセージ§7<message>§rを送る";
+		return "音声付きのメッセージ§7<message>§fを送る";
 	}
 
 	public function execute()

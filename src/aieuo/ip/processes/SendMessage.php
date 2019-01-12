@@ -11,12 +11,12 @@ class SendMessage extends TypeMessage
 
 	public function getName()
 	{
-		"チャット欄にメッセージを送る";
+		return "チャット欄にメッセージを送る";
 	}
 
 	public function getDescription()
 	{
-		"チャット欄にメッセージ§7<message>§rを送る";
+		return "チャット欄にメッセージ§7<message>§fを送る";
 	}
 
 	public function execute()

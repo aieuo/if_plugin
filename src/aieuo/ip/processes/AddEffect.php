@@ -25,7 +25,7 @@ class AddEffect extends Process
 
 	public function getDescription()
 	{
-		return "プレイヤーにidが§7<id>§fで強さが§7<power>§rのエフェクトを§7<time>§r秒間与える";
+		return "プレイヤーにidが§7<id>§fで強さが§7<power>§fのエフェクトを§7<time>§f秒間与える";
 	}
 
 	public function getEffect()

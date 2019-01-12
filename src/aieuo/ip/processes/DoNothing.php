@@ -8,11 +8,11 @@ class DoNothing extends Process
 
 	public function getName()
 	{
-		"何もしない";
+		return "何もしない";
 	}
 
 	public function getDescription()
 	{
-		"何もしない";
+		return "何もしない";
 	}
 }

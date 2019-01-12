@@ -13,12 +13,12 @@ class Command extends TypeCommand
 
 	public function getName()
 	{
-		"コマンドを実行する";
+		return "コマンドを実行する";
 	}
 
 	public function getDescription()
 	{
-		"コマンド§7<command>§rを実行する";
+		return "コマンド§7<command>§fを実行する";
 	}
 
 	public function execute()

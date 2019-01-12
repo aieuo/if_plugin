@@ -31,7 +31,7 @@ class Calculation extends Process
 
 	public function getDescription()
 	{
-		return "§7<value1>§rと§7<value2>§rを計算§7<operator>§rした結果を{result}に入れる";
+		return "§7<value1>§fと§7<value2>§fを計算§7<opefator>§rした結果を{result}に入れる";
 	}
 
 	public function getValue1()

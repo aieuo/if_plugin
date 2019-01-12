@@ -13,12 +13,12 @@ class BroadcastMessage extends TypeMessage
 
 	public function getName()
 	{
-		"全員にメッセージを送る";
+		return "全員にメッセージを送る";
 	}
 
 	public function getDescription()
 	{
-		"全員にメッセージ§7<message>§rを送る";
+		return "全員にメッセージ§7<message>§fを送る";
 	}
 
 	public function execute()

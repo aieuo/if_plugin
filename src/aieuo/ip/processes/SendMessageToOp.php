@@ -13,12 +13,12 @@ class SendMessageToOp extends TypeMessage
 
 	public function getName()
 	{
-		"opだけにメッセージを送る";
+		return "opだけにメッセージを送る";
 	}
 
 	public function getDescription()
 	{
-		"opだけにメッセージ§7<message>§rを送る";
+		return "opだけにメッセージ§7<message>§fを送る";
 	}
 
 	public function execute()
