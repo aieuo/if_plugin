@@ -11,6 +11,10 @@ class VariableHelper {
 	private $variables = [];
 
 	public function __construct($owner){
+		$this->owner = $owner;
+	}
+
+	public function loadDataBase() {
         if(!file_exists($owner->getDataFolder()."if.db")) {
             $this->db = new \SQLite3($owner->getDataFolder()."if.db", SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
         }else{

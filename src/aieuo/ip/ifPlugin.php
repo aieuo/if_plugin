@@ -36,6 +36,7 @@ use aieuo\ip\conditions\ConditionFactory;
 
 use aieuo\ip\processes\ProcessFactory;
 
+class ifPlugin extends PluginBase implements Listener{
 
     private static $instance;
 
@@ -60,6 +61,7 @@ use aieuo\ip\processes\ProcessFactory;
         $this->api = new ifAPI();
 
         $this->variables = new VariableHelper($this);
+        $this->variables->loadDataBase();
 
         $savetime = (int)$this->config->get("save_time", 10*20*60);
         $this->getScheduler()->scheduleRepeatingTask(new SaveTask($this), (int)$savetime);
