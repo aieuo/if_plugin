@@ -2,6 +2,7 @@
 
 namespace aieuo\ip;
 
+use pocketmine\Server;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
@@ -18,7 +19,7 @@ use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
-use pocketmine\event\CraftItemEvent;
+use pocketmine\event\inventory\CraftItemEvent;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
@@ -42,7 +43,15 @@ class EventListener implements Listener {
         $manager = $this->getOwner()->getCommandManager();
         if($manager->isAdded(mb_substr($event->getMessage(), 1))){
             $datas = $manager->get(mb_substr($event->getMessage(), 1));
-            $manager->executeIfMatchCondition($event->getPlayer(), $datas["if"], $datas["match"], $datas["else"]);
+            $manager->executeIfMatchCondition($event->getPlayer(),
+                $datas["if"],
+                $datas["match"],
+                $datas["else"],
+                [
+                    "player" => $event->getPlayer(),
+                    "command" => $event->getMessage()
+                ]
+            );
         }
     }
     public function join(PlayerJoinEvent $event){
@@ -53,6 +62,9 @@ class EventListener implements Listener {
             $session = new Session();
             $player->ifSession = $session;
         }
+    }
+    public function craft(CraftItemEvent $event){
+        $this->onEvent($event, "CraftItemEvent");
     }
     public function quit(PlayerQuitEvent $event){
         $this->onEvent($event, "PlayerQuitEvent");
@@ -72,8 +84,12 @@ class EventListener implements Listener {
     public function entityDeath(EntityDeathEvent $event){
         $this->onEvent($event, "EntityDeathEvent");
     }
+    public function entityLevelChange(EntityLevelChangeEvent $event){
+        $this->onEvent($event, "EntityLevelChangeEvent");
+    }
     public function onEvent($event, $eventname){
         switch ($eventname) {
+            case 'CraftItemEvent':
             case 'PlayerInteractEvent':
             case 'PlayerChatEvent':
             case 'PlayerCommandPreprocessEvent':
@@ -86,22 +102,38 @@ class EventListener implements Listener {
                 break;
             case 'EntityDamageEvent':
             case 'EntityDeathEvent':
+            case 'EntityLevelChangeEvent':
                 $player = $event->getEntity();
                 if(!$player instanceof Player)return;
                 break;
         }
         $manager = $this->getOwner()->getEventManager();
-        $datas = $manager->getByEvent($eventname);
+        $datas = $manager->getFromEvent($eventname);
         foreach ($datas as $key => $data) {
             $data = $manager->get($key, ["eventname" => $eventname]);
-            $manager->executeIfMatchCondition($player, $data["if"], $data["match"], $data["else"], ["eventname" => $eventname, "event" => $event]);
+            $manager->executeIfMatchCondition($player,
+                $data["if"],
+                $data["match"],
+                $data["else"],
+                [
+                    "player" => $player,
+                    "eventname" => $eventname,
+                    "event" => $event
+                ]
+            );
         }
     }
 
 	public function interact(PlayerInteractEvent $event){
+        $player = $event->getPlayer();
+        if(!isset($player->IFLastTouch)) $player->IFLastTouch = 0;
+        $tick = Server::getInstance()->getTick();
+        if($tick - $player->IFLastTouch <= 3) {
+            return;
+        }
+        $player->IFLastTouch = $tick;
 		$this->onEvent($event, "PlayerInteractEvent");
 
-		$player = $event->getPlayer();
         $manager = $this->getOwner()->getBlockManager();
         $block = $event->getBlock();
         $pos = $manager->getPosition($block);
@@ -164,7 +196,16 @@ class EventListener implements Listener {
 		}
         if($manager->isAdded($pos)){
             $datas = $manager->get($pos);
-            $manager->executeIfMatchCondition($player, $datas["if"], $datas["match"], $datas["else"]);
+            $manager->executeIfMatchCondition($player,
+                $datas["if"],
+                $datas["match"],
+                $datas["else"],
+                [
+                    "player" => $player,
+                    "block" => $block,
+                    "event" => $event
+                ]
+            );
         }
 	}
 
@@ -584,7 +625,7 @@ class EventListener implements Listener {
                     case 'edit':
                     case 'check':
                     case 'del':
-                        $all = $manager->getByEvent($eventname);
+                        $all = $manager->getFromEvent($eventname);
                         $datas = [];
                         foreach ($all as $key => $value) {
                             $datas[] = $manager->get($key, ["eventname" => $eventname]);
