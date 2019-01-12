@@ -35,51 +35,7 @@ use aieuo\ip\variable\VariableHelper;
 use aieuo\ip\conditions\ConditionFactory;
 
 use aieuo\ip\processes\ProcessFactory;
-class ifPlugin extends PluginBase implements Listener{
 
-    const IF_TAKEMONEY = 0;
-    const IF_HAVEINGITEM = 1;
-    const IF_EXISTITEM = 2;
-    const IF_IS_SNEAKING = 3;
-    const IF_OVERMONEY = 4;
-    const IF_REMOVEITEM = 5;
-    const IF_GAMEMODE = 6;
-    const IF_NO_CHECK = 7;
-    const IF_COMPARISON = 8;
-    const IF_IS_OP = 9;
-    const IF_IS_FLYING = 10;
-    const IF_IN_AREA = 11;
-    const IF_RANDOM_NUMBER = 12;
-
-    const COMMAND = 100;
-    const SENDMESSAGE = 101;
-    const SENDTIP = 102;
-    const TELEPORT = 103;
-    const BROADCASTMESSAGE = 104;
-    const COMMAND_CONSOLE = 105;
-    const DO_NOTHING = 106;
-    const ADD_ITEM = 107;
-    const REMOVE_ITEM = 108;
-    const SET_IMMOBILE = 109;
-    const UNSET_IMMOBILE = 110;
-    const SET_HEALTH = 111;
-    const SET_MAXHEALTH = 112;
-    const SET_GAMEMODE = 113;
-    const SET_NAMETAG = 114;
-    const ADD_ENCHANTMENT = 115;
-    const ADD_EFFECT = 116;
-    const EVENT_CANCELL = 117;
-    const SENDMESSAGE_TO_OP = 118;
-    const SET_SLEEPING = 119;
-    const SET_SITTING = 120;
-    const ATTACK = 121;
-    const KICK = 122;
-    const SENDVOICEMESSAGE = 123;
-    const SENDTITLE = 124;
-    const MOTION = 125;
-    const DELAYED_COMMAND = 126;
-    const CALCULATION = 127;
-    const ADD_VARIABLE = 128;
 
     private static $instance;
 

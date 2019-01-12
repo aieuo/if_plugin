@@ -37,64 +37,6 @@ class Form {
         }
     }
 
-////////////////////////////////event////////////////////////////////
-    public static function getSelectEventActionForm(){
-        $data = [
-            "type" => "form",
-            "title" => "選択",
-            "content" => "§7ボタンを押してください",
-            "buttons" => [
-                [
-                    "text" => "追加する"
-                ],
-                [
-                    "text" => "空の物を追加する",
-                ],
-                [
-                    "text" => "編集する"
-                ],
-                [
-                    "text" => "確認する"
-                ],
-                [
-                    "text" => "削除する"
-                ],
-                [
-                    "text" => "キャンセルする"
-                ]
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
-    }
-    public static function getSelectEventForm(){
-        $data = [
-            "type" => "custom_form",
-            "title" => "イベント選択",
-            "content" => [
-                Parts::getEventListDropdown()
-            ]
-        ];
-        $json = self::encodeJson($data);
-        return $json;
-    }
-
-    public static function getEditEventForm($event, $datas){
-        $data = [
-            "type" => "form",
-            "title" => $event,
-            "content" => "イベントの編集",
-            "buttons" => []
-        ];
-        foreach ($datas as $key => $value) {
-            $mes = Messages::createMessage($value["if"], $value["match"], $value["else"]);
-            $data["buttons"][] = ["text" => mb_substr(str_replace("\n", " ", $mes), 0, 30)."・・・"];
-        }
-        $data["buttons"][] = ["text" => "追加する"];
-        $json = self::encodeJson($data);
-        return $json;
-    }
-
 //////////////////////////////////////////////////////////////
     public static function encodeJson($data){
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
@@ -206,7 +148,6 @@ class Form {
         }
         $key = $session->getData("if_key");
         $datas = $manager->get($key, $args);
-        var_dump($datas);
         if($data == 0) {
             $form = $this->getEditContentsForm($datas["if"]);
             $session->setData("type", "if");
@@ -369,7 +310,6 @@ class Form {
         }
         $content = $session->getData("contents");
         $datas = $content->parseFormData($data);
-        var_dump($data, $datas);
         if($datas["cancel"]) {
             $form = $this->getAddContentsForm($session->getData("type"));
             Form::sendForm($player, $form, $this, "onAddContent");
@@ -415,7 +355,6 @@ class Form {
         }
         $content = $session->getData("contents");
         $datas = $content->parseFormData($data);
-        var_dump($data, $datas);
         if($datas["cancel"]) {
             $key = $session->getData("if_key");
             $form = $this->getEditContentsForm($manager->get($key, $args)[$session->getData("type")]);
