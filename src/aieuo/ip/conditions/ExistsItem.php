@@ -21,6 +21,12 @@ class ExistsItem extends TypeItem
 		return "インベントリにidが§7<id>§fのアイテムが§7<count>§f個以上あるなら";
 	}
 
+	public function getMessage() {
+		$item = $this->getItem();
+		if(!($item instanceof Item)) return false;
+		return "インベントリに(".$item->getId().":".$item->getDamage().")"."が".$item->getCount()."個あるなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

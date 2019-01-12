@@ -21,6 +21,11 @@ class Command extends TypeCommand
 		return "コマンド§7<command>§fを実行する";
 	}
 
+	public function getMessage() {
+		$command = $this->getCommand();
+		return "/".$command." を実行する";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

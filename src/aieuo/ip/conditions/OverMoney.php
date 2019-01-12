@@ -21,6 +21,10 @@ class OverMoney extends TypeMoney
 		return "所持金が§7<amount>§f以上なら";
 	}
 
+	public function getMessage() {
+		return "所持金が".$this->getAmount()."以上なら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

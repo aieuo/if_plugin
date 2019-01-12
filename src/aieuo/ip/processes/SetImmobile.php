@@ -21,6 +21,11 @@ class SetImmobile extends Process
 		return "プレイヤーを動けないようにする";
 	}
 
+	public function getMessage()
+	{
+		return "プレイヤーを動けないようにする";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

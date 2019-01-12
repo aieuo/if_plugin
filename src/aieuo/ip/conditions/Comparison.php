@@ -35,6 +35,41 @@ class Comparison extends Condition
 		return "§7<value1>§rと§7<value2>§rが§7<operator>§rなら";
 	}
 
+	public function getMessage() {
+		if($this->getValues() === false) return false;
+		$value1 = $this->getValue1();
+		$value2 = $this->getValue2();
+        switch ($this->getOperator()){
+            case self::EQUAL:
+                $mes = $value1."と".$value2."が等しいなら";
+                break;
+            case self::NOT_EQUAL:
+                $mes = $value1."と".$value2."が等しくないから";
+                break;
+            case self::GREATER:
+                $mes = $value1."より".$value2."が小さいなら";
+                break;
+            case self::LESS:
+                $mes = $value1."より".$value2."が大きいなら";
+                break;
+            case self::GREATER_EQUAL:
+                $mes = $value1."が".$value2."以上なら";
+                break;
+            case self::LESS_EQUAL:
+                $mes = $value1."が".$value2."以下なら";
+                break;
+            case self::CONTAINS:
+                $mes = $value1."の中に".$value2."が含まれているなら";
+                break;
+            case self::NOT_CONTAINS:
+                $mes = $value1."の中に".$value2."が含まれていないなら";
+                break;
+            default:
+                return false;
+        }
+        return $mes;
+	}
+
 	public function getValue1()
 	{
 		return $this->getValues()[0];
@@ -64,12 +99,6 @@ class Comparison extends Condition
         $value2 = trim(rtrim($matches[3]));
         if(is_numeric($value2)) $value2 = (int)$value2;
         return [$value1, $value2, $operator];
-	}
-
-	public function toString() : string
-	{
-		$str = $this->getValue1()."[ope:".$this->getOperator()."]".$this->getValue2();
-		return $str;
 	}
 
 	public function check()

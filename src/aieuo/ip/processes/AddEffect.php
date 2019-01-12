@@ -28,6 +28,12 @@ class AddEffect extends Process
 		return "プレイヤーにidが§7<id>§fで強さが§7<power>§fのエフェクトを§7<time>§f秒間与える";
 	}
 
+	public function getMessage() {
+		$effect = $this->getEffect();
+		if(!($effect instanceof EffectInstance)) return false;
+		return "idが".$effect->getId()."で強さが".$effect->getAmplifier()."のエフェクトを".($effect->getDuration() * 20)."秒間与える";
+	}
+
 	public function getEffect()
 	{
 		return $this->getValues();
@@ -47,14 +53,6 @@ class AddEffect extends Process
         if($effect === null) $effect = Effect::getEffect((int)$args[0]);
         if($effect === null) return null;
 		return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
-	}
-
-	public function toString() : string
-	{
-		$effect = $this->getEffect();
-		if(!($effect instanceof EffectInstance)) return (string)$effect;
-		$str = $effect->getId().",".$effect->getAmplifier().",".($effect->getDuration() * 20);
-		return $str;
 	}
 
 	public function execute()

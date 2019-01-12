@@ -32,15 +32,6 @@ class TypeItem extends Condition
 		return $item;
 	}
 
-	public function toString() : string
-	{
-		$item = $this->getItem();
-		if(!($item instanceof Item)) return (string)$item;
-		$str = $item->getId().":".$item->getDamage().":".$item->getCount();
-		return $str;
-	}
-
-
 	public function getEditForm(string $default = "", string $mes = "")
 	{
 		$item = $this->parse($default);

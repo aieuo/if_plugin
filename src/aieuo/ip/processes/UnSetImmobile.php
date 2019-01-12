@@ -21,6 +21,10 @@ class UnSetImmobile extends Process
 		return "プレイヤーを動けるようにする";
 	}
 
+	public function getMessage() {
+		return "プレイヤーを動けるようにする";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

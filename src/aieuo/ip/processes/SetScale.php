@@ -25,6 +25,12 @@ class SetScale extends Process
 		return "プレイヤーのサイズを§7<scale>§fにする";
 	}
 
+	public function getMessage() {
+		$scale = $this->getScale();
+		if($scale === false) return false;
+		return "プレイヤーのサイズを".$scale."にする";
+	}
+
 	public function getScale()
 	{
 		return $this->getValues();
@@ -40,11 +46,6 @@ class SetScale extends Process
 		$scale = (float)$content;
 		if($scale <= 0) return false;
         return $scale;
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getScale();
 	}
 
 	public function execute()

@@ -28,6 +28,13 @@ class DelayedCommand extends Process
 		return "§7<time>§f秒遅れてコマンド§7<command>§fを実行する";
 	}
 
+	public function getMessage() {
+		if($this->getValues() === false) return false;
+		$command = $this->getCommand();
+		$time = $this->getTiem();
+		return ($time * 20)."秒遅れて/".$command." を実行する";
+	}
+
 	public function getTime()
 	{
 		return $this->getValues()[1];
@@ -47,10 +54,6 @@ class DelayedCommand extends Process
 	{
 	    if(!preg_match("/([0-9]+),(.+)/", $commands, $matches)) return false;
 	    return [$matches[2], (int)$matches[1]];
-	}
-
-	public function toString() : string {
-		return $this->getTime().",".$this->getCommand();
 	}
 
 	public function execute()

@@ -21,6 +21,10 @@ class LessMoney extends TypeMoney
 		return "所持金が§7<amount>§f以下なら";
 	}
 
+	public function getMessage() {
+		return "所持金が".$this->getAmount()."なら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

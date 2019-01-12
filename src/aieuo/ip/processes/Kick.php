@@ -28,6 +28,12 @@ class Kick extends Process
 		return "プレイヤーを§7<reason>§fでキックする";
 	}
 
+	public function getMessage()
+	{
+		$reason = $this->getReason();
+		return "プレイヤーを".$reason."でキックする";
+	}
+
 	public function getReason()
 	{
 		return $this->getValues();
@@ -36,11 +42,6 @@ class Kick extends Process
 	public function setReason(string $reason)
 	{
 		$this->setValues($reason);
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getReason();
 	}
 
 	public function execute()

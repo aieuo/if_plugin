@@ -21,6 +21,12 @@ class SetSleeping extends TypePosition
 		return "プレイヤーを§7<pos>§fに寝かせる";
 	}
 
+	public function getMessage() {
+		$pos = $this->getPosition();
+		if($pos === false) return false;
+		return $pos->__toString()."で寝る";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

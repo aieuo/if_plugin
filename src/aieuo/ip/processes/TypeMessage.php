@@ -13,19 +13,14 @@ class TypeMessage extends Process
 		$this->setValues($message);
 	}
 
-	public function getMessage()
+	public function getSendMessage()
 	{
 		return $this->getValues();
 	}
 
-	public function setMessage(string $message)
+	public function setSendMessage(string $message)
 	{
 		$this->setValues($message);
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getMessage();
 	}
 
 	public function getEditForm(string $default = "", string $mes = "")

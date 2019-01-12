@@ -21,6 +21,12 @@ class InHand extends TypeItem
 		return "idが§7<id>§fのアイテムを§7<count>§f個以上手に持っているなら";
 	}
 
+	public function getMessage() {
+		$item = $this->getItem();
+		if(!($item instanceof Item)) return false;
+		return "手に(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."を持っているなら";
+	}
+
 	public function check()
 	{
 		$player = $this->getPlayer();

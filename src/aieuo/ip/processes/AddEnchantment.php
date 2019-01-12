@@ -28,6 +28,12 @@ class AddEnchantment extends Process
 		return "手に持ってるアイテムにidが§7<id>§fで強さが§7<power>§fのエンチャントを追加する";
 	}
 
+	public function getMessage() {
+		$enchant = $this->getEnchantment();
+		if(!($enchant instanceof EnchantmentInstance)) return false;
+		return "手に持ってるアイテムにidが".$enchant->getId()."で".$enchant->getLevel()."レベルのエンチャントを追加する";
+	}
+
 	public function getEnchantment()
 	{
 		return $this->getValues();
@@ -52,14 +58,6 @@ class AddEnchantment extends Process
         }
         if(!($enchantment instanceof Enchantment)) return null;
         return new EnchantmentInstance($enchantment, (int)$args[1]);
-	}
-
-	public function toString() : string
-	{
-		$enchant = $this->getEnchantment();
-		if(!($enchant instanceof EnchantmentInstance)) return (string)$enchant;
-		$str = $enchant->getId().",".$enchant->getLevel();
-		return $str;
 	}
 
 	public function execute()

@@ -34,6 +34,33 @@ class Calculation extends Process
 		return "§7<value1>§fと§7<value2>§fを計算§7<opefator>§rした結果を{result}に入れる";
 	}
 
+	public function getMessage() {
+		if($this->getValues() === false) return false;
+		$value1 = $this->getValue1();
+		$value2 = $this->getValue2();
+		$operator = $this->getOperator();
+        switch ($operator){
+            case self::ADDITION:
+            	$mes = $value1."と".$value2."を足す";
+                break;
+            case self::SUBTRACTION:
+            	$mes = $value1."から".$value2."を引く";
+                break;
+            case self::MULTIPLICATION:
+            	$mes = $value1."と".$value2."を掛ける";
+                break;
+            case self::DIVISION:
+            	$mes = $value1."を".$value2."で割る";
+                break;
+            case self::MODULO:
+            	$mes = $value1."を".$value2."で割った余りを出す";
+                break;
+            default:
+                return false;
+        }
+        return $mes;
+	}
+
 	public function getValue1()
 	{
 		return $this->getValues()[0];
@@ -63,12 +90,6 @@ class Calculation extends Process
         if(is_numeric($value1)) $value1 = (int)$value1;
         if(is_numeric($value2)) $value2 = (int)$value2;
         return [$value1, $value2, $operator];
-	}
-
-	public function toString() : string
-	{
-		$str = $this->getValue1()."[ope:".$this->getOperator()."]".$this->getValue2();
-		return $str;
 	}
 
 	public function execute()

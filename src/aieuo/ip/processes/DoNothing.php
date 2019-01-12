@@ -15,4 +15,8 @@ class DoNothing extends Process
 	{
 		return "何もしない";
 	}
+
+	public function getMessage() {
+		return "何もしない";
+	}
 }

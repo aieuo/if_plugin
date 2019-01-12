@@ -21,6 +21,12 @@ class SetMaxHealth extends SetHealth
 		return "プレイヤーの最大体力を§7<health>§fにする";
 	}
 
+	public function getMessage() {
+		$health = $this->getHealth();
+		if($health === false) return false;
+		return "プレイヤーの最大体力を".$health."にする";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

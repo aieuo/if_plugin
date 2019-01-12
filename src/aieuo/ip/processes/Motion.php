@@ -27,6 +27,12 @@ class Motion extends TypePosition
 		return "プレイヤーを§7<x> <y> <z>§fブロック動かす";
 	}
 
+	public function getMessage() {
+		$pos = $this->getCommand();
+		if($pos === false) return false;
+		return "プレイヤーを".$pos->x.",".$pos->y.",".$pos->z."ブロック動かす";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();

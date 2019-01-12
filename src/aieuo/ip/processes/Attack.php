@@ -27,6 +27,12 @@ class Attack extends Process
 		return "プレイヤーにダメージを§7<damage>§f与える";
 	}
 
+	public function getMessage() {
+		$damage = $this->getDamage();
+		if($damage === false) return false;
+		return "プレイヤーに".$damage."ダメージ与える";
+	}
+
 	public function getDamage()
 	{
 		return $this->getValues();
@@ -42,11 +48,6 @@ class Attack extends Process
 		$damage = (float)$content;
 		if($damage <= 0) return false;
 		return $damage;
-	}
-
-	public function toString() : string
-	{
-		return (string)$this->getDamage();
 	}
 
 	public function execute()

@@ -25,6 +25,12 @@ class SetSitting extends TypePosition
 		return "プレイヤーを§7<pos>§fに座らせる";
 	}
 
+	public function getMessage() {
+		$pos = $this->getPosition();
+		if($pos === false) return false;
+		return $pos->__toString()."で座る";
+	}
+
 	public function execute()
 	{
 		$player = $this->getPlayer();
