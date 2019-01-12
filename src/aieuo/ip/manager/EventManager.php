@@ -107,11 +107,11 @@ class EventManager extends ifManager{
         ){
             $block = $event->getBlock();
             $variables["{block}"] = $block->__toString();
-            $variables["{blockname}"] = $block->getName();
-            $variables["{blockid}"] = $block->getId();
-            $variables["{blockdamage}"] = $block->getDamage();
-            $variables["{blockids}"] = $block->getId().":".$block->getDamage();
-            $variables["{blockpos}"] = $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
+            $variables["{block_name}"] = $block->getName();
+            $variables["{block_id}"] = $block->getId();
+            $variables["{block_damage}"] = $block->getDamage();
+            $variables["{block_ids}"] = $block->getId().":".$block->getDamage();
+            $variables["{block_pos}"] = $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
             $variables["{block_level}"] = $block->level->getFolderName();
         }
         if(

@@ -283,9 +283,13 @@ class ifAPI {
             }
         }
         foreach (${"datas".$stat} as $datas) {
-            ($pro = Process::get($datas["id"]))
-              ->setPlayer($player)
-              ->setValues($pro->parse($this->replaceVariable($this->replaceDatas($datas["content"], $args))))
+            $process = Process::get($datas["id"]);
+            if($datas["id"] === Process::EVENT_CANCEL) {
+                $process->setValues($args["event"])->execute();
+                continue;
+            }
+            $process->setPlayer($player)
+              ->setValues($process->parse($this->replaceVariable($this->replaceDatas($datas["content"], $args))))
               ->execute();
         }
         return true;
