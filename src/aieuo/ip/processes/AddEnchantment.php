@@ -50,7 +50,7 @@ class AddEnchantment extends Process
         {
             $enchantment = Enchantment::getEnchantmentByName($args[0]);
         }
-        if(!($enchantment instanceof Enchantment)) return false;
+        if(!($enchantment instanceof Enchantment)) return null;
         return new EnchantmentInstance($enchantment, (int)$args[1]);
 	}
 
@@ -68,8 +68,8 @@ class AddEnchantment extends Process
 		$enchant = $this->getEnchantment();
 		if(!($enchant instanceof EnchantmentInstance))
 		{
-			if($enchant === null) $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
-			if($enchant === false) $player->sendMessage("§c[".$this->getName()."] エンチャントが見つかりません");
+			if($enchant === false) $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			if($enchant === null) $player->sendMessage("§c[".$this->getName()."] エンチャントが見つかりません");
 			return;
 		}
 		$item = $player->getInventory()->getItemInHand();
@@ -90,8 +90,8 @@ class AddEnchantment extends Process
 		}
 		elseif($default !== "")
 		{
-			if($enchant === null) $mes .= "§c正しく入力できていません§f";
-			if($enchant === false) $mes .= "§cエンチャントが見つかりません§f";
+			if($enchant === false) $mes .= "§c正しく入力できていません§f";
+			if($enchant === null) $mes .= "§cエンチャントが見つかりません§f";
 		}
         $data = [
             "type" => "custom_form",
@@ -107,4 +107,10 @@ class AddEnchantment extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "") return null;
+    	$enchant_str = $datas[1].",".$datas[2];
+    	return ["contents" => $enchant_str, "delete" => $datas[3], "cancel" => $datas[4]];
+    }
 }

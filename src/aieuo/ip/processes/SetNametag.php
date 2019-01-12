@@ -63,4 +63,9 @@ class SetNametag extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "") return null;
+    	return ["contents" => $datas[1], "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }

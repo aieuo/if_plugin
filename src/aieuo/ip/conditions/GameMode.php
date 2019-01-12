@@ -86,4 +86,11 @@ class GameMode extends Condition
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "") return null;
+    	$gamemode = $this->parse((string)$datas[1]);
+    	if($gamemode === false) return false;
+    	return ["contents" => (string)$datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    }
 }

@@ -156,4 +156,10 @@ class Comparison extends Condition
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($data[1] === "" or $data[3] === "") return null;
+    	if($this->parse($data[1]."[ope:".$data[2]."]".$data[3]) === false) return false;
+    	return ["contents" => $data[1]."[ope:".$data[2]."]".$data[3], "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }

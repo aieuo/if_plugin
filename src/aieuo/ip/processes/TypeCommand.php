@@ -44,4 +44,11 @@ class TypeCommand extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "") return null;
+    	$command = $this->parse($datas[1]);
+    	if($command === false) return false;
+    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    }
 }

@@ -45,7 +45,7 @@ class AddEffect extends Process
         if(!isset($args[2]) or (float)$args[2] <= 0) $args[2] = 30;
 		$effect = Effect::getEffectByName($args[0]);
         if($effect === null) $effect = Effect::getEffect((int)$args[0]);
-        if($effect === null) return false;
+        if($effect === null) return null;
 		return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
 	}
 
@@ -63,8 +63,8 @@ class AddEffect extends Process
 		$effect = $this->getEffect();
 		if(!($effect instanceof EffectInstance))
 		{
-			if($effect === null) $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
-			if($effect === false) $player->sendMessage("§c[".$this->getName()."] エフェクトが見つかりません");
+			if($effect === false) $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			if($effect === null) $player->sendMessage("§c[".$this->getName()."] エフェクトが見つかりません");
 			return;
 		}
 		$player->addEffect($effect);
@@ -85,8 +85,8 @@ class AddEffect extends Process
 		}
 		elseif($default !== "")
 		{
-			if($effect === null)$mes .= "§c正しく入力できていません§f";
-			if($effect === false)$mes .= "§cエフェクトが見つかりません§f";
+			if($effect === false)$mes .= "§c正しく入力できていません§f";
+			if($effect === null)$mes .= "§cエフェクトが見つかりません§f";
 		}
         $data = [
             "type" => "custom_form",
@@ -103,4 +103,10 @@ class AddEffect extends Process
         $json = Form::encodeJson($data);
         return $json;
 	}
+
+    public function parseFormData(array $datas) {
+    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") return null;
+    	$effect_str = $datas[1].",".$datas[2].",".$datas[3];
+    	return ["contents" => $effect_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    }
 }
