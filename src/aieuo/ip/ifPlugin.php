@@ -88,8 +88,6 @@ class ifPlugin extends PluginBase implements Listener{
 
         $this->getServer()->getCommandMap()->register("ifPlugin", new ifCommand($this));
 
-        Form::registerFormIds();
-
         if(!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,

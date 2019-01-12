@@ -20,52 +20,43 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 		$this->setUsage("if <block | command | event>");
 		$this->setExecutor($this);
 		$this->owner = $owner;
+		$this->form = new Form();
 	}
 
 	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool{
 		if(!$sender->isOp() or $sender->getName() === "CONSOLE")return true;
 		$name = $sender->getName();
 		if(!isset($args[0])){
-			$form = Form::getSelectIfTypeForm();
-			Form::sendForm($sender, $form, Form::getFormId("SelectIfTypeForm"));
+			$form = $this->form->getSelectIfTypeForm();
+			Form::sendForm($sender, $form, $this->form, "onSelectIfType");
 			return true;
 		}
 		switch ($args[0]) {
 			case 'block':
 				if(isset($args[1])){
 					$session = $sender->ifSession;
-					$session->setValid();
-					$session->setIfType(Session::BLOCK);
 					switch ($args[1]) {
-						case "add":
-							$session->setData("type", "add");
-							$sender->sendMessage("追加するブロックを触ってください");
-							return true;
-						case "add_empty":
-							$session->setData("type", "add_empty");
-							$sender->sendMessage("追加するブロックを触ってください");
-							return true;
 						case "edit":
-							$session->setData("type", "edit");
 							$sender->sendMessage("編集するブロックを触ってください");
-							return true;
+							break;
 						case "check":
-							$session->setData("type", "check");
 							$sender->sendMessage("確認するブロックを触ってください");
-							return true;
+							break;
 						case "del":
-							$session->setData("type", "del");
 							$sender->sendMessage("削除するブロックを触ってください");
-							return true;
+							break;
 						case "cancel":
 							$session->setValid(false);
 							$sender->sendMessage("キャンセルしました");
 							return true;
 					}
+					$session->setData("action", $args[1]);
+					$session->setIfType(Session::BLOCK);
+					$session->setValid();
 					return true;
 				}
-				$form = Form::getSelectBlockActionForm();
-				Form::sendForm($sender, $form, Form::getFormId("SelectBlockActionForm"));
+                $form = $this->form->getBlockForm()->getSelectActionForm();
+                Form::sendForm($sender, $form, $this->form->getBlockForm(), "onSelectAction");
 				break;
 			case 'command':
 				if(isset($args[1])){
@@ -75,34 +66,31 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 					$manager = $this->owner->getCommandManager();
 					switch ($args[1]) {
 						case "add":
-							$session->setData("type", "add_");
-							$form = Form::getAddCommandForm();
-							Form::sendForm($sender, $form, Form::getFormId("AddCommandForm"));
-							return true;
 						case "add_empty":
-							$session->setData("type", "add_empty");
-							$form = Form::getAddCommandForm();
-							Form::sendForm($sender, $form, Form::getFormId("AddCommandForm"));
+							$session->setData("action", $args[1]);
+			                $form = $this->form->getCommandFOrm()->getAddCommandForm();
+			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onAddCommand");
 							return true;
 						case "edit":
-							$session->setData("type", "edit");
+							$session->setData("action", "edit");
 							if(isset($args[2])){
 								if(!$manager->isAdded($args[2])){
 									$sender->sendMessage("そのコマンドはまだ追加されていません");
 									$session->setValid(false);
 									return true;
 								}
+                				$session->setData("if_key", $args[2]);
 								$datas = $manager->get($args[2]);
 								$mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-								$form = Form::getEditIfForm($mes);
-								Form::sendForm($sender, $form, Form::getFormId("EditIfForm"));
+					            $form = $this->form->getCommandForm()->getEditIfForm($mes);
+					            Form::sendForm($player, $form, $this->form->getCommandForm(), "onEditIf");
 								return true;
 							}
-							$form = Form::getSelectCommandForm();
-							Form::sendForm($sender, $form, Form::getFormId("SelectCommandForm"));
+			                $form = $this->form->getCommandForm()->getSelectCommandForm();
+			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onSelectCommand");
 							return true;
 						case "check":
-							$session->setData("type", "check");
+							$session->setData("action", "check");
 							if(isset($args[2])){
 								if(!$manager->isAdded($args[2])){
 									$sender->sendMessage("そのコマンドはまだ追加されていません");
@@ -112,25 +100,27 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 								$datas = $manager->get($args[2]);
 								$mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
 								$sender->sendMessage($mes);
+        						$session->setValid(false);
 								return true;
 							}
-							$form = Form::getSelectCommandForm();
-							Form::sendForm($sender, $form, Form::getFormId("SelectCommandForm"));
+			                $form = $this->form->getCommandForm()->getSelectCommandForm();
+			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onSelectCommand");
 							return true;
 						case "del":
-							$session->setData("type", "del");
+							$session->setData("action", "del");
 							if(isset($args[2])){
 								if(!$manager->isAdded($args[2])){
 									$sender->sendMessage("そのコマンドはまだ追加されていません");
 									$session->setValid(false);
 									return true;
 								}
-								$manager->remove($args[2]);
-								$sender->sendMessage("削除しました");
+        						$session->setData("if_key", $data[0]);
+					            $form = $this->form->getConfirmDeleteForm();
+					            Form::sendForm($player, $form, $this->form, "onDeleteIf");
 								return true;
 							}
-							$form = Form::getSelectCommandForm();
-							Form::sendForm($sender, $form, Form::getFormId("SelectCommandForm"));
+			                $form = $this->form->getCommandForm()->getSelectCommandForm();
+			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onSelectCommand");
 							return true;
 						case "cancel":
 							$session->setValid(false);
@@ -138,37 +128,16 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 							return true;
 					}
 				}
-				$form = Form::getSelectCommandActionForm();
-				Form::sendForm($sender, $form, Form::getFormId("SelectCommandActionForm"));
+                $form = $this->form->getCommandForm()->getSelectActionForm();
+                Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectAction");
 				break;
 			case 'event':
-				if(isset($args[1])){
-	                $session = $sender->ifSession;
-	                $session->setValid();
-	                $session->setIfType(Session::EVENT);
-	                switch ($args[1]) {
-	                    case "add":
-	                    case "add_empty":
-	                    case "edit":
-	                    case "check":
-	                    case "del":
-	                        $session->setData("type", $args[1]);
-	                        break;
-	                    case "cancel":
-	                        $session->setValid(false);
-	                        $sender->sendMessage("キャンセルしました");
-	                        break;
-	                }
-	                $form = Form::getSelectEventForm();
-	                Form::sendForm($sender, $form, Form::getFormId("SelectEventForm"));
-	                return true;
-				}
-                $form = Form::getSelectEventActionForm();
-                Form::sendForm($sender, $form, Form::getFormId("SelectEventActionForm"));
+				$form = $this->form->getEventForm()->getSelectEventForm();
+				Form::sendForm($sender, $form, $this->form->getEventForm(), "onSelectEvent");
 				break;
 			default:
-				$form = Form::getSelectIfTypeForm();
-				Form::sendForm($sender, $form, Form::getFormId("SelectIfTypeForm"));
+				$data = $this->form->getSelectIfTypeForm();
+				Form::sendForm($sender, $data, $this->form, "onSelectIfType");
 				break;
 		}
 		return true;
