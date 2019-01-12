@@ -96,7 +96,8 @@ class AddEffect extends Process
                 Elements::getInput("\n§7<id>§f エフェクトの名前かidを入力してください", "例) 1", $id),
                 Elements::getInput("\n§7<power>§f エフェクトの強さを入力してください", "例) 5", $power),
                 Elements::getInput("\n§7<time>§f エフェクトを与える時間を入力してください", "例) 5", $time),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

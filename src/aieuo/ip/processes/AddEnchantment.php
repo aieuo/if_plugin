@@ -100,7 +100,8 @@ class AddEnchantment extends Process
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<id>§f エンチャントの名前かidを入力してください", "例) 1", $id),
                 Elements::getInput("\n§7<power>§f エンチャントのレベルを入力してください", "例) 5", $name),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

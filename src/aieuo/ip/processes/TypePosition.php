@@ -59,7 +59,8 @@ class TypePosition extends Process
             "content" => [
                 Elements::getLabel($this->getDescription().$mes),
                 Elements::getInput("\n§7<pos>§f 座標とワールド名を,で区切って入力してください", "例) 1,15,30,world", $position),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

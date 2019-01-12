@@ -84,7 +84,8 @@ class AddVariable extends Process
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<name>§f 変数の名前を入力してください", "例) aieuo", $name),
                 Elements::getInput("\n§7<value>§f 変数の値を入力してください", "例) 1000", $value),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

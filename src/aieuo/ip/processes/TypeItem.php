@@ -67,7 +67,8 @@ class TypeItem extends Process
                 Elements::getInput("§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
                 Elements::getInput("§7<count>§f アイテムの数を入力してください", "例) 5", $count),
                 Elements::getInput("§7<name>§f アイテムに付けたい名前を入力してください(空白ならそのままの名前です)", "例) aieuo", $name),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);

@@ -48,7 +48,8 @@ class TypeMoney extends Condition
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)."\n"),
                 Elements::getInput("\n§7<amount>§f 値段を入力してください", "例) 1000", $money),
-                Elements::getToggle("削除する")
+                Elements::getToggle("削除する"),
+                Elements::getToggle("キャンセル")
             ]
         ];
         $json = Form::encodeJson($data);
