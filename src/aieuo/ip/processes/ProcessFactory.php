@@ -36,6 +36,7 @@ class ProcessFactory
 		self::register(new SetMaxHealth());
 		self::register(new Attack());
 		self::register(new Kick());
+		self::register(new EventCancel());
 	}
 
 	/**

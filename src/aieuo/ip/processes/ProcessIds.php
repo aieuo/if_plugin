@@ -33,4 +33,5 @@ interface ProcessIds {
     const CALCULATION = 127;
     const ADD_VARIABLE = 128;
     const SET_SCALE = 129;
+    const EVENT_CANCEL = 130;
 }
