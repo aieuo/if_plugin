@@ -74,6 +74,23 @@ class VariableHelper {
         return true;
 	}
 
+	/**
+	 * 変数を置き換える
+	 * @param  string $string
+	 * @return string
+	 */
+    public function replaceVariable($string){
+        $count = 0;
+        while(preg_match_all("/({[^{}]+})/", $string, $matches)){
+            if(++$count >= 10) break;
+            foreach ($matches[0] as $name) {
+                $val = $this->get(substr($name, 1, -1));
+                $string = str_replace($name, $val instanceof Variable ? $val->getValue(): $val, $string);
+            }
+        }
+        return $string;
+    }
+
 	public function save(){
 		unset($this->variables["result"]);
 		foreach ($this->variables as $variable) {

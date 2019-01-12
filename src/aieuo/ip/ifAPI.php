@@ -33,6 +33,7 @@ class ifAPI {
         foreach($datas1 as $datas){
             $result = ($co = Condition::get($datas["id"]))
                         ->setPlayer($player)
+                        ->setValues($co->parse(ifPlugin::getInstance()->getVariableHelper()->replaceVariable($this->replaceDatas($datas["content"], $args))))
                         ->check();
             if($result === Condition::NOT_FOUND){
                 $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
@@ -50,22 +51,10 @@ class ifAPI {
                 continue;
             }
             $process->setPlayer($player)
-              ->setValues($process->parse($this->replaceVariable($this->replaceDatas($datas["content"], $args))))
+              ->setValues($process->parse(ifPlugin::getInstance()->getVariableHelper()->replaceVariable($this->replaceDatas($datas["content"], $args))))
               ->execute();
         }
         return true;
-    }
-
-    public function replaceVariable($string){
-        $count = 0;
-        while(preg_match_all("/({[^{}]+})/", $string, $matches)){
-            if(++$count >= 10) break;
-            foreach ($matches[0] as $name) {
-                $val = ifManager::getOwner()->getVariableHelper()->get(substr($name, 1, -1));
-                $string = str_replace($name, $val instanceof Variable ? $val->getValue(): $val, $string);
-            }
-        }
-        return $string;
     }
 
     public function replaceDatas($string, $datas) {
