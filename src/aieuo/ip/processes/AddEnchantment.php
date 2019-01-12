@@ -99,7 +99,7 @@ class AddEnchantment extends Process
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<id>§f エンチャントの名前かidを入力してください", "例) 1", $id),
-                Elements::getInput("\n§7<power>§f エンチャントのレベルを入力してください", "例) 5", $name),
+                Elements::getInput("\n§7<power>§f エンチャントのレベルを入力してください", "例) 5", $power),
                 Elements::getToggle("削除する"),
                 Elements::getToggle("キャンセル")
             ]
@@ -109,8 +109,9 @@ class AddEnchantment extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "" or $datas[2] === "") return null;
+    	$status = true;
     	$enchant_str = $datas[1].",".$datas[2];
-    	return ["contents" => $enchant_str, "delete" => $datas[3], "cancel" => $datas[4]];
+    	if($datas[1] === "" or $datas[2] === "") $status = null;
+    	return ["status" => $status, "contents" => $enchant_str, "delete" => $datas[3], "cancel" => $datas[4]];
     }
 }

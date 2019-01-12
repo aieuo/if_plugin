@@ -158,8 +158,12 @@ class Comparison extends Condition
 	}
 
     public function parseFormData(array $datas) {
-    	if($data[1] === "" or $data[3] === "") return null;
-    	if($this->parse($data[1]."[ope:".$data[2]."]".$data[3]) === false) return false;
-    	return ["contents" => $data[1]."[ope:".$data[2]."]".$data[3], "delete" => $datas[4], "cancel" => $datas[5]];
+    	$status = true;
+    	if($datas[1] === "" or $datas[3] === "") {
+    		$status = null;
+    	} elseif($this->parse($datas[1]."[ope:".$datas[2]."]".$datas[3]) === false) {
+    		$status = false;
+    	}
+    	return ["status" => $status, "contents" => $datas[1]."[ope:".$datas[2]."]".$datas[3], "delete" => $datas[4], "cancel" => $datas[5]];
     }
 }

@@ -110,7 +110,7 @@ class Calculation extends Process
 		$values = $this->parse($default);
 		$value1 = $default;
 		$value2 = "";
-		$operator = self::ADD;
+		$operator = self::ADDITION;
 		if($values !== false)
 		{
 			$value1 = $values[0];
@@ -144,10 +144,14 @@ class Calculation extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") return null;
+    	$status = true;
     	$values_str = $datas[1]."[ope:".$datas[2]."]".$datas[3];
-    	$values = $this->parse($values_str);
-    	if($values === false) return false;
-    	return ["contents" => $values_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") {
+    		$status = null;
+    	} else {
+	    	$values = $this->parse($values_str);
+	    	if($values === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $values_str, "delete" => $datas[4], "cancel" => $datas[5]];
     }
 }

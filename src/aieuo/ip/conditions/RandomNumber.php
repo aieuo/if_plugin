@@ -110,10 +110,14 @@ class RandomNumber extends Condition
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") return null;
+    	$status = true;
     	$num_str = $datas[1].",".$datas[2].",".$datas[3];
-    	$num = $this->parse($num_str);
-    	if($num === false) return false;
-    	return ["contents" => $num_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") {
+    		$status = null;
+    	} else {
+	    	$num = $this->parse($num_str);
+	    	if($num === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $num_str, "delete" => $datas[4], "cancel" => $datas[5]];
     }
 }

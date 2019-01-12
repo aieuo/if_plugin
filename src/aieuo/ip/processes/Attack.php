@@ -85,9 +85,13 @@ class Attack extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	$damage = $this->parse($datas[1]);
-    	if($damage === false) return false;
-    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    	$status = true;
+    	if($datas[1] === "") {
+    		$status = null;
+    	} else {
+	    	$damage = $this->parse($datas[1]);
+	    	if($damage === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

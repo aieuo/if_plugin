@@ -105,8 +105,9 @@ class AddEffect extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") return null;
+    	$status = true;
     	$effect_str = $datas[1].",".$datas[2].",".$datas[3];
-    	return ["contents" => $effect_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") $status = null;
+    	return ["status" => $status, "contents" => $effect_str, "delete" => $datas[4], "cancel" => $datas[5]];
     }
 }

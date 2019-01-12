@@ -30,7 +30,6 @@ class TypeCommand extends Process
 
 	public function getEditForm(string $default = "", string $mes = "")
 	{
-		if($default[0] === "/") $mes .= "§e一つ目の/は取ってください§f";
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
@@ -46,9 +45,13 @@ class TypeCommand extends Process
 	}
 
     public function parseFormData(array $datas) {
-    	if($datas[1] === "") return null;
-    	$command = $this->parse($datas[1]);
-    	if($command === false) return false;
-    	return ["contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+    	$status = true;
+    	if($datas[1] === "") {
+    		$status = null;
+    	} else {
+	    	$command = $this->parse($datas[1]);
+	    	if($command === false) $status = false;
+	    }
+    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

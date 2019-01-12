@@ -15,11 +15,11 @@ class CommandManager extends ifManager{
 	}
 
     public function set($key, $datas = [], $args = []){
-        if($args["desc"] == "")$args["desc"] = "ifPluginで追加したコマンドです";
-        if($args["perm"] == "")$args["perm"] = "op";
+        $datas = $this->repairIF($datas);
+        if($args["desc"] === "") $args["desc"] = "ifPluginで追加したコマンドです";
+        if($args["perm"] === "") $args["perm"] = "op";
         $datas["description"] = $args["desc"];
         $datas["permission"] = $args["perm"];
-        $datas = $this->repairIF($datas);
         parent::set($key, $datas);
     }
 
