@@ -60,6 +60,10 @@ class Form {
         return new ExportForm();
     }
 
+    public function getImportForm() {
+        return new ImportForm();
+    }
+
     public function getSelectIfTypeForm(){
         $data = [
             "type" => "form",
@@ -69,6 +73,7 @@ class Form {
                 Elements::getButton("ブロック"),
                 Elements::getButton("コマンド"),
                 Elements::getButton("イベント"),
+                Elements::getButton("ファイルインポート"),
                 Elements::getButton("終了")
             ]
         ];
@@ -81,18 +86,25 @@ class Form {
         $session = $player->ifSession;
         switch ($data) {
             case 0:
+                $session->setIfType(Session::BLOCK);
                 $form = $this->getBlockForm()->getSelectActionForm();
                 Form::sendForm($player, $form, $this->getBlockForm(), "onSelectAction");
                 break;
             case 1:
+                $session->setIfType(Session::COMMAND);
                 $form = $this->getCommandForm()->getSelectActionForm();
                 Form::sendForm($player, $form, $this->getCommandForm(), "onSelectAction");
                 break;
             case 2:
+                $session->setIfType(Session::EVENT);
                 $form = $this->getEventForm()->getSelectEventForm();
                 Form::sendForm($player, $form, $this->getEventForm(), "onselectEvent");
                 break;
             case 3:
+                $form = $this->getImportForm()->getImportListForm();
+                Form::sendForm($player, $form, $this->getImportForm(), "onImportList");
+                break;
+            case 4:
                 $session->setValid(false);
                 break;
         }
