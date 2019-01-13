@@ -56,6 +56,10 @@ class Form {
         return new EventForm();
     }
 
+    public function getExportForm() {
+        return new ExportForm();
+    }
+
     public function getSelectIfTypeForm(){
         $data = [
             "type" => "form",
@@ -121,6 +125,9 @@ class Form {
                     "text" => "削除する"
                 ],
                 [
+                    "text" => "共有用にファイル出力する"
+                ],
+                [
                     "text" => "終了"
                 ]
             ]
@@ -160,6 +167,10 @@ class Form {
         } elseif($data == 3) {
             $form = $this->getConfirmDeleteForm();
             Form::sendForm($player, $form, $this, "onDeleteIf");
+            return;
+        } elseif($data == 4) {
+            $form = $this->getExportForm()->getExportForm();
+            Form::sendForm($player, $form, $this->getExportForm(), "onExport");
             return;
         } else {
             $session->setValid(false);
