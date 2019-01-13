@@ -35,4 +35,7 @@ interface ProcessIds {
     const SET_SCALE = 129;
     const EVENT_CANCEL = 130;
     const SET_ITEM = 131;
+    const SAVE_DATAS = 132;
+    const ADDMONEY = 133;
+    const TAKEMONEY = 134;
 }

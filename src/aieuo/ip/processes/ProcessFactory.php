@@ -18,12 +18,15 @@ class ProcessFactory
 		self::register(new Command());
 		self::register(new CommandConsole());
 		self::register(new DelayedCommand());
+		self::register(new AddMoney());
+		self::register(new TakeMoney());
 		self::register(new Teleport());
 		self::register(new Motion());
 		self::register(new Calculation());
 		self::register(new AddVariable());
 		self::register(new AddItem());
 		self::register(new RemoveItem());
+		self::register(new setItem());
 		self::register(new SetImmobile());
 		self::register(new UnSetImmobile());
 		self::register(new AddEnchantment());
@@ -31,13 +34,13 @@ class ProcessFactory
 		self::register(new SetNametag());
 		self::register(new SetSleeping());
 		self::register(new SetSitting());
+		self::register(new EventCancel());
+		self::register(new SaveDatas());
 		self::register(new SetGamemode());
 		self::register(new SetHealth());
 		self::register(new SetMaxHealth());
 		self::register(new Attack());
 		self::register(new Kick());
-		self::register(new EventCancel());
-		self::register(new setItem());
 	}
 
 	/**
