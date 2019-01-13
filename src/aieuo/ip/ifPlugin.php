@@ -124,4 +124,32 @@ class ifPlugin extends PluginBase implements Listener{
             $this->getServer()->getLogger()->warning("[if] 経済システムプラグインが見つかりませんでした");
         }
     }
+
+    public function getManagerBySession($session) {
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $manager = $this->getBlockManager();
+        }elseif($type === Session::COMMAND) {
+            $manager = $this->getCommandManager();
+        }elseif($type === Session::EVENT) {
+            $manager = $this->getEventManager();
+        }elseif($type === Session::CHAIN) {
+            $manager = $this->getChainManager();
+        }
+        return $manager;
+    }
+
+    public function getOptionsBySession($session) {
+        $type = $session->getIfType();
+        if($type === Session::BLOCK) {
+            $options = [];
+        }elseif($type === Session::COMMAND) {
+            $options = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+        }elseif($type === Session::EVENT) {
+            $options = ["eventname" => $session->getData("eventname")];
+        }elseif($type === Session::CHAIN) {
+            $options = [];
+        }
+        return $options;
+    }
 }
