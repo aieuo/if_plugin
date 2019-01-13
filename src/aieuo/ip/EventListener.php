@@ -59,10 +59,8 @@ class EventListener implements Listener {
         $this->onEvent($event, "PlayerJoinEvent");
 
         $player = $event->getPlayer();
-        if($player->isOp()){
-            $session = new Session();
-            $player->ifSession = $session;
-        }
+        $session = new Session();
+        $player->ifSession = $session;
     }
     public function craft(CraftItemEvent $event){
         $this->onEvent($event, "CraftItemEvent");
