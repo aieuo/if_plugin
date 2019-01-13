@@ -188,7 +188,8 @@ class Form {
                 $content = Process::get($value["id"]);
             }
             $content->setValues($content->parse($value["content"]));
-            $data["buttons"][] = Elements::getButton($content->getMessage());
+            $message = $content->getMessage();
+            $data["buttons"][] = Elements::getButton($message === false ? $content->getDescription() : $message);
         }
         $data = self::encodeJson($data);
         return $data;

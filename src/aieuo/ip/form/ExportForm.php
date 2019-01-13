@@ -46,7 +46,7 @@ class ExportForm {
             return;
         }
         $datas["type"] = $type;
-        $datas["options"] = $option;
+        $datas["options"] = $options;
         $export = [
         	"name" => $data[0],
         	"author" => $data[1],

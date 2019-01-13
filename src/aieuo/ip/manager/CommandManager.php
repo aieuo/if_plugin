@@ -64,8 +64,10 @@ class CommandManager extends ifManager{
     public function unregister($command){
         $commands = $this->getSubcommand($command);
         if($this->isSubcommand($command)){
-            $subs = array_shift(explode(" ", $command));
-            unset($commands[implode(" ", $subs)]);
+            $cmds = explode(" ", $command);
+            $subs = array_shift($cmds);
+            $cmd = implode(" ", $subs);
+            unset($commands[$cmd]);
             $command = $this->getParentCommand($command);
         }
         $count = count($commands);
