@@ -46,6 +46,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->getServer()->getCommandMap()->register("ifPlugin", new ifCommand($this));
 
         if(!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
+        if(!file_exists($this->getDataFolder()."exports")) @mkdir($this->getDataFolder()."exports", 0721, true);
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,
             "save_time" => 10*20*60
