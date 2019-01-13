@@ -45,6 +45,9 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 						case "del":
 							$sender->sendMessage("削除するブロックを触ってください");
 							break;
+						case "copy":
+							$sender->sendMessage("コピーするブロックを触ってください");
+							break;
 						case "cancel":
 							$session->setValid(false);
 							$sender->sendMessage("キャンセルしました");
