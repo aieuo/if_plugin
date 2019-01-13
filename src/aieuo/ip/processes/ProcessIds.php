@@ -38,4 +38,5 @@ interface ProcessIds {
     const SAVE_DATAS = 132;
     const ADDMONEY = 133;
     const TAKEMONEY = 134;
+    const COOPERATION = 135;
 }

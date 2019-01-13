@@ -56,6 +56,10 @@ class Form {
         return new EventForm();
     }
 
+    public function getChainForm() {
+        return new ChainIfForm();
+    }
+
     public function getExportForm() {
         return new ExportForm();
     }
@@ -73,6 +77,7 @@ class Form {
                 Elements::getButton("ブロック"),
                 Elements::getButton("コマンド"),
                 Elements::getButton("イベント"),
+                Elements::getButton("チェーン"),
                 Elements::getButton("ファイルインポート"),
                 Elements::getButton("終了")
             ]
@@ -101,10 +106,15 @@ class Form {
                 Form::sendForm($player, $form, $this->getEventForm(), "onselectEvent");
                 break;
             case 3:
+                $session->setIfType(Session::CHAIN);
+                $form = $this->getChainForm()->getSelectActionForm();
+                Form::sendForm($player, $form, $this->getChainForm(), "onselectAction");
+                break;
+            case 4:
                 $form = $this->getImportForm()->getImportListForm();
                 Form::sendForm($player, $form, $this->getImportForm(), "onImportList");
                 break;
-            case 4:
+            case 5:
                 $session->setValid(false);
                 break;
         }

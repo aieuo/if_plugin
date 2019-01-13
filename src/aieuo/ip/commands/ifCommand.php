@@ -138,9 +138,44 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 				$form = $this->form->getEventForm()->getSelectEventForm();
 				Form::sendForm($sender, $form, $this->form->getEventForm(), "onSelectEvent");
 				break;
+			case "chain":
+				if(isset($args[1])) {
+					$session = $sender->ifSession;
+					switch ($args[1]) {
+						case 'add':
+			                $session->setData("action", "add");
+			                $form = $this->form->getChainForm()->getAddChainIfForm();
+			                Form::sendForm($sender, $form, $this->form->getChainForm(), "onAddChainIf");
+							break;
+						case 'edit':
+                			$session->setData("action", "edit");
+			                $form = $this->form->getChainForm()->getEditChainIfForm();
+			                Form::sendForm($sender, $form, $this->form->getChainForm(), "onEditChainIf");
+							break;
+						case 'del':
+                			$session->setData("action", "del");
+			                $form = $this->form->getChainForm()->getEditChainIfForm();
+			                Form::sendForm($sender, $form, $this->form->getChainForm(), "onEditChainIf");
+							break;
+						case 'list':
+			                $form = $this->form->getChainForm()->getChainIfListForm();
+			                Form::sendForm($sender, $form, $this->form->getChainForm(), "onChainIfList");
+							break;
+						default:
+			                $form = $this->form->getChainForm()->getSelectActionForm();
+			                Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
+							break;
+					}
+			        $session->setIfType(Session::CHAIN);
+			        $session->setValid();
+					return true;
+				}
+                $form = $this->form->getChainForm()->getSelectActionForm();
+                Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
+				return true;
 			case "import":
                 $form = $this->form->getImportForm()->getImportListForm();
-                Form::sendForm($player, $form, $this->form->getImportForm(), "onImportList");
+                Form::sendForm($sender, $form, $this->form->getImportForm(), "onImportList");
                 break;
 			default:
 				$data = $this->form->getSelectIfTypeForm();
