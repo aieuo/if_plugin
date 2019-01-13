@@ -71,7 +71,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 						case "add":
 						case "add_empty":
 							$session->setData("action", $args[1]);
-			                $form = $this->form->getCommandFOrm()->getAddCommandForm();
+			                $form = $this->form->getCommandForm()->getAddCommandForm();
 			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onAddCommand");
 							return true;
 						case "edit":
@@ -138,6 +138,10 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 				$form = $this->form->getEventForm()->getSelectEventForm();
 				Form::sendForm($sender, $form, $this->form->getEventForm(), "onSelectEvent");
 				break;
+			case "import":
+                $form = $this->form->getImportForm()->getImportListForm();
+                Form::sendForm($player, $form, $this->form->getImportForm(), "onImportList");
+                break;
 			default:
 				$data = $this->form->getSelectIfTypeForm();
 				Form::sendForm($sender, $data, $this->form, "onSelectIfType");

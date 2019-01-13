@@ -9,21 +9,21 @@ use aieuo\ip\ifAPI;
 
 class ifManager extends ifAPI{
 
-	private static $owner;
+	private $owner;
 	private $config;
 
 	public function __construct($owner, $type){
-		self::$owner = $owner;
+		$this->owner = $owner;
         $this->config = new Config($owner->getDataFolder() . $type. ".yml", Config::YAML, []);
 	}
 
-	public static function getOwner(){
-		return self::$owner;
+	public function getOwner(){
+		return $this->owner;
 	}
 
-	public function getServer(){
-		return self::getOwner()->getServer();
-	}
+    public function getServer() {
+        return $this->getOwner()->getServer();
+    }
 
     /**
      * @return Config
@@ -34,9 +34,10 @@ class ifManager extends ifAPI{
 
     /**
      * @param  string  $key
+     * @param  array   $options
      * @return boolean
      */
-    public function isAdded($key){
+    public function isAdded($key, $options = []){
     	return $this->config->exists($key);
     }
 

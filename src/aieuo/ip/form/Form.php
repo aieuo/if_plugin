@@ -120,7 +120,7 @@ class Form {
                 Elements::getButton("条件に合った時を編集する"),
                 Elements::getButton("条件に合わなかった時を編集する"),
                 Elements::getButton("削除する"),
-                Elements::getButton("共有用にファイル出力する"),
+                Elements::getButton("ファイル出力する"),
                 Elements::getButton("終了")
             ]
         ];
