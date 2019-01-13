@@ -13,24 +13,12 @@ class BlockForm {
             "title" => "block > 操作選択",
             "content" => "§7ボタンを押してください",
             "buttons" => [
-                [
-                    "text" => "編集する"
-                ],
-                [
-                    "text" => "確認する"
-                ],
-                [
-                    "text" => "削除する"
-                ],
-                [
-                    "text" => "コピーする"
-                ],
-                [
-                    "text" => "キャンセルする"
-                ],
-                [
-                    "text" => "ひとつ前の画面に戻る"
-                ]
+                Elements::getButton("編集する"),
+                Elements::getButton("確認する"),
+                Elements::getButton("削除する"),
+                Elements::getButton("コピーする"),
+                Elements::getButton("キャンセルする"),
+                Elements::getButton("ひとつ前の画面に戻る")
             ]
         ];
         $json = Form::encodeJson($data);

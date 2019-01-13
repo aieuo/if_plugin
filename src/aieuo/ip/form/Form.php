@@ -66,18 +66,10 @@ class Form {
             "title" => "選択",
             "content" => "§7ボタンを押してください",
             "buttons" => [
-                [
-                    "text" => "ブロック"
-                ],
-                [
-                    "text" => "コマンド",
-                ],
-                [
-                    "text" => "イベント"
-                ],
-                [
-                    "text" => "終了"
-                ]
+                Elements::getButton("ブロック"),
+                Elements::getButton("コマンド"),
+                Elements::getButton("イベント"),
+                Elements::getButton("終了")
             ]
         ];
         $json = self::encodeJson($data);
@@ -112,24 +104,12 @@ class Form {
             "title" => "IF編集",
             "content" => $mes,
             "buttons" => [
-                [
-                    "text" => "もし~を編集する"
-                ],
-                [
-                    "text" => "条件に合った時を編集する",
-                ],
-                [
-                    "text" => "条件に合わなかった時を編集する"
-                ],
-                [
-                    "text" => "削除する"
-                ],
-                [
-                    "text" => "共有用にファイル出力する"
-                ],
-                [
-                    "text" => "終了"
-                ]
+                Elements::getButton("もし~を編集する"),
+                Elements::getButton("条件に合った時を編集する"),
+                Elements::getButton("条件に合わなかった時を編集する"),
+                Elements::getButton("削除する"),
+                Elements::getButton("共有用にファイル出力する"),
+                Elements::getButton("終了")
             ]
         ];
         $data = self::encodeJson($data);
@@ -186,7 +166,7 @@ class Form {
             "content" => ($mes === "" ? "" : $mes."\n")."§7ボタンを押してください",
             "buttons" => []
         ];
-        $data["buttons"] = [["text" => "<1つ前のページに戻る>"], ["text" => "<追加する>"]];
+        $data["buttons"] = [Elements::getButton("<1つ前のページに戻る>"), Elements::getButton("<追加する>")];
         foreach ($datas as $key => $value) {
             if($value["id"] < 100) {
                 $content = Condition::get($value["id"]);
@@ -252,9 +232,9 @@ class Form {
         }else{
             $datas = ProcessFactory::getAll();
         }
-        $buttons[] = ["text" => "<ひとつ前のページに戻る>"];
+        $buttons[] = Elements::getButton("<ひとつ前のページに戻る>");
         foreach ($datas as $data) {
-            $buttons[] = ["text" => $data->getName()];
+            $buttons[] = Elements::getButton($data->getName());
         }
         $data = [
             "type" => "form",
