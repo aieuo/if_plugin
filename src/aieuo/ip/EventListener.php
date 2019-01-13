@@ -165,6 +165,25 @@ class EventListener implements Listener {
 	                    $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
 	                    $player->sendMessage($mes);
 						break;
+                    case 'copy':
+                        $pos = $manager->getPosition($block);
+                        if(!$manager->isAdded($pos)){
+                            $player->sendMessage("そのブロックには追加されていません");
+                            return;
+                        }
+                        $session->setData("if_key", $pos);
+                        $session->setData("action", "paste");
+                        $player->sendMessage("貼り付けるブロックを触ってください");
+                        return;
+                    case 'paste':
+                        $pos = $manager->getPosition($block);
+                        if($manager->isAdded($pos)){
+                            $player->sendMessage("そのブロックにはすでに追加されています");
+                            return;
+                        }
+                        $manager->set($pos, $manager->get($session->getData("if_key")));
+                        $player->sendMessage("貼り付けました");
+                        break;
 					case 'del':
 	                    $pos = $manager->getPosition($block);
 	                    if(!$manager->isAdded($pos)){

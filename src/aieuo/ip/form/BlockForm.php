@@ -23,6 +23,9 @@ class BlockForm {
                     "text" => "削除する"
                 ],
                 [
+                    "text" => "コピーする"
+                ],
+                [
                     "text" => "キャンセルする"
                 ],
                 [
@@ -51,10 +54,14 @@ class BlockForm {
                 $player->sendMessage("削除するブロックを触ってください");
                 break;
             case 3:
+                $session->setData("action", "copy");
+                $player->sendMessage("コピーするブロックを触ってください");
+                break;
+            case 4:
                 $session->setValid(false);
                 $player->sendMessage("キャンセルしました");
                 return;
-            case 4:
+            case 5:
                 $form = (new Form())->getSelectIfTypeForm();
                 Form::sendForm($player, $form, new Form(), "onSelectIfType");
                 return;
