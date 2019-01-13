@@ -23,6 +23,7 @@ use aieuo\ip\manager\ifManager;
 use aieuo\ip\manager\BlockManager;
 use aieuo\ip\manager\CommandManager;
 use aieuo\ip\manager\EventManager;
+use aieuo\ip\manager\ChainIfManager;
 use aieuo\ip\utils\Messages;
 use aieuo\ip\form\Form;
 use aieuo\ip\economy\EconomyLoader;
@@ -59,6 +60,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->command = new CommandManager($this);
         $this->block = new BlockManager($this);
         $this->event = new EventManager($this);
+        $this->chain = new ChainIfManager($this);
 
         $this->api = new ifAPI();
 
@@ -78,6 +80,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->command->save();
         $this->block->save();
         $this->event->save();
+        $this->chain->save();
         $this->variables->save();
     }
 
@@ -95,6 +98,10 @@ class ifPlugin extends PluginBase implements Listener{
 
     public function getEventManager() : EventManager{
         return $this->event;
+    }
+
+    public function getChainManager() : ChainIfManager{
+        return $this->chain;
     }
 
     public function getAPI() : ifAPI{

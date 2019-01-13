@@ -7,6 +7,7 @@ class Session {
 	const BLOCK = 0;
 	const COMMAND = 1;
 	const EVENT = 2;
+	const CHAIN = 3;
 
 	private $valid = false;
 	private $if_type = self::BLOCK;
@@ -26,7 +27,7 @@ class Session {
 	}
 
 	public function setIfType($type){
-		if($type !== self::BLOCK and $type !== self::COMMAND and $type !== self::EVENT)$type = self::BLOCK;
+		if($type !== self::BLOCK and $type !== self::COMMAND and $type !== self::EVENT and $type !== self::CHAIN)$type = self::BLOCK;
 		$this->if_type = $type;
 	}
 
@@ -45,5 +46,10 @@ class Session {
 
 	public function removeAllData(){
 		$this->datas = [];
+	}
+
+	public static function get($player) {
+		if(!isset($player->ifSession)) $player->ifSession = new Session();
+		return $player->ifSession;
 	}
 }
