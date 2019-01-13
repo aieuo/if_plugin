@@ -14,27 +14,13 @@ class CommandForm {
             "title" => "command > 操作選択",
             "content" => "§7ボタンを押してください",
             "buttons" => [
-                [
-                    "text" => "追加する"
-                ],
-                [
-                    "text" => "コマンドだけ追加する",
-                ],
-                [
-                    "text" => "編集する"
-                ],
-                [
-                    "text" => "削除する"
-                ],
-                [
-                    "text" => "追加したコマンド一覧"
-                ],
-                [
-                    "text" => "キャンセルする"
-                ],
-                [
-                    "text" => "ひとつ前の画面に戻る"
-                ]
+                Elements::getButton("追加する"),
+                Elements::getButton("コマンドだけ追加する"),
+                Elements::getButton("編集する"),
+                Elements::getButton("削除する"),
+                Elements::getButton("追加したコマンド一覧"),
+                Elements::getButton("キャンセルする"),
+                Elements::getButton("ひとつ前の画面に戻る")
             ]
         ];
         $json = Form::encodeJson($data);
