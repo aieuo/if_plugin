@@ -33,8 +33,8 @@ use aieuo\ip\economy\PocketMoneyLoader;
 use aieuo\ip\ifAPI;
 use aieuo\ip\task\SaveTask;
 use aieuo\ip\variable\VariableHelper;
-use aieuo\ip\conditions\ConditionFactory;
 
+use aieuo\ip\conditions\ConditionFactory;
 use aieuo\ip\processes\ProcessFactory;
 
 class ifPlugin extends PluginBase implements Listener{
