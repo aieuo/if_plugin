@@ -46,7 +46,7 @@ class AddVariable extends Process
 
 	public function parse(string $content)
 	{
-        $datas = explode(",", $content);
+        $datas = explode(";", $content);
         if(!isset($datas[1]) or $datas[1] === "") return false;
         return new Variable($datas[0], $datas[1]);
 	}
@@ -95,7 +95,7 @@ class AddVariable extends Process
 
     public function parseFormData(array $datas) {
     	$status = true;
-    	$var_str = $datas[1].",".$datas[2];
+    	$var_str = $datas[1].";".$datas[2];
     	if($datas[1] === "" or $datas[2] === "") {
     		$status = null;
     	} else {

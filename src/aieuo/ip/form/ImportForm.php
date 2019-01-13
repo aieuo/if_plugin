@@ -49,14 +49,14 @@ class ImportForm {
 	}
 
 	public function getImportForm($datas) {
-		$mes = "";
+		$mes = $datas["name"]."\n作成者: ".$datas["author"]."\n".$datas["details"]."\n";
 		foreach ($datas["ifs"] as $key => $value) {
-			$mes .= "§l".$key."§r§f\n".Messages::createMessage($value["if"], $value["match"], $value["else"])."\n";
 			$mes .= "---------------------------";
+			$mes .= "§l".$key."§r§f\n".Messages::createMessage($value["if"], $value["match"], $value["else"])."\n";
 		}
 		$data = [
 			"type" => "custom_form",
-			"title" => "ファイルインポート",
+			"title" => "ファイルインポート > ".$datas["name"],
 			"content" => [
 				Elements::getLabel($mes),
 				Elements::getToggle("キャンセル")
@@ -109,7 +109,7 @@ class ImportForm {
 			} elseif($datas["type"] === Session::COMMAND) {
 				$manager = ifPlugin::getInstance()->getCommandManager();
 
-				if($manager->exists($key)) continue;
+				if(!$manager->isAdded($key) and $manager->exists($key)) continue;
 				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])){
 					$session->setData("file", $file);
 					$session->setData("if_key", $key);
@@ -144,11 +144,11 @@ class ImportForm {
 		$session->setValid(false);
 	}
 
-	public function getConfirmOverwriteForm($key) {
+	public function getConfirmOverwriteForm($name) {
 		$data = [
 			"type" => "modal",
 			"title" => "上書き",
-			"content" => $key."は既に存在します、上書きしますか?\n上書きすると以前の物は復元できません。",
+			"content" => $name."は既に存在します、上書きしますか?\n上書きすると以前の物は復元できません。",
 			"button1" => "はい",
 			"button2" => "いいえ"
 		];

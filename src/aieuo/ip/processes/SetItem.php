@@ -24,6 +24,7 @@ class SetItem extends Process
 	public function getMessage() {
 		if($this->getValues()) return false;
 		$item = $this->getItem();
+		if(!($item instanceof Item)) return false;
 		$index = $this->getIndex();
 		return "インベントリの".$index."に(".$item->getId().":".$item->getDamage().",".$item->getName().")"."を".$item->getCount()."個追加する";
 	}

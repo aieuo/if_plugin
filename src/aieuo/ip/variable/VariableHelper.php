@@ -41,7 +41,7 @@ class VariableHelper {
 	 * @return string | Variable
 	 */
 	public function get(String $name, $save = false){
-		if(isset($this->variables[$name]) and !$save)return "";
+		if(isset($this->variables[$name]) and !$save) return $this->variables[$name];
 		if(!$this->exists($name, true))return "";
         $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
         return new Variable($datas["name"], $datas["value"], $datas["type"]);
