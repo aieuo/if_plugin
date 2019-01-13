@@ -135,18 +135,10 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        }elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        }elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
-        $datas = $manager->get($key, $args);
+        $datas = $manager->get($key, $options);
         if($data == 0) {
             $form = $this->getEditContentsForm($datas["if"]);
             $session->setData("type", "if");
@@ -199,18 +191,10 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        } elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        } elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
-        $datas = $manager->get($key, $args);
+        $datas = $manager->get($key, $options);
         if($data == 0) {
             // ひとつ前のformに戻る
             $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
@@ -265,19 +249,11 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        } elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        } elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         if($data == 0) {
             $key = $session->getData("if_key");
-            $datas = $manager->get($key, $args);
+            $datas = $manager->get($key, $options);
             $form = $this->getEditContentsForm($datas[$session->getData("type")]);
             Form::sendForm($player, $form, $this, "onEditIfContents");
             return;
@@ -301,16 +277,8 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        } elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        } elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $content = $session->getData("contents");
         $datas = $content->parseFormData($data);
         if($datas["cancel"]) {
@@ -332,8 +300,8 @@ class Form {
         $mes = "§b追加しました§f";
         if($datas["status"] === false) $mes = "§e追加しましたが、正しく入力できていない可能性があります§f";
         $key = $session->getData("if_key");
-        $manager->add($key, $session->getData("type"), $content->getId(), $datas["contents"], $args);
-        $contents = $manager->get($key, $args);
+        $manager->add($key, $session->getData("type"), $content->getId(), $datas["contents"], $options);
+        $contents = $manager->get($key, $options);
         $form = $this->getEditContentsForm($contents[$session->getData("type")], $mes);
         Form::sendForm($player, $form, $this, "onEditIfContents");
         $player->sendMessage($mes);
@@ -346,21 +314,13 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        } elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        } elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $content = $session->getData("contents");
         $datas = $content->parseFormData($data);
         if($datas["cancel"]) {
             $key = $session->getData("if_key");
-            $form = $this->getEditContentsForm($manager->get($key, $args)[$session->getData("type")]);
+            $form = $this->getEditContentsForm($manager->get($key, $options)[$session->getData("type")]);
             Form::sendForm($player, $form, $this, "onEditIfContents");
             return;
         }
@@ -378,8 +338,8 @@ class Form {
         $mes = "§b変更しました§f";
         if($datas["status"] === false) $mes = "§e変更しましたが、正しく入力できていない可能性があります§f";
         $key = $session->getData("if_key");
-        $manager->updateContent($key, $session->getData("type"), $session->getData("num"), $datas["contents"], $args);
-        $contents = $manager->get($key, $args);
+        $manager->updateContent($key, $session->getData("type"), $session->getData("num"), $datas["contents"], $options);
+        $contents = $manager->get($key, $options);
         $form = $this->getEditContentsForm($contents[$session->getData("type")], $mes);
         Form::sendForm($player, $form, $this, "onEditIfContents");
         $player->sendMessage($mes);
@@ -404,26 +364,18 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        } elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        } elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
 
         $key = $session->getData("if_key");
         if($data) {
-            $manager->del($key, $session->getData("type"), $session->getData("num"), $args);
-            $form = $this->getEditContentsForm($manager->get($key, $args)[$session->getData("type")], "§b削除しました§f");
+            $manager->del($key, $session->getData("type"), $session->getData("num"), $options);
+            $form = $this->getEditContentsForm($manager->get($key, $options)[$session->getData("type")], "§b削除しました§f");
             Form::sendForm($player, $form, $this, "onEditIfContents");
             $player->sendMessage("削除しました");
         } else {
             $ifData = $contents[$session->getData("type")][$session->getData("num")];
-            $form = $manager->get($key, $args)->getEditForm($ifData["contents"], "§e削除キャンセルしました§f\n");
+            $form = $manager->get($key, $options)->getEditForm($ifData["contents"], "§e削除キャンセルしました§f\n");
             Form::sendForm($player, $form, $this, "onEdit");
             $player->sendMessage("削除キャンセルしました");
         }
@@ -436,19 +388,11 @@ class Form {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $args = [];
-        } elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $args = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        } elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $args = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
 
         if($data) {
-            $manager->remove($session->getData("if_key"), $args);
+            $manager->remove($session->getData("if_key"), $options);
             $player->sendMessage("削除しました");
         } else {
             $player->sendMessage("削除キャンセルしました");

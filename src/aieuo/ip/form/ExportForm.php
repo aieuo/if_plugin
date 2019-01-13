@@ -29,18 +29,10 @@ class ExportForm {
             return;
         }
         $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = ifPlugin::getInstance()->getBlockManager();
-            $option = [];
-        }elseif($type === Session::COMMAND) {
-            $manager = ifPlugin::getInstance()->getCommandManager();
-            $option = [];
-        }elseif($type === Session::EVENT) {
-            $manager = ifPlugin::getInstance()->getEventManager();
-            $option = ["eventname" => $session->getData("eventname")];
-        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
-        $datas = $manager->get($key, $option);
+        $datas = $manager->get($key, $options);
         if($data[3]) {
             $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = (new Form())->getEditIfForm($mes);
