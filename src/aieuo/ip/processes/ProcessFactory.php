@@ -27,7 +27,7 @@ class ProcessFactory
 		self::register(new DeleteVariable());
 		self::register(new AddItem());
 		self::register(new RemoveItem());
-		self::register(new setItem());
+		self::register(new SetItem());
 		self::register(new SetImmobile());
 		self::register(new UnSetImmobile());
 		self::register(new AddEnchantment());

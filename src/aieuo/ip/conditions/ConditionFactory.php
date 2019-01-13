@@ -19,7 +19,7 @@ class ConditionFactory
 		self::register(new IsOp());
 		self::register(new IsSneaking());
 		self::register(new IsFlying());
-		self::register(new Gamemode());
+		self::register(new GameMode());
 		self::register(new InArea());
 		self::register(new RandomNumber());
 		self::register(new Comparison());
