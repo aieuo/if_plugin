@@ -15,6 +15,7 @@ class VariableHelper {
 	}
 
 	public function loadDataBase() {
+		$owner = $this->owner;
         if(!file_exists($owner->getDataFolder()."if.db")) {
             $this->db = new \SQLite3($owner->getDataFolder()."if.db", SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
         }else{
