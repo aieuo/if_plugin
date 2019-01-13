@@ -34,7 +34,7 @@ class ExportForm {
             $option = [];
         }elseif($type === Session::COMMAND) {
             $manager = ifPlugin::getInstance()->getCommandManager();
-            $option = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+            $option = [];
         }elseif($type === Session::EVENT) {
             $manager = ifPlugin::getInstance()->getEventManager();
             $option = ["eventname" => $session->getData("eventname")];
@@ -53,16 +53,14 @@ class ExportForm {
             $player->sendMessage("必要事項を入力してください");
             return;
         }
+        $datas["type"] = $type;
+        $datas["options"] = $option;
         $export = [
         	"name" => $data[0],
         	"author" => $data[1],
         	"details" => $data[2],
         	"ifs" => [
-        		$key => $datas + [
-        			"type" => $type
-        		] + [
-        			"options" => $option
-        		]
+        		$key => $datas
         	]
         ];
         $filename = $data[0]."_".$data[1]."_".$type."_".$key.".json";

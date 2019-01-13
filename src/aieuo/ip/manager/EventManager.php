@@ -25,10 +25,6 @@ class EventManager extends ifManager{
         parent::__construct($owner, "events");
     }
 
-    public function setOptions($eventname, $event = null){
-        $this->tmp = [$eventname, $event];
-    }
-
     public function get($key, $args = []){
         $datass = $this->getFromEvent($args["eventname"]);
         if(!isset($datass[$key]))return [];
@@ -67,6 +63,13 @@ class EventManager extends ifManager{
         $datas = [];
         if(isset(($all = $this->getAll())[$event]))$datas = $all[$event];
         return $datas;
+    }
+
+    public function addByEvent($event, $add) {
+        $add = $this->repairIF($add);
+        $datas = $this->getFromEvent($event);
+        $datas[] = $add;
+        $this->set($event, $datas);
     }
 
     public function del($key, $type, $num, $args = []){
