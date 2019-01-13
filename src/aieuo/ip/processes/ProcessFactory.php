@@ -24,6 +24,7 @@ class ProcessFactory
 		self::register(new Motion());
 		self::register(new Calculation());
 		self::register(new AddVariable());
+		self::register(new DeleteVariable());
 		self::register(new AddItem());
 		self::register(new RemoveItem());
 		self::register(new setItem());
