@@ -40,4 +40,5 @@ interface ProcessIds {
     const TAKEMONEY = 134;
     const COOPERATION = 135;
     const DELETE_VARIABLE = 136;
+    const SET_BLOCKS = 137;
 }
