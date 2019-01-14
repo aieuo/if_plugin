@@ -65,8 +65,8 @@ class CommandManager extends ifManager{
         $commands = $this->getSubcommand($command);
         if($this->isSubcommand($command)){
             $cmds = explode(" ", $command);
-            $subs = array_shift($cmds);
-            $cmd = implode(" ", $subs);
+            array_shift($cmds);
+            $cmd = implode(" ", $cmds);
             unset($commands[$cmd]);
             $command = $this->getParentCommand($command);
         }
