@@ -43,6 +43,7 @@ class ProcessFactory
 		self::register(new Attack());
 		self::register(new Kick());
 		self::register(new Cooperation());
+		self::register(new SetBlocks());
 	}
 
 	/**
