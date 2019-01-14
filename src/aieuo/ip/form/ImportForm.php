@@ -137,6 +137,28 @@ class ImportForm {
 				$manager = ifPlugin::getInstance()->getEventManager();
 				$manager->addByEvent($datas["options"]["eventname"], $datas + ["author" => $file["author"]]);
 				$count ++;
+			} elseif($datas["type"] === Session::CHAIN) {
+				$manager = ifPlugin::getInstance()->getChainManager();
+
+				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])) {
+					$session->setData("file", $file);
+					$session->setData("if_key", $key);
+					$session->setData("count", $count);
+					$form = $this->getConfirmOverwriteForm($key);
+					Form::sendForm($player, $form, $this, "onConfirmOverwrite");
+					return;
+				} elseif($manager->isAdded($key) and !$session->getData("overwrite")[$key]) {
+					continue;
+				}
+
+				$manager->set($key, [
+					"if" => $datas["if"],
+					"match" => $datas["match"],
+					"else" => $datas["else"],
+					"author" => $file["author"]
+				]);
+				$count ++;
+
 			}
 			unset($file["ifs"][$key]);
 		}
