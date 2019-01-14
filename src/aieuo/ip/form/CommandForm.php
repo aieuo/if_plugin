@@ -120,7 +120,7 @@ class CommandForm {
             return;
         }
         if($data[1] === "") $data[1] = "ifPluginで追加したコマンドです";
-        $manager->set($data[0], [], ["desc" => $data[1], "perm" => $data[2]]);
+        $manager->set($data[0], [], ["desc" => $data[1], "perm" => $data[2] == 0 ? "op" : "default"]);
         $manager->register($data[0], $data[1], $data[2] == 0 ? "op" : "default");
         if($session->getData("action") == "add_empty"){
             $player->sendMessage("追加しました");
