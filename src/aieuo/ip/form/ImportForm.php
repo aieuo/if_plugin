@@ -51,7 +51,7 @@ class ImportForm {
 	public function getImportForm($datas) {
 		$mes = $datas["name"]."\n作成者: ".$datas["author"]."\n".$datas["details"]."\n";
 		foreach ($datas["ifs"] as $key => $value) {
-			$mes .= "---------------------------";
+			$mes .= "---------------------------\n";
 			$mes .= "§l".$key."§r§f\n".Messages::createMessage($value["if"], $value["match"], $value["else"])."\n";
 		}
 		$data = [
