@@ -44,7 +44,7 @@ class VariableHelper {
 		if(isset($this->variables[$name]) and !$save) return $this->variables[$name];
 		if(!$this->exists($name, true))return "";
         $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
-        return new Variable($datas["name"], $datas["value"], $datas["type"]);
+        return Variable::create($datas["name"], $datas["value"], $datas["type"]);
 	}
 
 	/**
@@ -79,6 +79,14 @@ class VariableHelper {
         return true;
 	}
 
+	public function save(){
+		unset($this->variables["result"]);
+		foreach ($this->variables as $variable) {
+			$this->add($variable, true);
+		}
+		$this->variables = [];
+	}
+
 	/**
 	 * 変数を置き換える
 	 * @param  string $string
@@ -96,11 +104,56 @@ class VariableHelper {
         return $string;
     }
 
-	public function save(){
-		unset($this->variables["result"]);
-		foreach ($this->variables as $variable) {
-			$this->add($variable, true);
+	/**
+	 * 文字列が変数か調べる
+	 * @param  string  $variable
+	 * @return boolean
+	 */
+	public function isVariable(string $variable) {
+		return preg_match("/^{.+}$/", $variable);
+	}
+
+	/**
+	 * 文字列に変数が含まれているか調べる
+	 * @param  string  $variable
+	 * @return boolean
+	 */
+	public function containsVariable(string $variable) {
+		return preg_match("/.*{.+}.*/", $variable);
+	}
+
+	/**
+	 * 文字列の型を調べる
+	 * @param  string $string
+	 * @return int
+	 */
+	public function getType(string $string) {
+		if(substr($string, 0, 5) === "(str)") {
+			$type = Variable::STRING;
+		} elseif(substr($string, 0, 5) === "(num)") {
+			$type = Variable::NUMBER;
+		} elseif(is_numeric($string)) {
+			$type = Variable::NUMBER;
+		} else {
+			$type = Variable::STRING;
 		}
-		$this->variables = [];
+		return $type;
+	}
+
+	/**
+	 * 文字列の型を変更する
+	 * @param  string $string
+	 * @return string | float
+	 */
+	public function changeType(string $string) {
+		if(mb_substr($string, 0, 5) === "(str)") {
+			$string = mb_substr($string, 5);
+		} elseif(mb_substr($string, 0, 5) === "(num)") {
+			$string = mb_substr($string, 5);
+			if(!$this->containsVariable($string)) $string = (float)$string;
+		} elseif(is_numeric($string)) {
+			$string = (float)$string;
+		}
+		return $string;
 	}
 }
