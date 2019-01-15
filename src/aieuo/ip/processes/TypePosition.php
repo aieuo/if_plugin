@@ -38,7 +38,12 @@ class TypePosition extends Process
 		$pos = $this->parse($default);
 		if($pos instanceof Position)
 		{
-			$position = $pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName();
+			if($pos->level === null) {
+				$mes .= "§cワールドが存在しないか読み込まれていません§f";
+				$position = $default;
+			} else {
+				$position = $pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName();
+			}
 		}
 		else
 		{
