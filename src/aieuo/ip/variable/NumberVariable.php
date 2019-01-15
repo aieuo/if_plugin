@@ -56,4 +56,9 @@ class NumberVariable extends Variable {
 		$result = $this->getValue() % $var->getValue();
 		return new NumberVariable($name, $result);
 	}
+
+	public function toStringVariable() {
+		$variable = new StringVariable($this->getName(), (string)$this->getValue());
+		return $variable;
+	}
 }

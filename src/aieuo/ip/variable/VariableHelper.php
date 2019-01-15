@@ -99,7 +99,10 @@ class VariableHelper {
             if(++$count >= 10) break;
             foreach ($matches[0] as $name) {
                 $val = $this->get(substr($name, 1, -1));
-                $string = str_replace($name, $val instanceof Variable ? $val->getValue(): $val, $string);
+                if(!($val instanceof Variable)) {
+                	$string = str_replace($name, "§cUndefined variable: ".substr($name, 1, -1)."§r", $string);
+                	continue;
+                }
                 if($val instanceof ListVariable) {
                 	$haystack = explode($name, $string)[1];
                 	if(preg_match("/^\[([0-9]+)\].*/", $haystack, $index)) {
