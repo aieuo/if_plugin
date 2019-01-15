@@ -18,10 +18,10 @@ class Calculation extends Process
 	const DIVISION = 3;
 	const MODULO = 4;
 
-	public function __construct($player = null, $value1 = 0, $value2 = 0, $operator = self::ADDITION)
+	public function __construct($player = null, $values = false)
 	{
 		parent::__construct($player);
-		$this->setValues($value1, $value2, $operator);
+		$this->setValues($values);
 	}
 
 	public function getName()
@@ -41,19 +41,19 @@ class Calculation extends Process
 		$operator = $this->getOperator();
         switch ($operator){
             case self::ADDITION:
-            	$mes = $value1."と".$value2."を足す";
+            	$mes = $value1->getValue()."と".$value2->getValue()."を足す";
                 break;
             case self::SUBTRACTION:
-            	$mes = $value1."から".$value2."を引く";
+            	$mes = $value1->getValue()."から".$value2->getValue()."を引く";
                 break;
             case self::MULTIPLICATION:
-            	$mes = $value1."と".$value2."を掛ける";
+            	$mes = $value1->getValue()."と".$value2->getValue()."を掛ける";
                 break;
             case self::DIVISION:
-            	$mes = $value1."を".$value2."で割る";
+            	$mes = $value1->getValue()."を".$value2->getValue()."で割る";
                 break;
             case self::MODULO:
-            	$mes = $value1."を".$value2."で割った余りを出す";
+            	$mes = $value1->getValue()."を".$value2->getValue()."で割った余りを出す";
                 break;
             default:
                 return false;
@@ -76,20 +76,31 @@ class Calculation extends Process
 		return $this->getValues()[2];
 	}
 
-	public function setNumbers($value1, $value2, int $ope)
+	public function getAssignName()
 	{
-		$this->setValues([$value1, $value2, $ope]);
+		return $this->getValues()[3];
+	}
+
+	public function setNumbers(Variable $value1, Variable $value2, int $ope, string $assign = "result")
+	{
+		$this->setValues([$value1, $value2, $ope, $assign]);
 	}
 
 	public function parse(string $numbers)
 	{
-        if(!preg_match("/\s*(.+)\s*\[ope:([0-9])\]\s*(.+)\s*/", $numbers, $matches)) return false;
+        if(!preg_match("/\s*(.+)\s*\[ope:([0-9])\]\s*(.+)\s*;\s*([^;]*)\s*$/", $numbers, $matches)) return false;
+        $helper = ifPlugin::getInstance()->getVariableHelper();
         $operator = (int)$matches[2];
         $value1 = $matches[1];
         $value2 = $matches[3];
-        if(is_numeric($value1)) $value1 = (int)$value1;
-        if(is_numeric($value2)) $value2 = (int)$value2;
-        return [$value1, $value2, $operator];
+        $assign = $matches[4] === "" ? "result" : $matches[4];
+        $type1 = $helper->getType($value1);
+        $value1 = $helper->changeType($value1);
+        $var1 = Variable::create("value1", $value1, $type1);
+        $type2 = $helper->getType($value2);
+        $value2 = $helper->changeType($value2);
+        $var2 = Variable::create("value2", $value2, $type2);
+        return [$var1, $var2, $operator, $assign];
 	}
 
 	public function execute()
@@ -100,28 +111,33 @@ class Calculation extends Process
 			return;
 		}
 		$player = $this->getPlayer();
-		$value1 = $this->getValue1();
-		$value2 = $this->getValue2();
+		$variable1 = $this->getValue1();
+		$variable2 = $this->getValue2();
 		$operator = $this->getOperator();
+		$name = $this->getAssignName();
         switch ($operator){
             case self::ADDITION:
-                $result = (new Variable("value1", $value1))->Addition(new Variable("value2", $value2));
+                $result = $variable1->Addition($variable2, $name);
                 break;
             case self::SUBTRACTION:
-                $result = (new Variable("value1", $value1))->Subtraction(new Variable("value2", $value2));
+                $result = $variable1->Subtraction($variable2, $name);
                 break;
             case self::MULTIPLICATION:
-                $result = (new Variable("value1", $value1))->Multiplication(new Variable("value2", $value2));
+                $result = $variable1->Multiplication($variable2, $name);
                 break;
             case self::DIVISION:
-                $result = (new Variable("value1", $value1))->Division(new Variable("value2", $value2));
+                $result = $variable1->Division($variable2, $name);
                 break;
             case self::MODULO:
-                $result = (new Variable("value1", $value1))->Modulo(new Variable("value2", $value2));
+                $result = $variable1->Modulo($variable2, $name);
                 break;
             default:
                 $player->sendMessage("§c[".$this->getName()."] その組み合わせは使用できません");
                 return;
+        }
+        if($result->getName() == "ERROR") {
+        	$player->sendMessage("§c[".$this->getName()."] ".$result->getValue());
+        	return;
         }
         ifPlugin::getInstance()->getVariableHelper()->add($result);
 	}
@@ -132,11 +148,19 @@ class Calculation extends Process
 		$value1 = $default;
 		$value2 = "";
 		$operator = self::ADDITION;
+		$name = "";
 		if($values !== false)
 		{
-			$value1 = $values[0];
-			$value2 = $values[1];
+			for($i = 0; $i <= 1; $i ++) {
+				${"value".$i} = $values[$i]->getValue();
+				if(is_numeric(${"value".$i}) and $values[$i]->getType() === Variable::STRING) {
+					${"value".$i} = "(str)".${"value".$i};
+				} elseif(!is_numeric(${"value".$i}) and $values[$i]->getType() === Variable::NUMBER) {
+					${"value".$i} = "(num)".${"value".$i};
+				}
+			}
 			$operator = $values[2];
+			$name = $values[3];
 		}
 		elseif($default !== "")
 		{
@@ -147,7 +171,7 @@ class Calculation extends Process
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<value1>§f 一つ目の値を入力してください", "例) 100", $value1),
+                Elements::getInput("\n§7<value1>§f 一つ目の値を入力してください", "例) 100", $value0),
                 Elements::getDropdown("\n§7<operator>§f 選んでください", [
                 	"一つ目の値と二つ目の値を足す (value1 + value2)",
                 	"一つ目の値と二つ目の値を引く (value1 - value2)",
@@ -155,7 +179,8 @@ class Calculation extends Process
                 	"一つ目の値を二つ目で値を割る (value1 / value2)",
                 	"一つ目の値を二つ目で値を割った余り (value1 % value2)",
                 ], $operator),
-                Elements::getInput("\n§7<value2>§f 二つ目の値を入力してください", "例) 50", $value2),
+                Elements::getInput("\n§7<value2>§f 二つ目の値を入力してください", "例) 50", $value1),
+                Elements::getInput("\n§7<result>§f 結果を代入する変数の名前を入力してください(空白ならresult)", "例) aieuo", $name),
                 Elements::getToggle("削除する"),
                 Elements::getToggle("キャンセル")
             ]
@@ -166,13 +191,13 @@ class Calculation extends Process
 
     public function parseFormData(array $datas) {
     	$status = true;
-    	$values_str = $datas[1]."[ope:".$datas[2]."]".$datas[3];
+    	$values_str = $datas[1]."[ope:".$datas[2]."]".$datas[3].";".$datas[4];
     	if($datas[1] === "" or $datas[2] === "" or $datas[3] === "") {
     		$status = null;
     	} else {
 	    	$values = $this->parse($values_str);
 	    	if($values === false) $status = false;
 	    }
-    	return ["status" => $status, "contents" => $values_str, "delete" => $datas[4], "cancel" => $datas[5]];
+    	return ["status" => $status, "contents" => $values_str, "delete" => $datas[5], "cancel" => $datas[6]];
     }
 }
