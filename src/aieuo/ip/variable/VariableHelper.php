@@ -42,7 +42,7 @@ class VariableHelper {
 	 */
 	public function get(String $name, $save = false){
 		if(isset($this->variables[$name]) and !$save) return $this->variables[$name];
-		if(!$this->exists($name, true))return "";
+		if(!$this->exists($name, true)) return "";
         $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
         return Variable::create($datas["name"], $datas["value"], $datas["type"]);
 	}
@@ -56,6 +56,7 @@ class VariableHelper {
 			$this->variables[$val->getName()] = $val;
 			return;
 		}
+		if(!($val instanceof StringVariable)) $val = $val->toStringVariable();
 		$name = $val->getName();
 		$value = $val->getValue();
 		$type = $val->getType();
@@ -99,6 +100,17 @@ class VariableHelper {
             foreach ($matches[0] as $name) {
                 $val = $this->get(substr($name, 1, -1));
                 $string = str_replace($name, $val instanceof Variable ? $val->getValue(): $val, $string);
+                if($val instanceof ListVariable) {
+                	$haystack = explode($name, $string)[1];
+                	if(preg_match("/^\[([0-9]+)\].*/", $haystack, $index)) {
+                		$value = $val->getValueFromIndex($index[1]);
+                		if($value === null) $value = "§cUndefined index: ".substr($name, 1, -1)."[".$index[1]."]§r";
+                		$string = str_replace($name."[".$index[1]."]", $value, $string);
+                		continue;
+                	}
+                	$val = $val->toStringVariable();
+                }
+                $string = str_replace($name, $val->getValue(), $string);
             }
         }
         return $string;
@@ -132,6 +144,8 @@ class VariableHelper {
 			$type = Variable::STRING;
 		} elseif(substr($string, 0, 5) === "(num)") {
 			$type = Variable::NUMBER;
+		} elseif(substr($string, 0, 6) === "(list)") {
+			$type = Variable::LIST;
 		} elseif(is_numeric($string)) {
 			$type = Variable::NUMBER;
 		} else {
@@ -143,17 +157,20 @@ class VariableHelper {
 	/**
 	 * 文字列の型を変更する
 	 * @param  string $string
-	 * @return string | float
+	 * @return string | float | value
 	 */
-	public function changeType(string $string) {
-		if(mb_substr($string, 0, 5) === "(str)") {
-			$string = mb_substr($string, 5);
-		} elseif(mb_substr($string, 0, 5) === "(num)") {
-			$string = mb_substr($string, 5);
-			if(!$this->containsVariable($string)) $string = (float)$string;
-		} elseif(is_numeric($string)) {
-			$string = (float)$string;
+	public function changeType(string $value) {
+		if(mb_substr($value, 0, 5) === "(str)") {
+			$value = mb_substr($value, 5);
+		} elseif(mb_substr($value, 0, 5) === "(num)") {
+			$value = mb_substr($value, 5);
+			if(!$this->containsVariable($value)) $value = (float)$value;
+		} elseif(substr($value, 0, 6) === "(list)") {
+			$value = mb_substr($value, 6);
+			if(!$this->containsVariable($value)) $value = Variable::create("list", $value, Variable::LIST)->getValue();
+		} elseif(is_numeric($value)) {
+			$value = (float)$value;
 		}
-		return $string;
+		return $value;
 	}
 }

@@ -4,6 +4,10 @@ namespace aieuo\ip\processes;
 
 use aieuo\ip\ifPlugin;
 use aieuo\ip\variable\Variable;
+use aieuo\ip\variable\StringVariable;
+use aieuo\ip\variable\NumberVariable;
+use aieuo\ip\variable\ListVariable;
+
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
@@ -36,24 +40,35 @@ class Calculation extends Process
 
 	public function getMessage() {
 		if($this->getValues() === false) return false;
-		$value1 = $this->getValue1();
-		$value2 = $this->getValue2();
+		$variable1 = $this->getValue1();
+		$variable2 = $this->getValue2();
+		for($i = 1; $i <= 2; $i ++) {
+			${"value".$i} = ${"variable".$i}->getValue();
+
+			if(${"variable".$i} instanceof StringVariable and is_numeric(${"value".$i})) {
+				${"value".$i} = "(str)".${"value".$i};
+			} elseif(${"variable".$i} instanceof NumberVariable and !is_numeric(${"value".$i})) {
+				${"value".$i} = "(num)".${"value".$i};
+			} elseif(${"variable".$i} instanceof ListVariable) {
+				${"value".$i} = "(list)".${"variable".$i}->toStringVariable()->getValue();
+			}
+		}
 		$operator = $this->getOperator();
         switch ($operator){
             case self::ADDITION:
-            	$mes = $value1->getValue()."と".$value2->getValue()."を足す";
+            	$mes = $value1."と".$value2."を足す";
                 break;
             case self::SUBTRACTION:
-            	$mes = $value1->getValue()."から".$value2->getValue()."を引く";
+            	$mes = $value1."から".$value2."を引く";
                 break;
             case self::MULTIPLICATION:
-            	$mes = $value1->getValue()."と".$value2->getValue()."を掛ける";
+            	$mes = $value1."と".$value2."を掛ける";
                 break;
             case self::DIVISION:
-            	$mes = $value1->getValue()."を".$value2->getValue()."で割る";
+            	$mes = $value1."を".$value2."で割る";
                 break;
             case self::MODULO:
-            	$mes = $value1->getValue()."を".$value2->getValue()."で割った余りを出す";
+            	$mes = $value1."を".$value2."で割った余りを出す";
                 break;
             default:
                 return false;
@@ -135,6 +150,7 @@ class Calculation extends Process
                 $player->sendMessage("§c[".$this->getName()."] その組み合わせは使用できません");
                 return;
         }
+        var_dump($variable1, $variable2, $result, "\n");
         if($result->getName() == "ERROR") {
         	$player->sendMessage("§c[".$this->getName()."] ".$result->getValue());
         	return;
@@ -153,10 +169,13 @@ class Calculation extends Process
 		{
 			for($i = 0; $i <= 1; $i ++) {
 				${"value".$i} = $values[$i]->getValue();
-				if(is_numeric(${"value".$i}) and $values[$i]->getType() === Variable::STRING) {
+
+				if($values[$i] instanceof StringVariable and is_numeric(${"value".$i})) {
 					${"value".$i} = "(str)".${"value".$i};
-				} elseif(!is_numeric(${"value".$i}) and $values[$i]->getType() === Variable::NUMBER) {
+				} elseif($values[$i] instanceof NumberVariable and !is_numeric(${"value".$i})) {
 					${"value".$i} = "(num)".${"value".$i};
+				} elseif($values[$i] instanceof ListVariable) {
+					${"value".$i} = "(list)".$values[$i]->toStringVariable()->getValue();
 				}
 			}
 			$operator = $values[2];
