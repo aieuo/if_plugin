@@ -48,7 +48,33 @@ class AddVariable extends Process
 	{
         $datas = explode(";", $content);
         if(!isset($datas[1]) or $datas[1] === "") return false;
-        return new Variable($datas[0], $datas[1]);
+        $helper = ifPlugin::getInstance()->getVariableHelper();
+        $value = $helper->changeType($datas[1]);
+        return Variable::create($datas[0], $value, $helper->getType($datas[1]));
+	}
+
+	public function getType($string) {
+		if(substr($string, 0, 5) === "(str)") {
+			$type = Variable::STRING;
+		} elseif(substr($string, 0, 5) === "(num)") {
+			$type = Variable::NUMBER;
+		} elseif(is_numeric($string)) {
+			$type = Variable::NUMBER;
+		} else {
+			$type = Variable::STRING;
+		}
+		return $type;
+	}
+
+	public function changeType($string) {
+		if(mb_substr($string, 0, 5) === "(str)") {
+			$string = mb_substr($string, 5);
+		} elseif(mb_substr($string, 0, 5) === "(num)") {
+			$string = (float)mb_substr($string, 5);
+		} elseif(is_numeric($string)) {
+			$string = (float)$string;
+		}
+		return $string;
 	}
 
 	public function execute()
@@ -73,6 +99,11 @@ class AddVariable extends Process
 		{
 			$name = $var->getName();
 			$value = $var->getValue();
+			if(is_numeric($value) and $var->getType() === Variable::STRING) {
+				$value = "(str)".$value;
+			} elseif(!is_numeric($value) and $var->getType() === Variable::NUMBER) {
+				$value = "(num)".$value;
+			}
 		}
 		elseif($default !== "")
 		{
