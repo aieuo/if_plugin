@@ -53,30 +53,6 @@ class AddVariable extends Process
         return Variable::create($datas[0], $value, $helper->getType($datas[1]));
 	}
 
-	public function getType($string) {
-		if(substr($string, 0, 5) === "(str)") {
-			$type = Variable::STRING;
-		} elseif(substr($string, 0, 5) === "(num)") {
-			$type = Variable::NUMBER;
-		} elseif(is_numeric($string)) {
-			$type = Variable::NUMBER;
-		} else {
-			$type = Variable::STRING;
-		}
-		return $type;
-	}
-
-	public function changeType($string) {
-		if(mb_substr($string, 0, 5) === "(str)") {
-			$string = mb_substr($string, 5);
-		} elseif(mb_substr($string, 0, 5) === "(num)") {
-			$string = (float)mb_substr($string, 5);
-		} elseif(is_numeric($string)) {
-			$string = (float)$string;
-		}
-		return $string;
-	}
-
 	public function execute()
 	{
 		$player = $this->getPlayer();

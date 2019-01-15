@@ -33,8 +33,11 @@ class StringVariable extends Variable{
 	}
 
 	public function Division(Variable $var, string $name = "result") {
-		return new StringVariable("ERROR", "文字列は割り算できません");
-		// TODO Variable::ARRAY
+		if($var->getType() !== Variable::STRING) {
+			return new StringVariable("ERROR", "文字列を文字列以外で割ることはできません");
+		}
+		$result = explode($var->getValue(), $this->getValue());
+		return new ListVariable($name, $result);
 	}
 
 	public function Modulo(Variable $var, string $name = "result") {
