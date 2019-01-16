@@ -36,14 +36,16 @@ class ProcessFactory
 		self::register(new SetSleeping());
 		self::register(new SetSitting());
 		self::register(new EventCancel());
-		self::register(new SaveDatas());
 		self::register(new SetGamemode());
+		self::register(new Cooperation());
+		self::register(new CooperationRepeat());
+		self::register(new ExecuteOtherPlayer());
+		self::register(new SetBlocks());
+		self::register(new SaveDatas());
 		self::register(new SetHealth());
 		self::register(new SetMaxHealth());
 		self::register(new Attack());
 		self::register(new Kick());
-		self::register(new Cooperation());
-		self::register(new SetBlocks());
 	}
 
 	/**
