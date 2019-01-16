@@ -46,6 +46,10 @@ class ListVariable extends Variable {
 		return $this->value[$index];
 	}
 
+	public function getCount() {
+		return count($this->value);
+	}
+
 	public function toStringVariable($glue = ", ") {
 		$variable = new StringVariable($this->getName(), implode($glue, $this->getValue()));
 		return $variable;

@@ -111,6 +111,12 @@ class VariableHelper {
                 		$string = str_replace($name."[".$index[1]."]", $value, $string);
                 		continue;
                 	}
+                	if(preg_match("/^\.([a-z]+[0-9a-z]*).*/", $haystack, $method)) {
+                		if($method[1] === "length") {
+                			$string = str_replace($name.".".$method[1], $val->getCount(), $string);
+                		}
+                		continue;
+                	}
                 	$val = $val->toStringVariable();
                 }
                 $string = str_replace($name, $val->getValue(), $string);
