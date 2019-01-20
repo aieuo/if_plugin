@@ -138,7 +138,7 @@ class ifManager extends ifAPI{
         return $datas;
     }
 
-    public function replaceDatas($string, $datas) {
-        return parent::replaceDatas($string, $datas);
+    public function getReplaceDatas($datas) {
+        return parent::getReplaceDatas($datas);
     }
 }

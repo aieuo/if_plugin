@@ -2,6 +2,10 @@
 
 namespace aieuo\ip\manager;
 
+use aieuo\ip\variable\StringVariable;
+use aieuo\ip\variable\NumberVariable;
+use aieuo\ip\variable\ListVariable;
+
 class BlockManager extends ifManager{
 
 	public function __construct($owner){
@@ -17,34 +21,23 @@ class BlockManager extends ifManager{
         return $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
     }
 
-    public function replaceDatas($string, $datas) {
-        $string = parent::replaceDatas($string, $datas);
+    public function getReplaceDatas($datas) {
+        $result = parent::getReplaceDatas($datas);
         $block = $datas["block"];
         $event = $datas["event"];
-        $item = $event->getItem();
         $variables = [
-            "{block}" => $block->__toString(),
-            "{block_name}" => $block->getName(),
-            "{block_id}" => $block->getId(),
-            "{block_damage}" => $block->getDamage(),
-            "{block_ids}" => $block->getId().":".$block->getDamage(),
-            "{block_pos}" => $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName(),
-            "{block_x}" => $block->x,
-            "{block_y}" => $block->y,
-            "{block_z}" => $block->z,
-            "{block_level}" => $block->level->getFolderName(),
-            "{touch_action}" => $event->getAction(),
-            "{touch_face}" => $event->getFace(),
-            "{item}" => $item->__toString(),
-            "{item_name}" => $item->getName(),
-            "{item_id}" => $item->getId(),
-            "{item_damage}" => $item->getDamage(),
-            "{item_ids}" => $item->getId().":".$item->getDamage(),
-            "{item_count}" => $item->getCount(),
+            "block" => new StringVariable("block", $block->__toString()),
+            "block_name" => new StringVariable("block_name", $block->getName()),
+            "block_id" => new NumberVariable("block_id", $block->getId()),
+            "block_damage" => new NumberVariable("block_damage", $block->getDamage()),
+            "block_ids" => new StringVariable("block_ids", $block->getId().":".$block->getDamage()),
+            "block_pos" => new StringVariable("block_pos", $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName()),
+            "block_x" => new NumberVariable("block_x", $block->x),
+            "block_y" => new NumberVariable("block_y", $block->y),
+            "block_z" => new NumberVariable("block_z", $block->z),
+            "block_level" => new StringVariable("block_level", $block->level->getFolderName()),
+            "touch_face" => new NumberVariable("touch_face", $event->getFace())
         ];
-        foreach ($variables as $key => $value) {
-            $string = str_replace($key, $value, $string);
-        }
-        return $string;
+        return array_merge($result, $variables);
     }
 }
