@@ -41,4 +41,6 @@ interface ProcessIds {
     const COOPERATION = 135;
     const DELETE_VARIABLE = 136;
     const SET_BLOCKS = 137;
+    const COOPERATION_REPEAT = 138;
+    const EXECUTE_OTHER_PLAYER = 139;
 }

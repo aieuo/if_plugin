@@ -31,8 +31,8 @@ class VariableHelper {
 	 */
 	public function exists(String $name, $save = false){
 		if(isset($this->variables[$name]) and !$save)return true;
-        $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
-        return !empty($datas);
+		$datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
+		return !empty($datas);
 	}
 
 	/**
@@ -43,8 +43,8 @@ class VariableHelper {
 	public function get(String $name, $save = false){
 		if(isset($this->variables[$name]) and !$save) return $this->variables[$name];
 		if(!$this->exists($name, true)) return "";
-        $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
-        return Variable::create($datas["name"], $datas["value"], $datas["type"]);
+		$datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
+		return Variable::create($datas["name"], $datas["value"], $datas["type"]);
 	}
 
 	/**
@@ -61,9 +61,9 @@ class VariableHelper {
 		$value = $val->getValue();
 		$type = $val->getType();
 		if($this->exists($name, true)){
-	        $this->db->query("UPDATE variables set value=\"$value\" WHERE name=\"$name\"");
+			$this->db->query("UPDATE variables set value=\"$value\" WHERE name=\"$name\"");
 		}else{
-        	$this->db->query("INSERT OR REPLACE INTO variables VALUES(\"$name\",\"$value\",$type)");
+			$this->db->query("INSERT OR REPLACE INTO variables VALUES(\"$name\",\"$value\",$type)");
 		}
 	}
 
@@ -76,8 +76,8 @@ class VariableHelper {
 			unset($this->variables[$name]);
 		}
 		if(!$this->exists($name))return false;
-        $this->db->query("DELETE FROM variables WHERE name=\"$name\"");
-        return true;
+		$this->db->query("DELETE FROM variables WHERE name=\"$name\"");
+		return true;
 	}
 
 	public function save(){
@@ -89,41 +89,55 @@ class VariableHelper {
 	}
 
 	/**
-	 * 変数を置き換える
+	 * 文字列の中にある変数を置き換える
 	 * @param  string $string
+	 * @param  array $variables
 	 * @return string
 	 */
-    public function replaceVariable($string){
-        $count = 0;
-        while(preg_match_all("/({[^{}]+})/", $string, $matches)){
-            if(++$count >= 10) break;
-            foreach ($matches[0] as $name) {
-                $val = $this->get(substr($name, 1, -1));
-                if(!($val instanceof Variable)) {
-                	$string = str_replace($name, "§cUndefined variable: ".substr($name, 1, -1)."§r", $string);
-                	continue;
-                }
-                if($val instanceof ListVariable) {
-                	$haystack = explode($name, $string)[1];
-                	if(preg_match("/^\[([0-9]+)\].*/", $haystack, $index)) {
-                		$value = $val->getValueFromIndex($index[1]);
-                		if($value === null) $value = "§cUndefined index: ".substr($name, 1, -1)."[".$index[1]."]§r";
-                		$string = str_replace($name."[".$index[1]."]", $value, $string);
-                		continue;
-                	}
-                	if(preg_match("/^\.([a-z]+[0-9a-z]*).*/", $haystack, $method)) {
-                		if($method[1] === "length") {
-                			$string = str_replace($name.".".$method[1], $val->getCount(), $string);
-                		}
-                		continue;
-                	}
-                	$val = $val->toStringVariable();
-                }
-                $string = str_replace($name, $val->getValue(), $string);
-            }
-        }
-        return $string;
-    }
+	public function replaceVariables($string, $variables = []){
+		foreach (["/\[({[^{}]+})\]/", "/({[^{}]+})/"] as $pattern) {
+			while(preg_match_all($pattern, $string, $matches)){
+				foreach ($matches[0] as $name) {
+					$name = mb_substr($name, 1, -1);
+					$val = isset($variables[$name]) ? $variables[$name] : $this->get($name);
+					if(!($val instanceof Variable)) {
+						$string = str_replace("{".$name."}", "§cUndefined variable: ".$name."§r", $string);
+						continue;
+					}
+					$string = $this->replace($string, $val);
+				}
+			}
+		}
+		return $string;
+	}
+
+	/**
+	 * 変数を置き換える
+	 * @param  string $string
+	 * @param  Variable $variable
+	 * @return string
+	 */
+	public function replace($string, $variable) {
+		if(strpos($string, "{".$variable->getName()."}") === false) return $string;
+		if($variable instanceof ListVariable) {
+			$haystack = explode("{".$variable->getName()."}", $string)[1];
+			if(preg_match("/^\[([0-9]+)\].*/", $haystack, $index)) {
+				$value = $variable->getValueFromIndex($index[1]);
+				if($value === null) $value = "§cUndefined index: ".$variable->getName()."[".$index[1]."]§r";
+				$string = str_replace("{".$variable->getName()."}"."[".$index[1]."]", $value, $string);
+				return $string;
+			}
+			if(preg_match("/^\.([a-z]+[0-9a-z]*).*/", $haystack, $method)) {
+				if($method[1] === "length") {
+					$string = str_replace("{".$variable->getName()."}".".".$method[1], $variable->getCount(), $string);
+				}
+				return $string;
+			}
+			$variable = $variable->toStringVariable();
+		}
+		$string = str_replace("{".$variable->getName()."}", $variable->getValue(), $string);
+		return $string;
+	}
 
 	/**
 	 * 文字列が変数か調べる
