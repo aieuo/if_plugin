@@ -5,6 +5,10 @@ namespace aieuo\ip\manager;
 use pocketmine\command\Command;
 use pocketmine\command\PluginCommand;
 
+use aieuo\ip\variable\StringVariable;
+use aieuo\ip\variable\NumberVariable;
+use aieuo\ip\variable\ListVariable;
+
 class CommandManager extends ifManager{
 
     private $command_list = [];
@@ -41,7 +45,7 @@ class CommandManager extends ifManager{
 
     public function registerCommands(){
         foreach($this->getAll() as $command => $value){
-            if($this->isSubcommand($command))$command = $this->getParentCommand($command);
+            if($this->isSubcommand($command))$command = $this->getOriginCommand($command);
             if(!$this->exists($command)){
                 $this->register($command, $value["permission"], $value["description"]);
             }
@@ -49,7 +53,7 @@ class CommandManager extends ifManager{
     }
 
     public function register($command, $permission = "default", $description = "ifPluginで追加したコマンドです"){
-        if($this->isSubcommand($command))$command = $this->getParentCommand($command);
+        if($this->isSubcommand($command))$command = $this->getOriginCommand($command);
         if(!$this->exists($command)){
             $newCommand = new PluginCommand($command, $this->getOwner());
             $newCommand->setDescription($description);
@@ -68,7 +72,7 @@ class CommandManager extends ifManager{
             array_shift($cmds);
             $cmd = implode(" ", $cmds);
             unset($commands[$cmd]);
-            $command = $this->getParentCommand($command);
+            $command = $this->getOriginCommand($command);
         }
         $count = count($commands);
         if(!$this->isSubcommand($command) and $this->isAdded($command)) $count ++;
@@ -105,20 +109,18 @@ class CommandManager extends ifManager{
     	return $array;
     }
 
-    public function getParentCommand($command){
+    public function getOriginCommand($command){
     	if(!$this->isSubcommand($command))return $command;
     	$commands = explode(" ", $command);
     	return $commands[0];
     }
 
-    public function replaceDatas($string, $datas) {
-        $string = parent::replaceDatas($string, $datas);
+    public function getReplaceDatas($datas) {
+        $result = parent::getReplaceDatas($datas);
         $command = $datas["command"];
         $cmds = explode(" ", substr($command, 1));
-        $string = str_replace("{cmd}", array_shift($cmds), $string);
-        foreach ($cmds as $n => $cmd) {
-            $string = str_replace("{args_".$n."}", $cmd, $string);
-        }
-        return $string;
+        $result[] = new StringVariable("cmd", array_shift($cmds));
+        $result[] = new ListVariable("args", $cmds);
+        return $result;
     }
 }

@@ -2,22 +2,13 @@
 
 namespace aieuo\ip\manager;
 
-use pocketmine\item\Item;
-use pocketmine\level\Position;
 use pocketmine\Player;
-use pocketmine\event\Cancellable;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use aieuo\ip\ifPlugin;
+
+use aieuo\ip\variable\StringVariable;
+use aieuo\ip\variable\NumberVariable;
+use aieuo\ip\variable\ListVariable;
 
 class EventManager extends ifManager{
 
@@ -98,36 +89,35 @@ class EventManager extends ifManager{
         return true;
     }
 
-    public function replaceDatas($string, $datas){
-        $string = parent::replaceDatas($string, $datas);
+    public function getReplaceDatas($datas){
+        $result = parent::getReplaceDatas($datas);
         $event = $datas["event"];
         $eventname = $datas["eventname"];
+        $variables = [];
         if(
             $eventname == "PlayerInteractEvent"
             or $eventname == "BlockBreakEvent"
             or $eventname == "BlockPlaceEvent"
         ){
             $block = $event->getBlock();
-            $variables["{block}"] = $block->__toString();
-            $variables["{block_name}"] = $block->getName();
-            $variables["{block_id}"] = $block->getId();
-            $variables["{block_damage}"] = $block->getDamage();
-            $variables["{block_ids}"] = $block->getId().":".$block->getDamage();
-            $variables["{block_pos}"] = $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
-            $variables["{block_level}"] = $block->level->getFolderName();
+            $variables["block"] = new StringVariable("block", $block->__toString());
+            $variables["block_name"] = new StringVariable("block_name", $block->getName());
+            $variables["block_id"] = new NumberVariable("block_id", $block->getId());
+            $variables["block_damage"] = new NumberVariable("block_damage", $block->getDamage());
+            $variables["block_ids"] = new StringVariable("block_ids", $block->getId().":".$block->getDamage());
+            $variables["block_pos"] = new StringVariable("block_pos", $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName());
+            $variables["block_level"] = new StringVariable("block_level", $block->level->getFolderName());
         }
         if(
             $eventname == "PlayerChatEvent"
             or $eventname == "PlayerCommandPreprocessEvent"
         ){
-            $variables["{mes}"] = $event->getMessage();
+            $variables["mes"] = new StringVariable("mes", $event->getMessage());
         }
         if($eventname == "PlayerCommandPreprocessEvent"){
-            $args = explode(" ", $variables["{mes}"]);
-            $variables["{cmd}"] = array_shift($args);
-            foreach($args as $key => $value){
-                $variables["{args".$key."}"] = $value;
-            }
+            $args = explode(" ", $variables["mes"]->getValue());
+            $variables["cmd"] = new StringVariable("cmd", array_shift($args));
+            $variables["args"] = new ListVariable("args", $args);
         }
         if($eventname == "CraftItemEvent"){
             $inputs = $event->getInputs();
@@ -144,27 +134,32 @@ class EventManager extends ifManager{
                 $outputnames[] = $output->getName();
                 $outputids[] = $output->getId().":".$output->getDamage();
             }
-            $variables["{input_name}"] = implode(",", $inputnames);
-            $variables["{input_id}"] = implode(",", $inputids);
-            $variables["{output_name}"] = implode(",", $outputnames);
-            $variables["{output_id}"] = implode(",", $outputids);
+            $variables["input_name"] = new ListVariable("input_name", $inputnames);
+            $variables["input_id"] = new ListVariable("input_id", $inputids);
+            $variables["output_name"] = new ListVariable("output_name", $outputnames);
+            $variables["output_id"] = new ListVariable("output_id", $outputids);
         }
         if($eventname == "EntityDamageEvent"){
             $entity = $event->getEntity();
+            $variables["event_damage"] = new NumberVariable("event_damage", $event->getBaseDamage());
+            $variables["evant_cause"] = new NumberVariable("evant_cause", $event->getCause());
             if($event instanceof EntityDamageByEntityEvent){
                 $damager = $event->getDamager();
                 if($damager instanceof Player){
-                    $datas["{attacker}"] = $damager->getName();
+                    $variables["attacker"] = new StringVariable("attacker", $damager->__toString());
+                    $variables["attacker_name"] = new StringVariable("attacker_name", $damager->getName());
+                    $variables["attacker_pos"] = new StringVariable("attacker_pos", $damager->x.",".$damager->y.",".$damager->z.",".$damager->level->getFolderName());
+                    $variables["attacker_x"] = new NumberVariable("attacker_x", $damager->x);
+                    $variables["attacker_y"] = new NumberVariable("attacker_y", $damager->y);
+                    $variables["attacker_z"] = new NumberVariable("attacker_z", $damager->z);
+                    $variables["attacker_level"] = new StringVariable("attacker_level", $damager->level->getFolderName());
                 }
             }
         }
         if($eventname == "EntityLevelChangeEvent"){
-            $variables["{origin_level}"] = $event->getOrigin()->getFolderName();
-            $variables["{target_level}"] = $event->getTarget()->getFolderName();
+            $variables["origin_level"] = new StringVariable("origin_level", $event->getOrigin()->getFolderName());
+            $variables["target_level"] = new StringVariable("target_level", $event->getTarget()->getFolderName());
         }
-        foreach ($variables as $variable => $value) {
-            $string = str_replace($variable, $value, $string);
-        }
-        return $string;
+        return array_merge($result, $variables);
     }
 }
