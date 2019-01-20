@@ -150,7 +150,6 @@ class Calculation extends Process
                 $player->sendMessage("§c[".$this->getName()."] その組み合わせは使用できません");
                 return;
         }
-        var_dump($variable1, $variable2, $result, "\n");
         if($result->getName() == "ERROR") {
         	$player->sendMessage("§c[".$this->getName()."] ".$result->getValue());
         	return;
