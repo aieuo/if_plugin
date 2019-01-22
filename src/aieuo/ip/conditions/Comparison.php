@@ -5,8 +5,7 @@ namespace aieuo\ip\conditions;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Comparison extends Condition
-{
+class Comparison extends Condition {
 	public $id = self::COMPARISON;
 
 	const ERROR = -1;
@@ -19,19 +18,16 @@ class Comparison extends Condition
 	const CONTAINS = 6;
 	const NOT_CONTAINS = 7;
 
-	public function __construct($player = null, $value1 = 0, $value2 = 0, $operator = self::EQUAL)
-	{
+	public function __construct($player = null, $value1 = 0, $value2 = 0, $operator = self::EQUAL) {
 		parent::__construct($player);
 		$this->setValues($value1, $value2, $operator);
 	}
 
-	public function getName()
-	{
+	public function getName() {
 		return "二つの値を比較する";
 	}
 
-	public function getDescription()
-	{
+	public function getDescription() {
 		return "§7<value1>§rと§7<value2>§rが§7<operator>§rなら";
 	}
 
@@ -70,28 +66,23 @@ class Comparison extends Condition
         return $mes;
 	}
 
-	public function getValue1()
-	{
+	public function getValue1() {
 		return $this->getValues()[0];
 	}
 
-	public function getValue2()
-	{
+	public function getValue2() {
 		return $this->getValues()[1];
 	}
 
-	public function getOperator()
-	{
+	public function getOperator() {
 		return $this->getValues()[2];
 	}
 
-	public function setNumbers($value1, $value2, int $ope)
-	{
+	public function setNumbers($value1, $value2, int $ope) {
 		$this->setValues([$value1, $value2, $ope]);
 	}
 
-	public function parse(string $numbers)
-	{
+	public function parse(string $numbers) {
         if(!preg_match("/(.+)\[ope:([0-9])\](.+)/", $numbers, $matches)) return false;
         $operator = (int)$matches[2];
         $value1 = trim(rtrim($matches[1]));
@@ -101,11 +92,9 @@ class Comparison extends Condition
         return [$value1, $value2, $operator];
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
-		if($this->getValues() === false)
-		{
+		if($this->getValues() === false) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return self::ERROR;
 		}
@@ -145,20 +134,17 @@ class Comparison extends Condition
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$values = $this->parse($default);
 		$value1 = $default;
 		$operator = self::EQUAL;
 		$value2 = "";
-		if($values !== false)
-		{
+		if($values !== false) {
 			$value1 = $values[0];
 			$operator = $values[2];
 			$value2 = $values[1];
 		}
-		elseif($default !== "")
-		{
+		elseif($default !== "") {
 			$mes .= "§c正しく入力できていません§f";
 		}
         $data = [
