@@ -72,7 +72,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 						case "add_empty":
 							$session->setData("action", $args[1]);
 			                $form = $this->form->getCommandForm()->getAddCommandForm();
-			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onAddCommand");
+			                Form::sendForm($sender, $form, $this->form->getCommandForm(), "onAddCommand");
 							return true;
 						case "edit":
 							$session->setData("action", "edit");
@@ -86,11 +86,11 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 								$datas = $manager->get($args[2]);
 								$mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
 					            $form = $this->form->getCommandForm()->getEditIfForm($mes);
-					            Form::sendForm($player, $form, $this->form->getCommandForm(), "onEditIf");
+					            Form::sendForm($sender, $form, $this->form->getCommandForm(), "onEditIf");
 								return true;
 							}
 			                $form = $this->form->getCommandForm()->getSelectCommandForm();
-			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onSelectCommand");
+			                Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectCommand");
 							return true;
 						case "check":
 							$session->setData("action", "check");
@@ -107,7 +107,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 								return true;
 							}
 			                $form = $this->form->getCommandForm()->getSelectCommandForm();
-			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onSelectCommand");
+			                Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectCommand");
 							return true;
 						case "del":
 							$session->setData("action", "del");
@@ -119,11 +119,11 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 								}
         						$session->setData("if_key", $data[0]);
 					            $form = $this->form->getConfirmDeleteForm();
-					            Form::sendForm($player, $form, $this->form, "onDeleteIf");
+					            Form::sendForm($sender, $form, $this->form, "onDeleteIf");
 								return true;
 							}
 			                $form = $this->form->getCommandForm()->getSelectCommandForm();
-			                Form::sendForm($player, $form, $this->form->getCommandForm(), "onSelectCommand");
+			                Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectCommand");
 							return true;
 						case "cancel":
 							$session->setValid(false);
