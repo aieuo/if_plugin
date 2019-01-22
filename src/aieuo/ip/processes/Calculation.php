@@ -160,8 +160,8 @@ class Calculation extends Process
 	public function getEditForm(string $default = "", string $mes = "")
 	{
 		$values = $this->parse($default);
-		$value1 = $default;
-		$value2 = "";
+		$value0 = $default;
+		$value1 = "";
 		$operator = self::ADDITION;
 		$name = "";
 		if($values !== false)
