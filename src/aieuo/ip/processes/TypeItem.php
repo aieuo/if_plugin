@@ -29,7 +29,7 @@ class TypeItem extends Process
 	{
 		if(!preg_match("/\s*([0-9]+)\s*:?\s*([0-9]*)\s*:?\s*([0-9]*)\s*:?\s*(\.*)\s*/", $id, $ids)) return false;
 		$item = Item::get((int)$ids[1], empty($ids[2]) ? 0 : (int)$ids[2], empty($ids[3]) ? 0 : (int)$ids[3]);
-		if(!empty($ids[3])) $item->setCustomName($ids[3]);
+		if(!empty($ids[4])) $item->setCustomName($ids[4]);
 		return $item;
 	}
 
@@ -70,7 +70,7 @@ class TypeItem extends Process
     	$status = true;
     	$id = explode(":", $datas[1]);
     	if(!isset($id[1])) $id[1] = 0;
-    	$ids_str = $id[0].":".$id[1].":".$datas[2].($datas[3] !== "" ? ":".$datas[3] : "");
+    	$ids_str = $id[0].":".$id[1].":".$datas[2].":".$datas[3];
     	if($datas[1] === "" or $datas[2] === "") {
     		$status = null;
     	} else {
