@@ -39,7 +39,7 @@ use aieuo\ip\processes\ProcessFactory;
 
 class ifPlugin extends PluginBase implements Listener{
 
-    const VERSION = "3.0.3";
+    const VERSION = "3.0.4";
 
     private static $instance;
 

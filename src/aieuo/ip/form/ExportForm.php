@@ -51,6 +51,7 @@ class ExportForm {
         	"name" => $data[0],
         	"author" => $data[1],
         	"details" => $data[2],
+            "plugin_version" => ifPlugin::VERSION,
         	"ifs" => [
         		$key => $datas
         	]
