@@ -7,6 +7,7 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
 use aieuo\ip\Session;
@@ -34,7 +35,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 		switch ($args[0]) {
 			case 'block':
 				if(isset($args[1])){
-					$session = $sender->ifSession;
+					$session = ifAPI::getSession($sender);
 					switch ($args[1]) {
 						case "edit":
 							$sender->sendMessage("編集するブロックを触ってください");
@@ -63,7 +64,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 				break;
 			case 'command':
 				if(isset($args[1])){
-					$session = $sender->ifSession;
+					$session = ifAPI::getSession($sender);
 					$session->setValid();
 					$session->setIfType(Session::COMMAND);
 					$manager = $this->owner->getCommandManager();
@@ -140,7 +141,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 				break;
 			case "chain":
 				if(isset($args[1])) {
-					$session = $sender->ifSession;
+					$session = ifAPI::getSession($sender);
 					switch ($args[1]) {
 						case 'add':
 			                $session->setData("action", "add");

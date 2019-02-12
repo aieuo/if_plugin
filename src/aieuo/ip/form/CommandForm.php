@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\form;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
@@ -29,7 +30,7 @@ class CommandForm {
 
     public function onSelectAction($player, $data) {
         if($data === null) return;
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         switch ($data) {
             case 0:
                 $session->setData("action", "add");
@@ -90,7 +91,7 @@ class CommandForm {
     }
 
     public function onAddCommand($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -151,7 +152,7 @@ class CommandForm {
     }
 
     public function onSelectCommand($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -206,7 +207,7 @@ class CommandForm {
     }
 
     public function onCommandList($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;

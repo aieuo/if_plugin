@@ -47,9 +47,4 @@ class Session {
 	public function removeAllData(){
 		$this->datas = [];
 	}
-
-	public static function get($player) {
-		if(!isset($player->ifSession)) $player->ifSession = new Session();
-		return $player->ifSession;
-	}
 }

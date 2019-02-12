@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\form;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
@@ -44,7 +45,7 @@ class EventForm {
     }
 
     public function onSelectEvent($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -80,7 +81,7 @@ class EventForm {
     }
 
     public function onSelectIf($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;

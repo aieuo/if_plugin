@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\form;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
@@ -26,7 +27,7 @@ class ImportForm {
 	}
 
 	public function onImportList($player, $data) {
-		$session = $player->ifSession;
+        $session = ifAPI::getSession($player);
 		if($data === null) {
 			$session->setValid(false, false);
 			return;
@@ -67,7 +68,7 @@ class ImportForm {
 	}
 
 	public function onImport($player, $data) {
-		$session = $player->ifSession;
+        $session = ifAPI::getSession($player);
 		if($data === null) {
 			$session->setValid(false, false);
 			return;
@@ -82,7 +83,7 @@ class ImportForm {
 	}
 
 	public function importDatas($player, $file, $count = 0) {
-		$session = $player->ifSession;
+        $session = ifAPI::getSession($player);
 		foreach ($file["ifs"] as $key => $datas) {
 			if($datas["type"] === Session::BLOCK) {
 				$manager = ifPlugin::getInstance()->getBlockManager();
@@ -179,7 +180,7 @@ class ImportForm {
 	}
 
 	public function onConfirmOverwrite($player, $data) {
-		$session = $player->ifSession;
+        $session = ifAPI::getSession($player);
 		if($data === null) {
 			$session->setValid(false, false);
 			return;

@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\form;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\Session;
@@ -30,7 +31,7 @@ class ChainIfForm {
 
     public function onSelectAction($player, $data) {
         if($data === null) return;
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         switch ($data) {
             case 0:
                 $session->setData("action", "add");
@@ -78,7 +79,7 @@ class ChainIfForm {
     }
 
     public function onAddChainIf($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -123,7 +124,7 @@ class ChainIfForm {
     }
 
     public function onEditChainIf($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -176,7 +177,7 @@ class ChainIfForm {
     }
 
     public function onChainIfList($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
