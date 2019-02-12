@@ -4,6 +4,7 @@ namespace aieuo\ip;
 
 use aieuo\ip\manager\ifManager;
 
+use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\item\Item;
 use pocketmine\item\enchantment\Enchantment;
