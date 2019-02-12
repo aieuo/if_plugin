@@ -127,12 +127,12 @@ class EventListener implements Listener {
 
 	public function interact(PlayerInteractEvent $event){
         $player = $event->getPlayer();
-        if(!isset($player->IFLastTouch)) $player->IFLastTouch = 0;
+        if(!isset($this->touch[$player->getName()])) $this->touch[$player->getName()] = 0;
         $tick = Server::getInstance()->getTick();
-        if($tick - $player->IFLastTouch <= 3) {
+        if($tick - $this->touch[$player->getName()] <= 3) {
             return;
         }
-        $player->IFLastTouch = $tick;
+        $this->touch[$player->getName()] = $tick;
 		$this->onEvent($event, "PlayerInteractEvent");
 
         $manager = $this->getOwner()->getBlockManager();
