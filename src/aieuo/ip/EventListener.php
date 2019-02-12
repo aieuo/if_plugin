@@ -21,6 +21,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
 use aieuo\ip\Session;
@@ -62,10 +63,6 @@ class EventListener implements Listener {
     }
     public function join(PlayerJoinEvent $event){
         $this->onEvent($event, "PlayerJoinEvent");
-
-        $player = $event->getPlayer();
-        $session = new Session();
-        $player->ifSession = $session;
     }
     public function craft(CraftItemEvent $event){
         $this->onEvent($event, "CraftItemEvent");
@@ -142,7 +139,7 @@ class EventListener implements Listener {
         $block = $event->getBlock();
         $pos = $manager->getPosition($block);
 		if($player->isOp()){
-			if(($session = $player->ifSession)->isValid()){
+			if(($session = ifAPI::getSession($player))->isValid()){
 				$type = $session->getData("action");
 				$manager = $this->getOwner()->getBlockManager();
 				switch ($type) {

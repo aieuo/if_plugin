@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\form;
 
+use aieuo\ip\ifAPI;
 use aieuo\ip\Session;
 use aieuo\ip\form\BlockForm;
 use aieuo\ip\form\Form;
@@ -27,7 +28,7 @@ class BlockForm {
 
     public function onSelectAction($player, $data) {
         if($data === null) return;
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         switch ($data) {
             case 0:
                 $session->setData("action", "edit");

@@ -88,7 +88,7 @@ class Form {
 
     public function onSelectIfType($player, $data) {
         if($data === null) return;
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         switch ($data) {
             case 0:
                 $session->setIfType(Session::BLOCK);
@@ -139,7 +139,7 @@ class Form {
     }
 
     public function onEditIf($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -196,7 +196,7 @@ class Form {
     }
 
     public function onEditIfContents($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -254,7 +254,7 @@ class Form {
     }
 
     public function onAddContent($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -282,7 +282,7 @@ class Form {
     }
 
     public function onEdit($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -319,7 +319,7 @@ class Form {
     }
 
     public function onUpdateContent($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -369,7 +369,7 @@ class Form {
     }
 
     public function onDeleteContent($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -393,7 +393,7 @@ class Form {
     }
 
     public function onDeleteIf($player, $data) {
-        $session = $player->ifSession;
+        $session = ifAPI::getSession($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
