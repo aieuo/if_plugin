@@ -95,10 +95,10 @@ class VariableHelper {
 	 * @return string
 	 */
 	public function replaceVariables($string, $variables = []){
-		foreach (["/\[({[^{}]+})\]/", "/({[^{}]+})/"] as $pattern) {
+		foreach (["/\[({[^{}]+})\]/" => 2, "/({[^{}]+})/" => 1] as $pattern => $n) {
 			while(preg_match_all($pattern, $string, $matches)){
 				foreach ($matches[0] as $name) {
-					$name = mb_substr($name, 1, -1);
+					$name = mb_substr($name, $n, -$n);
 					$val = isset($variables[$name]) ? $variables[$name] : $this->get($name);
 					if(!($val instanceof Variable)) {
 						$string = str_replace("{".$name."}", "§cUndefined variable: ".$name."§r", $string);

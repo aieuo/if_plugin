@@ -19,7 +19,7 @@ class ChainIfManager extends ifManager{
 
     public function getReplaceDatas($datas) {
         $result = parent::getReplaceDatas($datas);
-        if(isset($datas["count"])) $result[] = new NumberVariable("i", $datas["count"]);
+        if(isset($datas["count"])) $result["i"] = new NumberVariable("i", $datas["count"]);
         if(isset($datas["origin"])) {
             $origin = $datas["origin"];
             $variables = [
