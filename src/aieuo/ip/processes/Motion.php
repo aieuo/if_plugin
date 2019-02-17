@@ -7,58 +7,48 @@ use pocketmine\math\Vector3;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Motion extends TypePosition
-{
+class Motion extends TypePosition {
 	public $id = self::MOTION;
 
-	public function __construct($player = null, $pos = false)
-	{
+	public function __construct($player = null, $pos = false) {
 		parent::__construct($player);
 		$this->setValues($pos);
 	}
 
-	public function getName()
-	{
+	public function getName() {
 		return "動かす";
 	}
 
-	public function getDescription()
-	{
+	public function getDescription() {
 		return "プレイヤーを§7<x> <y> <z>§fブロック動かす";
 	}
 
 	public function getMessage() {
-		$pos = $this->getCommand();
+		$pos = $this->getPosition();
 		if($pos === false) return false;
 		return "プレイヤーを".$pos->x.",".$pos->y.",".$pos->z."ブロック動かす";
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$pos = $this->getPosition();
-		if(!($pos instanceof Vector3))
-		{
+		if(!($pos instanceof Vector3)) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}
         $player->setMotion($pos);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$pos = $this->parse($default);
 		$x = $default;
 		$y = "";
 		$z = "";
-		if($pos instanceof Vector3)
-		{
+		if($pos instanceof Vector3) {
 			$x = $pos->x;
 			$y = $pos->y;
 			$z = $pos->z;
-		}
-		elseif($default !== "")
-		{
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません§f";
 		}
         $data = [
