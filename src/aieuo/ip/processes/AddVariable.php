@@ -8,25 +8,11 @@ use aieuo\ip\variable\Variable;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class AddVariable extends Process
-{
-	public $id = self::ADD_VARIABLE;
+class AddVariable extends Process {
 
-	public function __construct($player = null, $variable = false)
-	{
-		parent::__construct($player);
-		$this->setValues($variable);
-	}
-
-	public function getName()
-	{
-		return "変数を追加する";
-	}
-
-	public function getDescription()
-	{
-		return "§7<name>§fという名前で§7<value>§fという値の変数を追加する";
-	}
+	protected $id = self::ADD_VARIABLE;
+    protected $name = "変数を追加する";
+    protected $description = "§7<name>§fという名前で§7<value>§fという値の変数を追加する";
 
 	public function getMessage() {
 		$variable = $this->getVariable();
@@ -34,18 +20,15 @@ class AddVariable extends Process
 		return $variable->getName()."という名前で".$variable->getValue()."という値の変数を追加する";
 	}
 
-	public function getVariable()
-	{
+	public function getVariable() {
 		return $this->getValues();
 	}
 
-	public function setVariable(Variable $variable)
-	{
+	public function setVariable(Variable $variable) {
 		$this->setValues($variable);
 	}
 
-	public function parse(string $content)
-	{
+	public function parse(string $content) {
         $datas = explode(";", $content);
         if(!isset($datas[1]) or $datas[1] === "") return false;
         $helper = ifPlugin::getInstance()->getVariableHelper();
@@ -53,12 +36,10 @@ class AddVariable extends Process
         return Variable::create($datas[0], $value, $helper->getType($datas[1]));
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$variable = $this->getVariable();
-		if($variable === false)
-		{
+		if($variable === false) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}
@@ -66,13 +47,11 @@ class AddVariable extends Process
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$var = $this->parse($default);
 		$name = $default;
 		$value = "";
-		if($var instanceof Variable)
-		{
+		if($var instanceof Variable) {
 			$name = $var->getName();
 			$value = $var->getValue();
 			if(is_numeric($value) and $var->getType() === Variable::STRING) {
@@ -80,9 +59,7 @@ class AddVariable extends Process
 			} elseif(!is_numeric($value) and $var->getType() === Variable::NUMBER) {
 				$value = "(num)".$value;
 			}
-		}
-		elseif($default !== "")
-		{
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません§f";
 		}
         $data = [

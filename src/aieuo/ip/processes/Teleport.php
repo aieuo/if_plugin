@@ -7,19 +7,11 @@ use pocketmine\level\Position;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Teleport extends TypePosition
-{
-	public $id = self::TELEPORT;
+class Teleport extends TypePosition {
 
-	public function getName()
-	{
-		return "テレポートする";
-	}
-
-	public function getDescription()
-	{
-		return "§7<pos>§fにテレポートする";
-	}
+    protected $id = self::TELEPORT;
+    protected $name = "テレポートする";
+    protected $description = "§7<pos>§fにテレポートする";
 
 	public function getMessage() {
 		$pos = $this->getPosition();
@@ -27,12 +19,10 @@ class Teleport extends TypePosition
 		return $pos->__toString()."にテレポートする";
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$pos = $this->getPosition();
-		if(!($pos instanceof Position))
-		{
+		if(!($pos instanceof Position)) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}

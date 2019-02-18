@@ -7,26 +7,17 @@ use aieuo\ip\ifPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class TakeMoney extends TypeMoney
-{
-	public $id = self::TAKEMONEY;
+class TakeMoney extends TypeMoney {
 
-	public function getName()
-	{
-		return "お金を減らす";
-	}
-
-	public function getDescription()
-	{
-		return "お金を§7<amount>§f払えるなら";
-	}
+	protected $id = self::TAKEMONEY;
+    protected $name = "お金を減らす";
+    protected $description = "お金を§7<amount>§f払えるなら";
 
 	public function getMessage() {
 		return "お金を".$this->getAmount()."払えるなら";
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
     	$mymoney = ifPlugin::getInstance()->getEconomy()->getMoney($player->getName());
         if($mymoney === false){

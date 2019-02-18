@@ -11,19 +11,11 @@ use pocketmine\network\mcpe\protocol\types\EntityLink;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SetSitting extends TypePosition
-{
-	public $id = self::SET_SITTING;
+class SetSitting extends TypePosition {
 
-	public function getName()
-	{
-		return "座らせる";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーを§7<pos>§fに座らせる";
-	}
+    protected $id = self::SET_SITTING;
+    protected $name = "座らせる";
+    protected $description = "プレイヤーを§7<pos>§fに座らせる";
 
 	public function getMessage() {
 		$pos = $this->getPosition();
@@ -31,12 +23,10 @@ class SetSitting extends TypePosition
 		return $pos->__toString()."で座る";
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$pos = $this->getPosition();
-		if(!($pos instanceof Position))
-		{
+		if(!($pos instanceof Position)) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}

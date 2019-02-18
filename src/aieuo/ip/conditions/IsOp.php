@@ -2,26 +2,17 @@
 
 namespace aieuo\ip\conditions;
 
-class IsOp extends Condition
-{
-	public $id = self::IS_OP;
+class IsOp extends Condition {
 
-	public function getName()
-	{
-		return "プレイヤーがopか";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーがopなら";
-	}
+	protected $id = self::IS_OP;
+	protected $name = "プレイヤーがopか";
+	protected $description = "プレイヤーがopなら";
 
 	public function getMessage() {
 		return "プレイヤーがopなら";
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
 		return $player->isOp() ? self::MATCHED : self::NOT_MATCHED;
 	}

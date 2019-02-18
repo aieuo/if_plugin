@@ -11,23 +11,10 @@ use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
 class SetBlocks extends TypePosition {
-	public $id = self::SET_BLOCKS;
 
-	public function __construct($player = null, $settings = false)
-	{
-		parent::__construct($player);
-		$this->setValues($settings);
-	}
-
-	public function getName()
-	{
-		return "指定した範囲にブロックを設置する";
-	}
-
-	public function getDescription()
-	{
-		return "§7<level>§fワールドの§7<spos>§f~§7<epos>§fに§7<id>§fのブロックを設置する";
-	}
+    protected $id = self::SET_BLOCKS;
+    protected $name = "指定した範囲にブロックを設置する";
+    protected $description = "§7<level>§fワールドの§7<spos>§f~§7<epos>§fに§7<id>§fのブロックを設置する";
 
 	public function getMessage() {
 		if($this->getValues() === false) return false;
@@ -64,8 +51,7 @@ class SetBlocks extends TypePosition {
 		$this->setValues([$spos, $epos, $level, $block]);
 	}
 
-	public function parse(string $content)
-	{
+	public function parse(string $content) {
         $settings = explode(";", $content);
         if(!isset($settings[3])) return false;
         $spos = parent::parse($settings[0]);
@@ -79,8 +65,7 @@ class SetBlocks extends TypePosition {
         return [$spos, $epos, $level, $block];
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		if($this->getValues() === false) return false;
 		$spos = $this->getStartPosition();
 		$epos = $this->getEndPosition();
@@ -102,8 +87,7 @@ class SetBlocks extends TypePosition {
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$settings = $this->parse($default);
 		$spos_str = $default;
 		$epos_str = "";

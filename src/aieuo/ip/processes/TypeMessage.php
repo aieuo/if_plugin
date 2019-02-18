@@ -5,26 +5,17 @@ namespace aieuo\ip\processes;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class TypeMessage extends Process
-{
-	public function __construct($player = null, $message = "")
-	{
-		parent::__construct($player);
-		$this->setValues($message);
-	}
+class TypeMessage extends Process {
 
-	public function getSendMessage()
-	{
+	public function getSendMessage() {
 		return $this->getValues();
 	}
 
-	public function setSendMessage(string $message)
-	{
+	public function setSendMessage(string $message) {
 		$this->setValues($message);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

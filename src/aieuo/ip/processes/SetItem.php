@@ -7,19 +7,11 @@ use pocketmine\item\Item;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SetItem extends Process
-{
-	public $id = self::SET_ITEM;
+class SetItem extends Process {
 
-	public function getName()
-	{
-		return "インベントリの指定した場所にアイテムを追加する";
-	}
-
-	public function getDescription()
-	{
-		return "インベントリの§7<index>§fにidが§7<id>§fの§7<name>§fという名前のアイテムを§7<count>§f追加する";
-	}
+    protected $id = self::SET_ITEM;
+    protected $name = "インベントリの指定した場所にアイテムを追加する";
+    protected $description = "インベントリの§7<index>§fにidが§7<id>§fの§7<name>§fという名前のアイテムを§7<count>§f追加する";
 
 	public function getMessage() {
 		if($this->getValues()) return false;
@@ -29,34 +21,28 @@ class SetItem extends Process
 		return "インベントリの".$index."に(".$item->getId().":".$item->getDamage().",".$item->getName().")"."を".$item->getCount()."個追加する";
 	}
 
-	public function getIndex()
-	{
+	public function getIndex() {
 		return $this->getValues()[0];
 	}
 
-	public function getItem()
-	{
+	public function getItem() {
 		return $this->getValues()[1];
 	}
 
-	public function setItems(int $index, Item $item)
-	{
+	public function setItems(int $index, Item $item) {
 		$this->setValues([$index, $item]);
 	}
 
-	public function parse(string $id)
-	{
+	public function parse(string $id) {
 		if(!preg_match("/\s*([0-9]+)\s*,\s*([0-9]+)\s*:?\s*([0-9]*)\s*:?\s*([0-9]*)\s*:?\s*(\.*)\s*/", $id, $ids)) return false;
 		$item = Item::get((int)$ids[2], empty($ids[3]) ? 0 : (int)$ids[3], empty($ids[4]) ? 0 : (int)$ids[4]);
 		if(!empty($ids[5])) $item->setCustomName($ids[5]);
 		return [(int)$ids[1], $item];
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
-		if($this->getValues() === false)
-		{
+		if($this->getValues() === false) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}
@@ -66,19 +52,15 @@ class SetItem extends Process
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$items = $this->parse($default);
 		$id = $default;
 		$count = "";
 		$name = "";
 		$index = "";
-		if($items === false and $default !== "")
-		{
+		if($items === false and $default !== "") {
 			$mes .= "§c正しく入力できていません\n(idは数字で0以上の数を入力してください)§f";
-		}
-		elseif($items[1] instanceof Item)
-		{
+		} elseif($items[1] instanceof Item) {
 			$item = $items[1];
 			$id = $item->getId().":".$item->getDamage();
 			$count = $item->getCount();

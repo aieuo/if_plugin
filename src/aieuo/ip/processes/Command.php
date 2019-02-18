@@ -7,27 +7,18 @@ use pocketmine\Server;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Command extends TypeCommand
-{
-	public $id = self::COMMAND;
+class Command extends TypeCommand {
 
-	public function getName()
-	{
-		return "コマンドを実行する";
-	}
-
-	public function getDescription()
-	{
-		return "コマンド§7<command>§fを実行する";
-	}
+	protected $id = self::COMMAND;
+	protected $name = "コマンドを実行する";
+	protected $description = "コマンド§7<command>§fを実行する";
 
 	public function getMessage() {
 		$command = $this->getCommand();
 		return "/".$command." を実行する";
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
         Server::getInstance()->dispatchCommand($player, $this->getCommand());
 	}

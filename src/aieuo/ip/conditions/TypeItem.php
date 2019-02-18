@@ -7,44 +7,30 @@ use pocketmine\item\Item;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class TypeItem extends Condition
-{
-	public function __construct($player = null, $item = false)
-	{
-		parent::__construct($player);
-		$this->setValues($item);
-	}
-
-	public function getItem()
-	{
+class TypeItem extends Condition {
+	public function getItem() {
 		return $this->getValues();
 	}
 
-	public function setItem(Item $item)
-	{
+	public function setItem(Item $item) {
 		$this->setValues($item);
 	}
 
-	public function parse(string $id)
-	{
+	public function parse(string $id) {
 		if(!preg_match("/^\s*([0-9]+)\s*:?\s*([0-9]*)\s*:?\s*([0-9]*)\s*$/", $id, $ids)) return false;
 		$item = Item::get((int)$ids[1], empty($ids[2]) ? 0 : (int)$ids[2], empty($ids[3]) ? 0 : (int)$ids[3]);
 		return $item;
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$item = $this->parse($default);
 		$id = $default;
 		$count = "";
-		if($item instanceof Item)
-		{
+		if($item instanceof Item) {
 			$id = $item->getId().":".$item->getDamage();
 			$count = $item->getCount();
 			if($count === 0) $mes .= "§e個数が0になっています§f";
-		}
-		elseif($default !== "")
-		{
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません(idは数字で0以上の数を入力してください)§f";
 		}
         $data = [

@@ -9,20 +9,10 @@ use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
 class CooperationRepeat extends Process {
-	public $id = self::COOPERATION_REPEAT;
 
-	public function __construct($player = null, $name = false) {
-		parent::__construct($player);
-		$this->setValues($name);
-	}
-
-	public function getName() {
-		return "ほかのIF何回か実行する";
-	}
-
-	public function getDescription() {
-		return "§7<name>§fという名前のIFを§7<count>§f回実行する";
-	}
+	protected $id = self::COOPERATION_REPEAT;
+    protected $name = "ほかのIF指定した回数実行する";
+    protected $description = "§7<name>§fという名前のIFを§7<count>§f回実行する";
 
 	public function getMessage() {
 		$name = $this->getCooperationName();

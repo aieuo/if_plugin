@@ -7,27 +7,18 @@ use pocketmine\Server;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SendMessageToOp extends TypeMessage
-{
-	public $id = self::SENDMESSAGE_TO_OP;
+class SendMessageToOp extends TypeMessage {
 
-	public function getName()
-	{
-		return "opだけにメッセージを送る";
-	}
-
-	public function getDescription()
-	{
-		return "opだけにメッセージ§7<message>§fを送る";
-	}
+    protected $id = self::SENDMESSAGE_TO_OP;
+    protected $name = "opだけにメッセージを送る";
+    protected $description = "opだけにメッセージ§7<message>§fを送る";
 
 	public function getMessage() {
 		$message = $this->getSendMessage();
 		return "opだけに".$message."と送る";
 	}
 
-	public function execute()
-	{
+	public function execute() {
     	$players = Server::getInstance()->getOnlinePlayers();
     	foreach ($players as $player) {
     		if($player->isOp()){

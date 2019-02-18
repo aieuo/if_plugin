@@ -8,49 +8,31 @@ use aieuo\ip\variable\Variable;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class DeleteVariable extends Process
-{
-	public $id = self::DELETE_VARIABLE;
+class DeleteVariable extends Process {
 
-	public function __construct($player = null, $name = false)
-	{
-		parent::__construct($player);
-		$this->setValues($name);
-	}
-
-	public function getName()
-	{
-		return "変数を削除する";
-	}
-
-	public function getDescription()
-	{
-		return "§7<name>§fという名前の変数を削除する";
-	}
+	protected $id = self::DELETE_VARIABLE;
+    protected $name = "変数を削除する";
+    protected $description = "§7<name>§fという名前の変数を削除する";
 
 	public function getMessage() {
 		return $this->getVariableName()."という名前の変数を削除する";
 	}
 
-	public function getVariableName()
-	{
+	public function getVariableName() {
 		return $this->getValues();
 	}
 
-	public function setVariableName(string $variable)
-	{
+	public function setVariableName(string $variable) {
 		$this->setValues($variable);
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
         ifPlugin::getInstance()->getVariableHelper()->del($this->getVariableName());
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
