@@ -5,64 +5,43 @@ namespace aieuo\ip\conditions;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class RandomNumber extends Condition
-{
-	public $id = self::RANDOM_NUMBER;
+class RandomNumber extends Condition {
 
-	public function __construct($player = null, $min = 0, $max = PHP_INT_MAX, $check = 0)
-	{
-		parent::__construct($player);
-		$this->setValues([$min, $max, $check]);
-	}
-
-	public function getName()
-	{
-		return "乱数が指定したものだったら";
-	}
-
-	public function getDescription()
-	{
-		return "§7<min>§r～§7<max>§rの範囲で生成した乱数が§7<number>§7だったら";
-	}
+	protected $id = self::RANDOM_NUMBER;
+    protected $name = "乱数が指定したものだったら";
+    protected $description = "§7<min>§r～§7<max>§rの範囲で生成した乱数が§7<number>§7だったら";
 
 	public function getMessage() {
 		if($this->getValues() === false) return false;
 		return $this->getMin()."~".$this->getMax()."の範囲の乱数が".$this->getCheck()."なら";
 	}
 
-	public function getMin()
-	{
+	public function getMin() {
 		return $this->getValues()[0];
 	}
 
-	public function getMax()
-	{
+	public function getMax() {
 		return $this->getValues()[1];
 	}
 
-	public function getCheck()
-	{
+	public function getCheck() {
 		return $this->getValues()[2];
 	}
 
-	public function setNumbers(int $min, int $max, int $check)
-	{
+	public function setNumbers(int $min, int $max, int $check) {
 		$this->setValues([$min, $max, $check]);
 	}
 
-	public function parse(string $numbers)
-	{
+	public function parse(string $numbers) {
         if(!preg_match("/(-?[0-9]+),(-?[0-9]+),(-?[0-9]+)/", $numbers, $matches)) return false;
         $min = min((int)$matches[1], (int)$matches[2]);
         $max = max((int)$matches[1], (int)$matches[2]);
         return [$min, $max, (int)$matches[3]];
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
-		if($this->getValues() === false)
-		{
+		if($this->getValues() === false) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません§f");
 			return self::ERROR;
 		}
@@ -72,24 +51,19 @@ class RandomNumber extends Condition
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$numbers = $this->parse($default);
 		$min = $default;
 		$max = "";
 		$check = "";
-		if($numbers !== false)
-		{
+		if($numbers !== false) {
 			$min = $numbers[0];
 			$max = $numbers[1];
 			$check = $numbers[2];
-			if($check > $max or $check < $min)
-			{
+			if($check > $max or $check < $min) {
 				$mes .= "§e指定した数".$check."は".$min."~".$max."の範囲の乱数で生成されることはありません§f";
 			}
-		}
-		elseif($default !== "")
-		{
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません§f";
 		}
         $data = [

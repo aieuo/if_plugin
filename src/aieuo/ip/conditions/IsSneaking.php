@@ -2,26 +2,17 @@
 
 namespace aieuo\ip\conditions;
 
-class IsSneaking extends Condition
-{
-	public $id = self::IS_SNEAKING;
+class IsSneaking extends Condition {
 
-	public function getName()
-	{
-		return "プレイヤーがスニークしているか";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーがスニークしているなら";
-	}
+	protected $id = self::IS_SNEAKING;
+	protected $name = "プレイヤーがスニークしているか";
+	protected $description = "プレイヤーがスニークしているなら";
 
 	public function getMessage() {
 		return "プレイヤーがスニークしているなら";
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
 		return $player->isSneaking() ? self::MATCHED : self::NOT_MATCHED;
 	}

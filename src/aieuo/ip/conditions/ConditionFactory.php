@@ -2,12 +2,10 @@
 
 namespace aieuo\ip\conditions;
 
-class ConditionFactory
-{
+class ConditionFactory {
 	private static $list = [];
 
-	public static function init()
-	{
+	public static function init() {
 		self::register(new NoCheck());
 		self::register(new TakeMoney());
 		self::register(new OverMoney());
@@ -29,25 +27,21 @@ class ConditionFactory
 	 * @param  int $id
 	 * @return Condition | null
 	 */
-	public static function get($id)
-	{
-		if(isset(self::$list[$id]))
-		{
+	public static function get($id) {
+		if(isset(self::$list[$id])) {
 			return clone self::$list[$id];
 		}
 		return new Condition();
 	}
 
-	public static function getAll()
-	{
+	public static function getAll() {
 		return self::$list;
 	}
 
 	/**
 	 * @param  Condition $condition
 	 */
-	public static function register(Condition $condition)
-	{
+	public static function register(Condition $condition) {
 		self::$list[$condition->getId()] = clone $condition;
 	}
 }

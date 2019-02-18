@@ -6,7 +6,10 @@ use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
 class Comparison extends Condition {
-	public $id = self::COMPARISON;
+
+    protected $id = self::COMPARISON;
+    protected $name = "二つの値を比較する";
+    protected $description = "§7<value1>§rと§7<value2>§rが§7<operator>§rなら";
 
 	const ERROR = -1;
 	const EQUAL = 0;
@@ -17,19 +20,6 @@ class Comparison extends Condition {
 	const LESS_EQUAL = 5;
 	const CONTAINS = 6;
 	const NOT_CONTAINS = 7;
-
-	public function __construct($player = null, $value1 = 0, $value2 = 0, $operator = self::EQUAL) {
-		parent::__construct($player);
-		$this->setValues($value1, $value2, $operator);
-	}
-
-	public function getName() {
-		return "二つの値を比較する";
-	}
-
-	public function getDescription() {
-		return "§7<value1>§rと§7<value2>§rが§7<operator>§rなら";
-	}
 
 	public function getMessage() {
 		if($this->getValues() === false) return false;

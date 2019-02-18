@@ -8,43 +8,26 @@ use aieuo\ip\variable\Variable;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Cooperation extends Process
-{
-	public $id = self::COOPERATION;
+class Cooperation extends Process {
 
-	public function __construct($player = null, $name = false)
-	{
-		parent::__construct($player);
-		$this->setValues($name);
-	}
-
-	public function getName()
-	{
-		return "ほかのIFと連携する";
-	}
-
-	public function getDescription()
-	{
-		return "§7<name>§fという名前のIFを実行する";
-	}
+	protected $id = self::COOPERATION;
+    protected $name = "ほかのIFと連携する";
+    protected $description = "§7<name>§fという名前のIFを実行する";
 
 	public function getMessage() {
 		$name = $this->getCooperationName();
 		return $name."を実行する";
 	}
 
-	public function getCooperationName()
-	{
+	public function getCooperationName() {
 		return $this->getValues();
 	}
 
-	public function setCooperationName(string $name)
-	{
+	public function setCooperationName(string $name) {
 		$this->setValues($name);
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
         $manager = ifPlugin::getInstance()->getChainManager();
         if(!$manager->isAdded($this->getCooperationName())) {
@@ -60,8 +43,7 @@ class Cooperation extends Process
         );
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $manager = ifPlugin::getInstance()->getChainManager();
         if($default !== "" and !$manager->isAdded($default)) $mes .= "§eその名前のIFは追加されていません";
         $data = [

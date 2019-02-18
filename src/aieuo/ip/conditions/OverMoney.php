@@ -7,19 +7,11 @@ use aieuo\ip\ifPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class OverMoney extends TypeMoney
-{
-	public $id = self::OVERMONEY;
+class OverMoney extends TypeMoney {
 
-	public function getName()
-	{
-		return "所持金が指定した金額以上か";
-	}
-
-	public function getDescription()
-	{
-		return "所持金が§7<amount>§f以上なら";
-	}
+	protected $id = self::OVERMONEY;
+    protected $name = "所持金が指定した金額以上か";
+    protected $description = "所持金が§7<amount>§f以上なら";
 
 	public function getMessage() {
 		return "所持金が".$this->getAmount()."以上なら";

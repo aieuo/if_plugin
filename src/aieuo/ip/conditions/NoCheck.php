@@ -2,26 +2,17 @@
 
 namespace aieuo\ip\conditions;
 
-class NoCheck extends Condition
-{
-	public $id = self::NO_CHECK;
+class NoCheck extends Condition {
 
-	public function getName()
-	{
-		return "何も確認しない";
-	}
-
-	public function getDescription()
-	{
-		return "何も確認しない";
-	}
+	protected $id = self::NO_CHECK;
+	protected $name = "何も確認しない";
+	protected $description = "何も確認しない";
 
 	public function getMessage() {
 		return "何も確認しない";
 	}
 
-	public function check()
-	{
+	public function check() {
 		return self::MATCHED;
 	}
 }

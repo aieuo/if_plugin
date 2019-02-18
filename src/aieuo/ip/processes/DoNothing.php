@@ -2,19 +2,11 @@
 
 namespace aieuo\ip\processes;
 
-class DoNothing extends Process
-{
-	public $id = self::DO_NOTHING;
+class DoNothing extends Process {
 
-	public function getName()
-	{
-		return "何もしない";
-	}
-
-	public function getDescription()
-	{
-		return "何もしない";
-	}
+	protected $id = self::DO_NOTHING;
+	protected $name = "何もしない";
+	protected $description = "何もしない";
 
 	public function getMessage() {
 		return "何もしない";

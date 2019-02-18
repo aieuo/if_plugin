@@ -7,25 +7,11 @@ use pocketmine\event\entity\EntityDamageEvent;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Attack extends Process
-{
-	public $id = self::ATTACK;
+class Attack extends Process {
 
-	public function __construct($player = null, $attack = 0)
-	{
-		parent::__construct($player);
-		$this->setValues($attack);
-	}
-
-	public function getName()
-	{
-		return "ダメージを与える";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーにダメージを§7<damage>§f与える";
-	}
+	protected $id = self::ATTACK;
+    protected $name = "ダメージを与える";
+    protected $description = "プレイヤーにダメージを§7<damage>§f与える";
 
 	public function getMessage() {
 		$damage = $this->getDamage();
@@ -33,29 +19,24 @@ class Attack extends Process
 		return "プレイヤーに".$damage."ダメージ与える";
 	}
 
-	public function getDamage()
-	{
+	public function getDamage() {
 		return $this->getValues();
 	}
 
-	public function setDamage(float $damage)
-	{
+	public function setDamage(float $damage) {
 		$this->setValues($damage);
 	}
 
-	public function parse(string $content)
-	{
+	public function parse(string $content) {
 		$damage = (float)$content;
 		if($damage <= 0) return false;
 		return $damage;
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$damage = $this->getDamage();
-		if($damage === false)
-		{
+		if($damage === false) {
 			$player->sendMessage("§c[".$this->getName()."] 攻撃力は1以上にしてください");
 			return;
 		}
@@ -63,11 +44,9 @@ class Attack extends Process
 		$player->attack($event);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$damage = $this->parse($default);
-		if($damage === false)
-		{
+		if($damage === false) {
 			if($default !== "") $mes .= "§c攻撃力は1以上にしてください§f";
 			$damage = $default;
 		}

@@ -8,42 +8,25 @@ use pocketmine\event\Cancellable;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class EventCancel extends Process
-{
-	public $id = self::EVENT_CANCEL;
+class EventCancel extends Process {
 
-	public function __construct($player = null, $effect = null)
-	{
-		parent::__construct($player);
-		$this->setValues($effect);
-	}
-
-	public function getName()
-	{
-		return "イベントキャンセルする";
-	}
-
-	public function getDescription()
-	{
-		return "イベントをキャンセルする";
-	}
+	protected $id = self::EVENT_CANCEL;
+	protected $name = "イベントキャンセルする";
+	protected $description = "イベントをキャンセルする";
 
 	public function getMessage() {
 		return "イベントをキャンセルする";
 	}
 
-	public function getEvent()
-	{
+	public function getEvent() {
 		return $this->getValues();
 	}
 
-	public function setEvent(Event $effect)
-	{
+	public function setEvent(Event $effect) {
 		$this->setValues($effect);
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$event = $this->getEvent();
 		if($event instanceof Cancellable) $event->setCancelled();
 	}

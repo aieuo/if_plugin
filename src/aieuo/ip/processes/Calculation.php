@@ -11,9 +11,11 @@ use aieuo\ip\variable\ListVariable;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Calculation extends Process
-{
-	public $id = self::CALCULATION;
+class Calculation extends Process {
+
+	protected $id = self::CALCULATION;
+    protected $name = "二つの値を計算する";
+    protected $description = "§7<value1>§fと§7<value2>§fを計算§7<opefator>§rした結果を{result}に入れる";
 
 	const ERROR = -1;
 	const ADDITION = 0;
@@ -21,22 +23,6 @@ class Calculation extends Process
 	const MULTIPLICATION = 2;
 	const DIVISION = 3;
 	const MODULO = 4;
-
-	public function __construct($player = null, $values = false)
-	{
-		parent::__construct($player);
-		$this->setValues($values);
-	}
-
-	public function getName()
-	{
-		return "二つの値を計算する";
-	}
-
-	public function getDescription()
-	{
-		return "§7<value1>§fと§7<value2>§fを計算§7<opefator>§rした結果を{result}に入れる";
-	}
 
 	public function getMessage() {
 		if($this->getValues() === false) return false;
@@ -76,33 +62,27 @@ class Calculation extends Process
         return $mes;
 	}
 
-	public function getValue1()
-	{
+	public function getValue1() {
 		return $this->getValues()[0];
 	}
 
-	public function getValue2()
-	{
+	public function getValue2() {
 		return $this->getValues()[1];
 	}
 
-	public function getOperator()
-	{
+	public function getOperator() {
 		return $this->getValues()[2];
 	}
 
-	public function getAssignName()
-	{
+	public function getAssignName() {
 		return $this->getValues()[3];
 	}
 
-	public function setNumbers(Variable $value1, Variable $value2, int $ope, string $assign = "result")
-	{
+	public function setNumbers(Variable $value1, Variable $value2, int $ope, string $assign = "result") {
 		$this->setValues([$value1, $value2, $ope, $assign]);
 	}
 
-	public function parse(string $numbers)
-	{
+	public function parse(string $numbers) {
         if(!preg_match("/\s*(.+)\s*\[ope:([0-9])\]\s*(.+)\s*;\s*([^;]*)\s*$/", $numbers, $matches)) return false;
         $helper = ifPlugin::getInstance()->getVariableHelper();
         $operator = (int)$matches[2];
@@ -118,10 +98,8 @@ class Calculation extends Process
         return [$var1, $var2, $operator, $assign];
 	}
 
-	public function execute()
-	{
-		if($this->getValues() === false)
-		{
+	public function execute() {
+		if($this->getValues() === false) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return;
 		}
@@ -157,15 +135,13 @@ class Calculation extends Process
         ifPlugin::getInstance()->getVariableHelper()->add($result);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$values = $this->parse($default);
 		$value0 = $default;
 		$value1 = "";
 		$operator = self::ADDITION;
 		$name = "";
-		if($values !== false)
-		{
+		if($values !== false) {
 			for($i = 0; $i <= 1; $i ++) {
 				${"value".$i} = $values[$i]->getValue();
 
@@ -179,9 +155,7 @@ class Calculation extends Process
 			}
 			$operator = $values[2];
 			$name = $values[3];
-		}
-		elseif($default !== "")
-		{
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません§f";
 		}
         $data = [

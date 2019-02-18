@@ -5,26 +5,17 @@ namespace aieuo\ip\processes;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class TypeCommand extends Process
-{
-	public function __construct($player = null, $command = "")
-	{
-		parent::__construct($player);
-		$this->setValues($command);
-	}
+class TypeCommand extends Process {
 
-	public function getCommand()
-	{
+	public function getCommand() {
 		return $this->getValues();
 	}
 
-	public function setCommand(string $command)
-	{
+	public function setCommand(string $command) {
 		$this->setValues($command);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

@@ -7,38 +7,21 @@ use pocketmine\Server;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SetGamemode extends Process
-{
-	public $id = self::SET_GAMEMODE;
+class SetGamemode extends Process {
 
-	public function __construct($player = null, $gamemode = false)
-	{
-		parent::__construct($player);
-		$this->setValues($gamemode);
-	}
+    protected $id = self::SET_GAMEMODE;
+    protected $name = "ゲームモードを変更する";
+    protected $description = "プレイヤーのゲームモードを§7<gamemode>§fにする";
 
-	public function getName()
-	{
-		return "ゲームモードを変更する";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーのゲームモードを§7<gamemode>§fにする";
-	}
-
-	public function getGamemode()
-	{
+	public function getGamemode() {
 		return $this->getValues();
 	}
 
-	public function setGamemode(int $gamemode)
-	{
+	public function setGamemode(int $gamemode) {
 		$this->setValues($gamemode);
 	}
 
-	public function parse(string $content)
-	{
+	public function parse(string $content) {
 		$gamemode = Server::getInstance()->getGamemodeFromString($content);
 		if($gamemode === -1) return false;
 		return $gamemode;
@@ -50,23 +33,19 @@ class SetGamemode extends Process
 		return "ゲームモードを".$gamemode."に変更する";
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$gamemode = $this->getGamemode();
-		if($gamemode === false)
-		{
+		if($gamemode === false) {
 			$player->sendMessage("§c[".$this->getName()."] ゲームモードが見つかりません");
 			return;
 		}
 		$player->setGamemode($gamemode);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$gamemode = $this->parse($default);
-		if($gamemode === false)
-		{
+		if($gamemode === false) {
 			if($default !== "") $mes .= "§cゲームモードが見つかりません§f";
 			$gamemode = 0;
 		}

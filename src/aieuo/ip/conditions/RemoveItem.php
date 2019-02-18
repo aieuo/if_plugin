@@ -7,19 +7,11 @@ use pocketmine\item\Item;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class RemoveItem extends TypeItem
-{
-	public $id = self::REMOVE_ITEM;
+class RemoveItem extends TypeItem {
 
-	public function getName()
-	{
-		return "指定したアイテムがインベントリにあるなら削除する";
-	}
-
-	public function getDescription()
-	{
-		return "インベントリからidが§7<id>§fのアイテムを§7<count>§f個削除できるなら";
-	}
+	protected $id = self::REMOVE_ITEM;
+    protected $name = "指定したアイテムがインベントリにあるなら削除する";
+    protected $description = "インベントリからidが§7<id>§fのアイテムを§7<count>§f個削除できるなら";
 
 	public function getMessage() {
 		$item = $this->getItem();
@@ -27,46 +19,37 @@ class RemoveItem extends TypeItem
 		return "インベントリから(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."個削除できるなら";
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
 		$item = $this->getItem();
-	    if(!($item instanceof Item))
-		{
+	    if(!($item instanceof Item)) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return self::ERROR;
 		}
-		if($item->getCount() === 0)
-		{
+		if($item->getCount() === 0) {
             $count = 0;
-            foreach ($player->getInventory()->getContents() as $item1)
-            {
+            foreach ($player->getInventory()->getContents() as $item1) {
                 if($item1->getId() == $item->getId() and $item1->getDamage() == $item->getDamage()) $count += $item1->getCount();
             }
             if($count == 0) return self::NOT_MATCHED;
             $item->setCount($count);
 		}
-        if($player->getInventory()->contains($item))
-        {
+        if($player->getInventory()->contains($item)) {
             $player->getInventory()->removeItem($item);
             return self::MATCHED;
         }
         return self::NOT_MATCHED;
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$item = $this->parse($default);
 		$id = $default;
 		$count = "";
-		if($item instanceof Item)
-		{
+		if($item instanceof Item) {
 			$id = $item->getId().":".$item->getDamage();
 			$count = $item->getCount();
 			if($count === 0) $mes .= "§e指定したアイテムをインベントリからすべて削除します§f";
-		}
-		elseif($default !== "")
-		{
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません (idは0以上の数字で入力してください)§f";
 		}
         $data = [

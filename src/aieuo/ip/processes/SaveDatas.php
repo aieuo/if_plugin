@@ -5,15 +5,10 @@ namespace aieuo\ip\processes;
 use aieuo\ip\ifPlugin;
 
 class SaveDatas extends Process {
-	public $id = self::SAVE_DATAS;
 
-	public function getName() {
-		return "データをセーブする";
-	}
-
-	public function getDescription() {
-		return "データをセーブする";
-	}
+    protected $id = self::SAVE_DATAS;
+    protected $name = "データをセーブする";
+    protected $description = "データをセーブする";
 
 	public function getMessage() {
 		return "データをセーブする";

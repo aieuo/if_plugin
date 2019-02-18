@@ -7,50 +7,32 @@ use aieuo\ip\ifPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class ExistsVariable extends Condition
-{
-	public $id = self::EXISTS_VARIABLE;
+class ExistsVariable extends Condition {
 
-	public function __construct($player = null, $variable = "")
-	{
-		parent::__construct($player);
-		$this->setValues($variable);
-	}
-
-	public function getName()
-	{
-		return "変数が存在するか";
-	}
-
-	public function getDescription()
-	{
-		return "変数§7<variable>§fが存在するか";
-	}
+	protected $id = self::EXISTS_VARIABLE;
+    protected $name = "変数が存在するか";
+	protected $description = "変数§7<variable>§fが存在するか";
 
 	public function getMessage() {
 		$name = $this->getVariableName();
 		return $name."という名前の変数が存在するなら";
 	}
 
-	public function getVariableName()
-	{
+	public function getVariableName() {
 		return $this->getValues();
 	}
 
-	public function setVariableName(string $variable)
-	{
+	public function setVariableName(string $variable) {
 		$this->setValues($variable);
 	}
 
-	public function check()
-	{
+	public function check() {
 		if(ifPlugin::getInstance()->getVariableHelper()->exists($this->getVariableName())) return self::MATCHED;
 		return self::NOT_MATCHED;
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

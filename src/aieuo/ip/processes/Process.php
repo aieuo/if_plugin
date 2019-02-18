@@ -7,73 +7,67 @@ use pocketmine\Player;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Process implements ProcessIds
-{
+class Process implements ProcessIds {
 
-	/** @var int */
-	public $id;
+    /** @var Player */
+    private $player;
 
-	/** @var Player */
-	private $player;
+    /** @var array */
+    private $values = [];
 
-	/** @var array */
-	private $values = [];
+    /** @var int */
+    protected $id;
 
-	public function __construct($player = null)
-	{
-		$this->player = $player;
-	}
+    /** @var string */
+    protected $name = "";
 
-	public static function get($id)
-	{
-		return ProcessFactory::get($id);
-	}
+    /** @var string */
+    protected $description = "";
 
-	public function getId()
-	{
-		return $this->id;
-	}
+    public function __construct($player = null) {
+        $this->player = $player;
+    }
 
-	public function getName()
-	{
-		return "";
-	}
+    public static function get($id) {
+        return ProcessFactory::get($id);
+    }
 
-	public function getDescription()
-	{
-		return "";
-	}
+    public function getId() {
+        return $this->id;
+    }
 
-	public function parse(string $str)
-	{
-		return $str;
-	}
+    public function getName() {
+        return $this->name;
+    }
 
-	public function setPlayer(Player $player) : self
-	{
-		$this->player = $player;
-		return $this;
-	}
+    public function getDescription() {
+        return $this->description;
+    }
 
-	public function getPlayer() : Player
-	{
-		return $this->player;
-	}
+    public function parse(string $str) {
+        return $str;
+    }
 
-	public function setValues($values) : self
-	{
-		$this->values = $values;
-		return $this;
-	}
+    public function setPlayer(Player $player) : self {
+        $this->player = $player;
+        return $this;
+    }
 
-	public function getValues()
-	{
-		return $this->values;
-	}
+    public function getPlayer() : Player {
+        return $this->player;
+    }
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
-		if($mes !== "") $mes = "\n".$mes;
+    public function setValues($values) : self {
+        $this->values = $values;
+        return $this;
+    }
+
+    public function getValues() {
+        return $this->values;
+    }
+
+    public function getEditForm(string $default = "", string $mes = "") {
+        if($mes !== "") $mes = "\n".$mes;
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
@@ -88,10 +82,9 @@ class Process implements ProcessIds
     }
 
     public function parseFormData(array $datas) {
-    	return ["status" => true, "contents" => "", "delete" => $datas[1], "cancel" => $datas[2]];
+        return ["status" => true, "contents" => "", "delete" => $datas[1], "cancel" => $datas[2]];
     }
 
-	public function execute()
-	{
-	}
+    public function execute() {
+    }
 }

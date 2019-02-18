@@ -5,51 +5,32 @@ namespace aieuo\ip\processes;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SetNametag extends Process
-{
-	public $id = self::SET_NAMETAG;
+class SetNametag extends Process {
 
-	public function __construct($player = null, $name = "")
-	{
-		parent::__construct($player);
-		$this->setValues($name);
-	}
+    protected $id = self::SET_NAMETAG;
+    protected $name = "名前を変える";
+    protected $description = "表示する名前を§7<name>§fに変える";
 
-	public function getName()
-	{
-		return "名前を変える";
-	}
-
-	public function getDescription()
-	{
-		return "表示する名前を§7<name>§fに変える";
-	}
-
-	public function getMessage()
-	{
+	public function getMessage() {
 		return "表示する名前を".$this->getChangeName()."にする";
 	}
 
-	public function getChangeName()
-	{
+	public function getChangeName() {
 		return $this->getValues();
 	}
 
-	public function setChangeName(string $name)
-	{
+	public function setChangeName(string $name) {
 		$this->setValues($name);
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$name = $this->getChangeName();
     	$player->setNametag($name);
     	$player->setDisplayName($name);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

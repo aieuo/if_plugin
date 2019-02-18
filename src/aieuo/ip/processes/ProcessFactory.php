@@ -2,12 +2,10 @@
 
 namespace aieuo\ip\processes;
 
-class ProcessFactory
-{
+class ProcessFactory {
 	private static $list = [];
 
-	public static function init()
-	{
+	public static function init() {
 		self::register(new DoNothing());
 		self::register(new SendMessage());
 		self::register(new SendTip());
@@ -52,25 +50,21 @@ class ProcessFactory
 	 * @param  int $id
 	 * @return Process
 	 */
-	public static function get($id)
-	{
-		if(isset(self::$list[$id]))
-		{
+	public static function get($id) {
+		if(isset(self::$list[$id])) {
 			return clone self::$list[$id];
 		}
 		return new Process();
 	}
 
-	public static function getAll()
-	{
+	public static function getAll() {
 		return self::$list;
 	}
 
 	/**
 	 * @param  Condition $process
 	 */
-	public static function register(Process $process)
-	{
+	public static function register(Process $process) {
 		self::$list[$process->getId()] = clone $process;
 	}
 }

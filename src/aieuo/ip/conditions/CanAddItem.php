@@ -7,19 +7,11 @@ use pocketmine\item\Item;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class CanAddItem extends TypeItem
-{
-	public $id = self::CAN_ADD_ITEM;
+class CanAddItem extends TypeItem {
 
-	public function getName()
-	{
-		return "インベントリにアイテムを追加できるか";
-	}
-
-	public function getDescription()
-	{
-		return "インベントリにidが§7<id>§fのアイテムを§7<count>§f個追加できるスペースがあるなら";
-	}
+	protected $id = self::CAN_ADD_ITEM;
+	protected $name = "インベントリにアイテムを追加できるか";
+	protected $description = "インベントリにidが§7<id>§fのアイテムを§7<count>§f個追加できるスペースがあるなら";
 
 	public function getMessage() {
 		$item = $this->getItem();
@@ -27,12 +19,10 @@ class CanAddItem extends TypeItem
 		return "インベントリに(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."個追加できるなら";
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
 		$item = $this->getItem();
-		if(!($item instanceof Item))
-		{
+		if(!($item instanceof Item)) {
 			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
 			return self::ERROR;
 		}

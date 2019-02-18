@@ -7,25 +7,11 @@ use pocketmine\math\Vector3;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class SetHealth extends Process
-{
-	public $id = self::SET_HEALTH;
+class SetHealth extends Process {
 
-	public function __construct($player = null, $health = 0)
-	{
-		parent::__construct($player);
-		$this->setValues($health);
-	}
-
-	public function getName()
-	{
-		return "体力を変更する";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーの体力を§7<health>§fにする";
-	}
+    protected $id = self::SET_HEALTH;
+    protected $name = "体力を変更する";
+    protected $description = "プレイヤーの体力を§7<health>§fにする";
 
 	public function getMessage() {
 		$health = $this->getHealth();
@@ -33,40 +19,33 @@ class SetHealth extends Process
 		return "プレイヤーの体力を".$health."にする";
 	}
 
-	public function getHealth()
-	{
+	public function getHealth() {
 		return $this->getValues();
 	}
 
-	public function setHealth(int $health)
-	{
+	public function setHealth(int $health) {
 		$this->setValues($health);
 	}
 
-	public function parse(string $content)
-	{
+	public function parse(string $content) {
         $health = (int)$content;
         if($health <= 0) return false;
     	return $health;
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$health = $this->gethealth();
-		if($health === false)
-		{
+		if($health === false) {
 			$player->sendMessage("§c[".$this->getName()."] 体力は1以上にしてください");
 			return;
 		}
 		$player->setHealth($health);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$health = $this->parse($default);
-		if($health === false)
-		{
+		if($health === false) {
 			if($default !== "") $mes = "§c体力は1以上にしてください§f";
 			$health = $default;
 		}

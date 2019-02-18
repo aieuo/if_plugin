@@ -8,51 +8,32 @@ use aieuo\ip\task\KickTask;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class Kick extends Process
-{
-	public $id = self::KICK;
+class Kick extends Process {
 
-	public function __construct($player = null, $reason = "")
-	{
-		parent::__construct($player);
-		$this->setValues($reason);
-	}
+	protected $id = self::KICK;
+    protected $name = "キックする";
+    protected $description = "プレイヤーを§7<reason>§fでキックする";
 
-	public function getName()
-	{
-		return "キックする";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーを§7<reason>§fでキックする";
-	}
-
-	public function getMessage()
-	{
+	public function getMessage() {
 		$reason = $this->getReason();
 		return "プレイヤーを".$reason."でキックする";
 	}
 
-	public function getReason()
-	{
+	public function getReason() {
 		return $this->getValues();
 	}
 
-	public function setReason(string $reason)
-	{
+	public function setReason(string $reason) {
 		$this->setValues($reason);
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$reason = $this->getReason();
         ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new KickTask($player, $reason), 5);
 	}
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

@@ -12,20 +12,10 @@ use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
 class ExecuteOtherPlayer extends Process {
-	public $id = self::EXECUTE_OTHER_PLAYER;
 
-	public function __construct($player = null, $names = false) {
-		parent::__construct($player);
-		$this->setValues($names);
-	}
-
-	public function getName() {
-		return "ほかのプレイヤーとしてIFを実行する";
-	}
-
-	public function getDescription() {
-		return "§7<player>§fに§7<name>§fという名前のIFを実行させる";
-	}
+	protected $id = self::EXECUTE_OTHER_PLAYER;
+    protected $name = "ほかのプレイヤーとしてIFを実行する";
+    protected $description = "§7<player>§fに§7<name>§fという名前のIFを実行させる";
 
 	public function getMessage() {
 		$cname = $this->getCooperationName();

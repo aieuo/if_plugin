@@ -8,25 +8,11 @@ use pocketmine\entity\EffectInstance;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class AddEffect extends Process
-{
-	public $id = self::ADD_EFFECT;
+class AddEffect extends Process {
 
-	public function __construct($player = null, $effect = null)
-	{
-		parent::__construct($player);
-		$this->setValues($effect);
-	}
-
-	public function getName()
-	{
-		return "エフェクトを与える";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーにidが§7<id>§fで強さが§7<power>§fのエフェクトを§7<time>§f秒間与える";
-	}
+	protected $id = self::ADD_EFFECT;
+    protected $name = "エフェクトを与える";
+    protected $description = "プレイヤーにidが§7<id>§fで強さが§7<power>§fのエフェクトを§7<time>§f秒間与える";
 
 	public function getMessage() {
 		$effect = $this->getEffect();
@@ -34,18 +20,15 @@ class AddEffect extends Process
 		return "idが".$effect->getId()."で強さが".$effect->getAmplifier()."のエフェクトを".($effect->getDuration() * 20)."秒間与える";
 	}
 
-	public function getEffect()
-	{
+	public function getEffect() {
 		return $this->getValues();
 	}
 
-	public function setEffect(EffectInstance $effect)
-	{
+	public function setEffect(EffectInstance $effect) {
 		$this->setValues($effect);
 	}
 
-	public function parse(string $content)
-	{
+	public function parse(string $content) {
         $args = explode(",", $content);
         if(!isset($args[1]) or (int)$args[1] <= 0) $args[1] = 1;
         if(!isset($args[2]) or (float)$args[2] <= 0) $args[2] = 30;
@@ -55,8 +38,7 @@ class AddEffect extends Process
 		return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$effect = $this->getEffect();
 		if(!($effect instanceof EffectInstance))
@@ -69,8 +51,7 @@ class AddEffect extends Process
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		$effect = $this->parse($default);
 		$id = $default;
 		$power = "";

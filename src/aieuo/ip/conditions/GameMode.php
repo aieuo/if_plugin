@@ -7,25 +7,11 @@ use pocketmine\Server;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class GameMode extends Condition
-{
-	public $id = self::GAMEMODE;
+class GameMode extends Condition {
 
-	public function __construct($player = null, $gamemode = false)
-	{
-		parent::__construct($player);
-		$this->setValues($gamemode);
-	}
-
-	public function getName()
-	{
-		return "ゲームモードが指定したものだったら";
-	}
-
-	public function getDescription()
-	{
-		return "プレーヤーのゲームモードが§7<gamemode>§fだったら";
-	}
+	protected $id = self::GAMEMODE;
+    protected $name = "ゲームモードが指定したものだったら";
+    protected $description = "プレーヤーのゲームモードが§7<gamemode>§fだったら";
 
 	public function getMessage() {
 		$gamemode = $this->getGamemode();
@@ -33,29 +19,24 @@ class GameMode extends Condition
 		return "ゲームモードが".$gamemode."なら";
 	}
 
-	public function getGamemode()
-	{
+	public function getGamemode() {
 		return $this->getValues();
 	}
 
-	public function setGamemode(int $gamemode)
-	{
+	public function setGamemode(int $gamemode) {
 		$this->setValues($gamemode);
 	}
 
-	public function parse(string $gamemode)
-	{
+	public function parse(string $gamemode) {
 		$intGamemode = Server::getInstance()->getGamemodeFromString($gamemode);
 		if($intGamemode === -1) return false;
 		return $intGamemode;
 	}
 
-	public function check()
-	{
+	public function check() {
 		$player = $this->getPlayer();
 		$gamemode = $this->getGamemode();
-		if($gamemode === false)
-		{
+		if($gamemode === false) {
 			$player->sendMessage("§c[".$this->getName()."] ゲームモードが見つかりません");
 			return self::ERROR;
 		}
@@ -63,8 +44,7 @@ class GameMode extends Condition
 	}
 
 
-	public function getEditForm(string $default = "", string $mes = "")
-	{
+	public function getEditForm(string $default = "", string $mes = "") {
 		if($default === "")
 		{
 			$gamemode = 0;

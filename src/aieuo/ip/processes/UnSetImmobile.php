@@ -7,26 +7,17 @@ use pocketmine\item\Item;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
-class UnSetImmobile extends Process
-{
-	public $id = self::UNSET_IMMOBILE;
+class UnSetImmobile extends Process {
 
-	public function getName()
-	{
-		return "動けるようにする";
-	}
-
-	public function getDescription()
-	{
-		return "プレイヤーを動けるようにする";
-	}
+	protected $id = self::UNSET_IMMOBILE;
+    protected $name = "動けるようにする";
+    protected $description = "プレイヤーを動けるようにする";
 
 	public function getMessage() {
 		return "プレイヤーを動けるようにする";
 	}
 
-	public function execute()
-	{
+	public function execute() {
 		$player = $this->getPlayer();
 		$player->setImmobile(false);
 	}
