@@ -19,13 +19,14 @@ class TakeMoney extends TypeMoney {
 
 	public function check() {
 		$player = $this->getPlayer();
-    	$mymoney = ifPlugin::getInstance()->getEconomy()->getMoney($player->getName());
-        if($mymoney === false){
+        $economy = ifPlugin::getInstance()->getEconomy();
+        if($economy === null) {
             $player->sendMessage("§c経済システムプラグインが見つかりません");
             return self::ERROR;
         }
+        $mymoney = $economy->getMoney($player->getName());
         if($mymoney >= $this->getAmount()){
-            ifPlugin::getInstance()->getEconomy()->takeMoney($player->getName(), $this->getAmount());
+            $economy->takeMoney($player->getName(), $this->getAmount());
             return self::MATCHED;
         }
         return self::NOT_MATCHED;

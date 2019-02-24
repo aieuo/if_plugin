@@ -129,7 +129,7 @@ class ifPlugin extends PluginBase implements Listener{
             $this->economy = new PocketMoneyLoader($plugin);
             $this->getServer()->getLogger()->info("[if] PocketMoneyを見つけました");
         }else{
-            $this->economy = new EconomyLoader();
+            $this->economy = null;
             $this->getServer()->getLogger()->warning("[if] 経済システムプラグインが見つかりませんでした");
         }
     }

@@ -19,11 +19,12 @@ class LessMoney extends TypeMoney {
 
 	public function check() {
 		$player = $this->getPlayer();
-    	$mymoney = ifPlugin::getInstance()->getEconomy()->getMoney($player->getName());
-        if($mymoney === false){
+        $economy = ifPlugin::getInstance()->getEconomy();
+        if($economy === null){
             $player->sendMessage("§c経済システムプラグインが見つかりません");
             return self::ERROR;
         }
+        $mymoney = $economy->getMoney($player->getName());
         if($mymoney <= $this->getAmount()) return self::MATCHED;
         return self::NOT_MATCHED;
 	}
