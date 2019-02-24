@@ -240,6 +240,7 @@ class Form {
             $datas = ProcessFactory::getAll();
         }
         $buttons[] = Elements::getButton("<ひとつ前のページに戻る>");
+        $buttons[] = Elements::getButton("<検索する>");
         foreach ($datas as $data) {
             $buttons[] = Elements::getButton($data->getName());
         }
@@ -269,12 +270,18 @@ class Form {
             Form::sendForm($player, $form, $this, "onEditIfContents");
             return;
         }
+        if($data == 1) {
+            $form = $this->getSearchForm();
+            Form::sendForm($player, $form, $this, "onSearch");
+            return;
+        }
+        $data -= 2;
         if($session->getData("type") == "if") {
             $all = ConditionFactory::getAll();
-            $datas = Condition::get(current(array_slice($all, $data-1, 1, true))->getId());
+            $datas = Condition::get(current(array_slice($all, $data, 1, true))->getId());
         } else {
             $all = ProcessFactory::getAll();
-            $datas = Process::get(current(array_slice($all, $data-1, 1, true))->getId());
+            $datas = Process::get(current(array_slice($all, $data, 1, true))->getId());
         }
         $session->setData("contents", $datas);
         $form = $datas->getEditForm();
@@ -409,5 +416,85 @@ class Form {
             $player->sendMessage("削除キャンセルしました");
         }
         $session->setValid(false);
+    }
+
+    public function getSearchForm($mes = "") {
+        $data = [
+            "type" => "custom_form",
+            "title" => "IF検索",
+            "content" => [
+                Elements::getLabel("名前で検索します".(empty($mes) ? "" : "\n".$mes)),
+                Elements::getInput("検索する言葉を入力してください")
+            ]
+        ];
+        $data = self::encodeJson($data);
+        return $data;
+    }
+
+    public function onSearch($player, $data) {
+        $session = ifAPI::getSession($player);
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        if($data[1] === "") {
+            $form = $this->getSearchForm("§c必要事項を記入してください§f");
+            Form::sendForm($player, $form, $this, "onSearch");
+            return;
+        }
+        if($session->getData("type") == "if") {
+            $all = ConditionFactory::getAll();
+        } else {
+            $all = ProcessFactory::getAll();
+        }
+        $keywords = explode(" ", $data[1]);
+        $result = array_filter($all, function($item) use($keywords) {
+            $contains = true;
+            foreach ($keywords as $keyword) {
+                if(strpos($item->getName(), $keyword) === false) $contains = false;
+            }
+            return($contains);
+        });
+        $session->setData("searchResult", $result);
+
+        $buttons[] = Elements::getButton("<ひとつ前のページに戻る>");
+        foreach ($result as $item) {
+            $buttons[] = Elements::getButton($item->getName());
+        }
+        $data = [
+            "type" => "form",
+            "title" => "編集 > 追加",
+            "content" => "§7ボタンを押してください",
+            "buttons" => $buttons
+        ];
+        Form::sendForm($player, self::encodeJson($data), $this, "onSearchResult");
+    }
+
+    public function onSearchResult($player, $data) {
+        $session = ifAPI::getSession($player);
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        if($data == 0) {
+            $key = $session->getData("if_key");
+            $datas = $manager->get($key, $options);
+            $form = $this->getEditContentsForm($datas[$session->getData("type")]);
+            Form::sendForm($player, $form, $this, "onEditIfContents");
+            return;
+        }
+        $data -= 1;
+        $all = $session->getData("searchResult");
+        if($session->getData("type") == "if") {
+            $datas = Condition::get(current(array_slice($all, $data, 1, true))->getId());
+        } else {
+            $datas = Process::get(current(array_slice($all, $data, 1, true))->getId());
+        }
+        $session->setData("contents", $datas);
+        $form = $datas->getEditForm();
+        Form::sendForm($player, $form, $this, "onEdit");
     }
 }
