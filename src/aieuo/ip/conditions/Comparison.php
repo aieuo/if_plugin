@@ -133,8 +133,7 @@ class Comparison extends Condition {
 			$value1 = $values[0];
 			$operator = $values[2];
 			$value2 = $values[1];
-		}
-		elseif($default !== "") {
+		} elseif($default !== "") {
 			$mes .= "§c正しく入力できていません§f";
 		}
         $data = [

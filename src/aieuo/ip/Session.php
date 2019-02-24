@@ -27,7 +27,6 @@ class Session {
 	}
 
 	public function setIfType($type){
-		if($type !== self::BLOCK and $type !== self::COMMAND and $type !== self::EVENT and $type !== self::CHAIN)$type = self::BLOCK;
 		$this->if_type = $type;
 	}
 
