@@ -9,6 +9,11 @@ use aieuo\ip\ifAPI;
 
 class ifManager extends ifAPI{
 
+    const BLOCK = 0;
+    const COMMAND = 1;
+    const EVENT = 2;
+    const CHAIN = 3;
+
 	private $owner;
 	private $config;
 
