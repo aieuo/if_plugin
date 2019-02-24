@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\economy;
 
-class EconomyAPILoader extends EconomyLoader{
+class EconomyAPILoader implements EconomyLoader{
 
 	private $plugin;
 
