@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\economy;
 
-class PocketMoneyLoader extends EconomyLoader{
+class PocketMoneyLoader implements EconomyLoader{
 
 	private $plugin;
 
