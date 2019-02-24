@@ -2,21 +2,25 @@
 
 namespace aieuo\ip\economy;
 
-class EconomyLoader
-{
+interface EconomyLoader {
+	/**
+	 * 所持金を取得する
+	 * @param  string $name プレイヤーの名前
+	 * @return int          所持金
+	 */
+	public function getMoney(string $name);
 
-	public function getMoney(string $name)
-	{
-		return false;
-	}
+	/**
+	 * 所持金を増やす
+	 * @param string $name  プレイヤーの名前
+	 * @param int    $money 増やす額
+	 */
+	public function addMoney(string $name, int $money);
 
-	public function addMoney(string $name, int $money)
-	{
-		return false;
-	}
-
-	public function takeMoney(string $name, int $money)
-	{
-		return false;
-	}
+	/**
+	 * 所持金を減らす
+	 * @param  string $name  プレイヤーの名前
+	 * @param  int    $money 減らす額
+	 */
+	public function takeMoney(string $name, int $money);
 }
