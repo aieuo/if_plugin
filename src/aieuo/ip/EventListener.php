@@ -139,7 +139,7 @@ class EventListener implements Listener {
         $block = $event->getBlock();
         $pos = $manager->getPosition($block);
 		if($player->isOp()){
-			if(($session = ifAPI::getSession($player))->isValid()){
+			if(($session = Session::get($player))->isValid()){
 				$type = $session->getData("action");
 				$manager = $this->getOwner()->getBlockManager();
 				switch ($type) {

@@ -28,7 +28,7 @@ class BlockForm {
 
     public function onSelectAction($player, $data) {
         if($data === null) return;
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         switch ($data) {
             case 0:
                 $session->setData("action", "edit");

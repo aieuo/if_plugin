@@ -23,7 +23,7 @@ class ExportForm {
     }
 
     public function onExport($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;

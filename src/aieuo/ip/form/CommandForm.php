@@ -30,7 +30,7 @@ class CommandForm {
 
     public function onSelectAction($player, $data) {
         if($data === null) return;
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         switch ($data) {
             case 0:
                 $session->setData("action", "add");
@@ -91,7 +91,7 @@ class CommandForm {
     }
 
     public function onAddCommand($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -152,7 +152,7 @@ class CommandForm {
     }
 
     public function onSelectCommand($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -207,7 +207,7 @@ class CommandForm {
     }
 
     public function onCommandList($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
