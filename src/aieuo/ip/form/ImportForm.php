@@ -27,7 +27,7 @@ class ImportForm {
 	}
 
 	public function onImportList($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
 		if($data === null) {
 			$session->setValid(false, false);
 			return;
@@ -68,7 +68,7 @@ class ImportForm {
 	}
 
 	public function onImport($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
 		if($data === null) {
 			$session->setValid(false, false);
 			return;
@@ -83,7 +83,7 @@ class ImportForm {
 	}
 
 	public function importDatas($player, $file, $count = 0) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
 		foreach ($file["ifs"] as $key => $datas) {
 			if($datas["type"] === Session::BLOCK) {
 				$manager = ifPlugin::getInstance()->getBlockManager();
@@ -180,7 +180,7 @@ class ImportForm {
 	}
 
 	public function onConfirmOverwrite($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
 		if($data === null) {
 			$session->setValid(false, false);
 			return;

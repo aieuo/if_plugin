@@ -45,7 +45,7 @@ class EventForm {
     }
 
     public function onSelectEvent($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -81,7 +81,7 @@ class EventForm {
     }
 
     public function onSelectIf($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;

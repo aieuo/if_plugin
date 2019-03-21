@@ -32,9 +32,6 @@ use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
 class ifAPI {
-
-    private static $sessions = [];
-
     public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args = []){
         $stat = "2";
         foreach($datas1 as $datas){
@@ -111,14 +108,5 @@ class ifAPI {
             "ops" => new ListVariable("ops", $ops)
         ];
         return $variables;
-    }
-
-    /**
-     * @param  Player $player
-     * @return Session
-     */
-    public static function getSession(Player $player) {
-        if(!isset(self::$sessions[$player->getName()])) self::$sessions[$player->getName()] = new Session();
-        return self::$sessions[$player->getName()];
     }
 }

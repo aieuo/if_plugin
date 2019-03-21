@@ -31,7 +31,7 @@ class ChainIfForm {
 
     public function onSelectAction($player, $data) {
         if($data === null) return;
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         switch ($data) {
             case 0:
                 $session->setData("action", "add");
@@ -79,7 +79,7 @@ class ChainIfForm {
     }
 
     public function onAddChainIf($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -124,7 +124,7 @@ class ChainIfForm {
     }
 
     public function onEditChainIf($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
@@ -177,7 +177,7 @@ class ChainIfForm {
     }
 
     public function onChainIfList($player, $data) {
-        $session = ifAPI::getSession($player);
+        $session = Session::get($player);
         if($data === null) {
             $session->setValid(false, false);
             return;
