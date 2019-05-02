@@ -52,7 +52,7 @@ class CommandManager extends ifManager{
         }
     }
 
-    public function register($command, $permission = "default", $description = "ifPluginで追加したコマンドです"){
+    public function register($command, $permission = "true", $description = "ifPluginで追加したコマンドです"){
         if($this->isSubcommand($command))$command = $this->getOriginCommand($command);
         if(!$this->exists($command)){
             $newCommand = new PluginCommand($command, $this->getOwner());
