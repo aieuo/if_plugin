@@ -45,12 +45,9 @@ class GameMode extends Condition {
 
 
 	public function getEditForm(string $default = "", string $mes = "") {
-		if($default === "")
-		{
+		if($default === "") {
 			$gamemode = 0;
-		}
-		elseif(($gamemode = $this->parse($default)) === false)
-		{
+		} elseif(($gamemode = $this->parse($default)) === false) {
 			$mes .= "§cゲームモードが見つかりません§f";
 			$gamemode = 0;
 		}
