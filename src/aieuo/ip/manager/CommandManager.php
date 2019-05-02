@@ -18,12 +18,12 @@ class CommandManager extends ifManager{
         $this->registerCommands();
 	}
 
-    public function set($key, $datas = [], $args = []){
+    public function set($key, $datas = [], $options = []){
         $datas = $this->repairIF($datas);
-        if($args["desc"] === "") $args["desc"] = "ifPluginで追加したコマンドです";
-        if($args["perm"] === "") $args["perm"] = "op";
-        $datas["description"] = $args["desc"];
-        $datas["permission"] = $args["perm"];
+        if($options["desc"] === "") $options["desc"] = "ifPluginで追加したコマンドです";
+        if($options["perm"] === "") $options["perm"] = "op";
+        $datas["description"] = $options["desc"];
+        $datas["permission"] = $options["perm"];
         parent::set($key, $datas);
     }
 

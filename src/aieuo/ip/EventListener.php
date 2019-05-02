@@ -34,9 +34,7 @@ class EventListener implements Listener {
     public function getOwner(){
         return $this->owner;
     }
-    public function chat(PlayerChatEvent $event){
-        $this->onEvent($event, "PlayerChatEvent");
-    }
+
     public function commandProcess(PlayerCommandPreprocessEvent $event){
         $this->onEvent($event, "PlayerCommandPreprocessEvent");
 
@@ -61,33 +59,47 @@ class EventListener implements Listener {
             );
         }
     }
+
+    public function chat(PlayerChatEvent $event){
+        $this->onEvent($event, "PlayerChatEvent");
+    }
+
     public function join(PlayerJoinEvent $event){
         $this->onEvent($event, "PlayerJoinEvent");
     }
+
     public function craft(CraftItemEvent $event){
         $this->onEvent($event, "CraftItemEvent");
     }
+
     public function quit(PlayerQuitEvent $event){
         $this->onEvent($event, "PlayerQuitEvent");
     }
+
     public function toggleFlight(PlayerToggleFlightEvent $event){
         $this->onEvent($event, "PlayerToggleFlightEvent");
     }
+
     public function blockBreak(BlockBreakEvent $event){
         $this->onEvent($event, "BlockBreakEvent");
     }
+
     public function blockPlace(BlockPlaceEvent $event){
         $this->onEvent($event, "BlockPlaceEvent");
     }
+
     public function entityDamage(EntityDamageEvent $event){
         $this->onEvent($event, "EntityDamageEvent");
     }
+
     public function entityDeath(EntityDeathEvent $event){
         $this->onEvent($event, "EntityDeathEvent");
     }
+
     public function entityLevelChange(EntityLevelChangeEvent $event){
         $this->onEvent($event, "EntityLevelChangeEvent");
     }
+
     public function onEvent($event, $eventname){
         switch ($eventname) {
             case 'CraftItemEvent':
@@ -105,8 +117,10 @@ class EventListener implements Listener {
             case 'EntityDeathEvent':
             case 'EntityLevelChangeEvent':
                 $player = $event->getEntity();
-                if(!$player instanceof Player)return;
+                if(!($player instanceof Player)) return;
                 break;
+            default:
+                return;
         }
         $manager = $this->getOwner()->getEventManager();
         $datas = $manager->getFromEvent($eventname);

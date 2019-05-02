@@ -6,26 +6,26 @@ use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
-class BlockManager extends ifManager{
+class BlockManager extends ifManager {
 
-	public function __construct($owner){
+	public function __construct($owner) {
 		parent::__construct($owner ,"blocks");
 	}
 
-    public function set($key, $datas = [], $args = []){
+    public function set($key, $datas = [], $options = []) {
         $datas = $this->repairIF($datas);
         parent::set($key, $datas);
     }
 
-    public function getPosition($block){
+    public function getPosition($block) {
         return $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
     }
 
     public function getReplaceDatas($datas) {
-        $result = parent::getReplaceDatas($datas);
+        $variables = parent::getReplaceDatas($datas);
         $block = $datas["block"];
         $event = $datas["event"];
-        $variables = [
+        $add = [
             "block" => new StringVariable("block", $block->__toString()),
             "block_name" => new StringVariable("block_name", $block->getName()),
             "block_id" => new NumberVariable("block_id", $block->getId()),
@@ -38,6 +38,6 @@ class BlockManager extends ifManager{
             "block_level" => new StringVariable("block_level", $block->level->getFolderName()),
             "touch_face" => new NumberVariable("touch_face", $event->getFace())
         ];
-        return array_merge($result, $variables);
+        return array_merge($variables, $add);
     }
 }

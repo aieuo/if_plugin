@@ -7,7 +7,7 @@ use pocketmine\utils\Config;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\ifAPI;
 
-class ifManager extends ifAPI{
+class ifManager extends ifAPI {
 
     const BLOCK = 0;
     const COMMAND = 1;
@@ -17,12 +17,12 @@ class ifManager extends ifAPI{
 	private $owner;
 	private $config;
 
-	public function __construct($owner, $type){
+	public function __construct($owner, $type) {
 		$this->owner = $owner;
         $this->config = new Config($owner->getDataFolder() . $type. ".yml", Config::YAML, []);
 	}
 
-	public function getOwner(){
+	public function getOwner() {
 		return $this->owner;
 	}
 
@@ -33,7 +33,7 @@ class ifManager extends ifAPI{
     /**
      * @return Config
      */
-    public function getConfig(){
+    public function getConfig() {
         return $this->config;
     }
 
@@ -42,16 +42,16 @@ class ifManager extends ifAPI{
      * @param  array   $options
      * @return boolean
      */
-    public function isAdded($key, $options = []){
+    public function isAdded($key, $options = []) {
     	return $this->config->exists($key);
     }
 
     /**
      * @param  strign $key
-     * @param  bool $args
+     * @param  bool $options
      * @return bool | array
      */
-    public function get($key, $args = []){
+    public function get($key, $options = []) {
         if(!$this->isAdded($key))return false;
         $datas = $this->config->get($key);
         $datas = $this->repairIF($datas);
@@ -61,7 +61,7 @@ class ifManager extends ifAPI{
     /**
      * @return array
      */
-    public function getAll(){
+    public function getAll() {
     	return $this->config->getAll();
     }
 
@@ -70,9 +70,9 @@ class ifManager extends ifAPI{
      * @param string $type
      * @param int $id
      * @param string $content
-     * @param array  $args
+     * @param array  $options
      */
-    public function add($key, $type, $id, $content, $args = []){
+    public function add($key, $type, $id, $content, $options = []) {
         $datas = [];
         if($this->isAdded($key))$datas = $this->get($key);
         $datas = $this->repairIF($datas);
@@ -86,9 +86,9 @@ class ifManager extends ifAPI{
     /**
      * @param string $key
      * @param array  $datas
-     * @param array  $args
+     * @param array  $options
      */
-    public function set($key, $datas = [], $args = []){
+    public function set($key, $datas = [], $options = []) {
     	$this->config->set($key, $datas);
     }
 
@@ -98,7 +98,7 @@ class ifManager extends ifAPI{
      * @param  int $num
      * @return bool
      */
-    public function del($key, $type, $num, $args = []){
+    public function del($key, $type, $num, $options = []) {
         if(!$this->isAdded($key))return false;
         $datas = $this->get($key);
         unset($datas[$type][$num]);
@@ -113,7 +113,7 @@ class ifManager extends ifAPI{
      * @param  int $num
      * @return bool
      */
-    public function updateContent($key, $type, $num, $new, $args = []){
+    public function updateContent($key, $type, $num, $new, $options = []) {
         if(!$this->isAdded($key))return false;
         $datas = $this->get($key);
         $datas[$type][$num]["content"] = $new;
@@ -124,11 +124,11 @@ class ifManager extends ifAPI{
     /**
      * @param  string $key
      */
-    public function remove($key){
+    public function remove($key) {
     	$this->config->remove($key);
     }
 
-	public function save(){
+	public function save() {
 		$this->config->save();
 	}
 
