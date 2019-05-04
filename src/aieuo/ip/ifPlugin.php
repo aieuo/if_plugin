@@ -37,25 +37,39 @@ use aieuo\ip\variable\VariableHelper;
 use aieuo\ip\conditions\ConditionFactory;
 use aieuo\ip\processes\ProcessFactory;
 
+
+use aieuo\ip\utils\Language;
+
 class ifPlugin extends PluginBase implements Listener{
-
     const VERSION = "3.1.0";
-
     private static $instance;
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
-
         $this->getServer()->getCommandMap()->register("ifPlugin", new ifCommand($this));
-
         if(!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
         if(!file_exists($this->getDataFolder()."exports")) @mkdir($this->getDataFolder()."exports", 0721, true);
         if(!file_exists($this->getDataFolder()."imports")) @mkdir($this->getDataFolder()."imports", 0721, true);
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,
-            "save_time" => 10*20*60
+            "save_time" => 10*20*60,
+            "language" => "jpn"
         ]);
+        $this->config->save();
         $this->wait = $this->config->get("wait");
+        $language = $this->config->get("language", "jpn");
+        foreach($this->getResources() as $resource) {
+            $this->saveResource($resource->getFilename());
+            if($resource->getFilename() === $language.".ini") {
+                $messages = parse_ini_file($resource->getPathname());
+            }
+        }
+        if(!isset($messages)) {
+            $this->getLogger->warning("言語ファイルの読み込みに失敗しました");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return;
+        }
+        $language = new Language($messages);
 
         $this->loadEconomySystemPlugin();
 
@@ -121,16 +135,16 @@ class ifPlugin extends PluginBase implements Listener{
     public function loadEconomySystemPlugin(){
         if(($plugin = $this->getServer()->getPluginManager()->getPlugin("EconomyAPI")) !== null){
             $this->economy = new EconomyAPILoader($plugin);
-            $this->getServer()->getLogger()->info("[if] EconomyAPIを見つけました");
+            $this->getLogger()->info(Language::get("economy.found", ["EconomyAPI"]));
         }elseif(($plugin = $this->getServer()->getPluginManager()->getPlugin("MoneySystem")) !== null){
             $this->economy = new MoneySystemLoader($plugin);
-            $this->getServer()->getLogger()->info("[if] MoneySystemを見つけました");
+            $this->getLogger()->info(Language::get("economy.found", ["MoneySystem"]));
         }elseif(($plugin = $this->getServer()->getPluginManager()->getPlugin("PocketMoney")) !== null){
             $this->economy = new PocketMoneyLoader($plugin);
-            $this->getServer()->getLogger()->info("[if] PocketMoneyを見つけました");
+            $this->getLogger()->info(Language::get("economy.found", ["PocketMoney"]));
         }else{
             $this->economy = null;
-            $this->getServer()->getLogger()->warning("[if] 経済システムプラグインが見つかりませんでした");
+            $this->getLogger()->warning(Language::get("economy.notfound"));
         }
     }
 
