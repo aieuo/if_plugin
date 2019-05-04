@@ -6,10 +6,12 @@ use aieuo\ip\ifPlugin;
 use aieuo\ip\conditions\Condition;
 use aieuo\ip\processes\Process;
 
+use aieuo\ip\utils\Language;
+
 class Messages {
 
     public static function createMessage($ifs, $matchs, $elses){
-    	$mes = "もし\n";
+    	$mes = Language::get("message.if")."\n";
         foreach($ifs as $if){
             $content = Condition::get($if["id"]);
             $content->setValues($content->parse($if["content"]));

@@ -2,14 +2,16 @@
 
 namespace aieuo\ip\conditions;
 
+use aieuo\ip\utils\Language;
+
 class IsOp extends Condition {
 
 	protected $id = self::IS_OP;
-	protected $name = "プレイヤーがopか";
-	protected $description = "プレイヤーがopなら";
+	protected $name = "@condition.isop.name";
+	protected $description = "@condition.isop.description";
 
 	public function getMessage() {
-		return "プレイヤーがopなら";
+		return Language::get("condition.isop.detali");
 	}
 
 	public function check() {

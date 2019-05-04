@@ -7,6 +7,8 @@ use pocketmine\Player;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
+use aieuo\ip\utils\Language;
+
 class Condition implements ConditionIds {
 
 	const MATCHED = 0;
@@ -20,14 +22,14 @@ class Condition implements ConditionIds {
 	/** @var array */
 	private $values = [];
 
-	/** @var int */
-	protected $id;
-
-	/** @var string */
-	protected $name = "";
-
-	/** @var string */
-	protected $description = "";
+    /** @var int */
+    protected $id;
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $description;
+    /** @var string */
+    protected $detail;
 
 	public function __construct($player = null) {
 		$this->player = $player;
@@ -42,12 +44,25 @@ class Condition implements ConditionIds {
 	}
 
 	public function getName() {
+        if($this->name[0] === "@") {
+            return Language::get(substr($this->name, 1));
+        }
 		return $this->name;
 	}
 
 	public function getDescription() {
+        if($this->description[0] === "@") {
+            return Language::get(substr($this->description, 1));
+        }
 		return $this->description;
 	}
+
+    public function getDetail() {
+        if($this->detail[0] === "@") {
+            return Language::get(substr($this->detail, 1));
+        }
+        return $this->detail;
+    }
 
 	public function parse(string $str) {
 		return $str;
@@ -77,8 +92,8 @@ class Condition implements ConditionIds {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
