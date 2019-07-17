@@ -19,10 +19,11 @@ class EventForm {
         "BlockBreakEvent" => "プレイヤーがブロックを壊したとき",
         "BlockPlaceEvent" => "プレイヤーがブロックを置いたとき",
         "EntityDamageEvent" => "プレイヤーがダメージを受けたとき",
+        "EntityAttackEvent" => "プレイヤーが攻撃したとき",
         "PlayerToggleFlightEvent" => "プレイヤーがフライ状態を切り替えたとき",
         "PlayerDeathEvent" => "プレイヤーが死亡したとき",
         "EntityLevelChangeEvent" => "プレイヤーがワールドを移動したとき",
-        "CraftItemEvent" => "プレイヤーがクラフトしたとき"
+        "CraftItemEvent" => "プレイヤーがクラフトしたとき",
     ];
 
     public function getEvents() {
