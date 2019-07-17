@@ -39,14 +39,15 @@ class EventListener implements Listener {
         $this->onEvent($event, "PlayerCommandPreprocessEvent");
 
         if($event->isCancelled()) return;
-        $cmd = $event->getMessage();
+        $cmd = mb_substr($event->getMessage(), 1);
         $manager = $this->getOwner()->getCommandManager();
-        if($manager->isSubCommand(mb_substr($cmd, 1))) {
-            if(!$manager->isAdded(mb_substr($cmd, 1))) $cmd = "/".$manager->getOriginCommand(mb_substr($cmd, 1));
+        if($manager->isAdded($cmd)){
+            if($manager->isSubCommand($cmd) and !$manager->isAdded($cmd)) {
+                $event->getPlayer()->sendMessage("Usage: /".$manager->getOriginCommand($cmd)." <".implode(" | ", $manager->getSubcommands($cmd)).">");
+                return;
         }
-        if($manager->isAdded(mb_substr($cmd, 1))){
-            $datas = $manager->get(mb_substr($cmd, 1));
-            if($datas["permission"] == "op" and !$event->getPlayer()->isOp()) return;
+            $datas = $manager->get($cmd);
+            if($datas["permission"] == "ifplugin.customcommand.op" and !$event->getPlayer()->isOp()) return;
             $manager->executeIfMatchCondition($event->getPlayer(),
                 $datas["if"],
                 $datas["match"],
