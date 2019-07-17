@@ -21,7 +21,7 @@ class CommandManager extends ifManager{
     public function set($key, $datas = [], $options = []){
         $datas = $this->repairIF($datas);
         if($options["desc"] === "") $options["desc"] = "ifPluginで追加したコマンドです";
-        if($options["perm"] === "") $options["perm"] = "op";
+        if($options["perm"] === "") $options["perm"] = "ifplugin.customcommand.op";
         $datas["description"] = $options["desc"];
         $datas["permission"] = $options["perm"];
         parent::set($key, $datas);
@@ -45,14 +45,28 @@ class CommandManager extends ifManager{
 
     public function registerCommands(){
         foreach($this->getAll() as $command => $value){
+            $permission = $value["permission"];
+            switch ($permission) {
+                case 'ifplugin.customcommand.op':
+                case 'ifplugin.customcommand.true':
+                    break;
+                case true:
+                case 'true':
+                case 'default':
+                    $permission = "ifplugin.customcommand.true";
+                    break;
+                default:
+                    $permission = "ifplugin.customcommand.op";
+                    break;
+            }
             if($this->isSubcommand($command))$command = $this->getOriginCommand($command);
             if(!$this->exists($command)){
-                $this->register($command, $value["permission"], $value["description"]);
+                $this->register($command, $permission, $value["description"]);
             }
         }
     }
 
-    public function register($command, $permission = "true", $description = "ifPluginで追加したコマンドです"){
+    public function register($command, $permission = "ifplugin.customcommand.op", $description = "ifPluginで追加したコマンドです"){
         if($this->isSubcommand($command))$command = $this->getOriginCommand($command);
         if(!$this->exists($command)){
             $newCommand = new PluginCommand($command, $this->getOwner());
@@ -66,18 +80,11 @@ class CommandManager extends ifManager{
     }
 
     public function unregister($command){
-        $commands = $this->getSubcommand($command);
-        if($this->isSubcommand($command)){
-            $cmds = explode(" ", $command);
-            array_shift($cmds);
-            $cmd = implode(" ", $cmds);
-            unset($commands[$cmd]);
-            $command = $this->getOriginCommand($command);
-        }
-        $count = count($commands);
+        $count = count($this->getSubcommands($command));
         if(!$this->isSubcommand($command) and $this->isAdded($command)) $count ++;
-        if($count >= 1)return false;
+        if($count <= 1) {
         $this->getServer()->getCommandMap()->unregister($this->command_list[$command]);
+        }
         unset($this->command_list[$command]);
     }
 
@@ -93,7 +100,7 @@ class CommandManager extends ifManager{
     	return $subcommand;
     }
 
-    public function getSubcommand($command){
+    public function getSubcommands($command){
     	$array = [];
     	$command = explode(" ", $command)[0];
     	$commands = $this->getAll();

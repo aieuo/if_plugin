@@ -7,4 +7,11 @@ api:
 - 4.0.0
 load: POSTWORLD
 author: aieuo
+permissions:
+  ifplugin.customcommand.op:
+    default: op
+    description: "ifplugin.customcommand.op"
+  ifplugin.customcommand.true:
+    default: true
+    description: "ifplugin.customcommand.true"
 ...

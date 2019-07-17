@@ -125,7 +125,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 							$session->setValid(false);
 							break;
 						}
-						$session->setData("if_key", $data[0]);
+						$session->setData("if_key", $args[2]);
 			            $form = $this->form->getConfirmDeleteForm();
 			            Form::sendForm($sender, $form, $this->form, "onDeleteIf");
 						break;

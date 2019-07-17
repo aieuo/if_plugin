@@ -121,8 +121,8 @@ class CommandForm {
             return;
         }
         if($data[1] === "") $data[1] = "ifPluginで追加したコマンドです";
-        $manager->set($data[0], [], ["desc" => $data[1], "perm" => $data[2] == 0 ? "op" : "true"]);
-        $manager->register($data[0], $data[1], $data[2] == 0 ? "op" : "true");
+        $manager->set($data[0], [], ["perm" => $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true", "desc" => $data[1], ]);
+        $manager->register($data[0], $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true", $data[1]);
         if($session->getData("action") == "add_empty"){
             $player->sendMessage("追加しました");
             $session->setValid(false);
@@ -130,7 +130,7 @@ class CommandForm {
         }
         $session->setData("if_key", $data[0]);
         $session->setData("description", $data[1]);
-        $session->setData("permission", $data[2] == 0 ? "op" : "true");
+        $session->setData("permission", $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true");
         $datas = $manager->repairIF([]);
         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes);
