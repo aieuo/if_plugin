@@ -37,11 +37,10 @@ use aieuo\ip\variable\VariableHelper;
 use aieuo\ip\conditions\ConditionFactory;
 use aieuo\ip\processes\ProcessFactory;
 
-
 use aieuo\ip\utils\Language;
 
 class ifPlugin extends PluginBase implements Listener{
-    const VERSION = "3.1.0";
+    const VERSION = "3.2.0";
     private static $instance;
 
     public function onEnable(){
@@ -53,7 +52,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,
             "save_time" => 10*20*60,
-            "language" => "jpn"
+            "language" => "jpn",
         ]);
         $this->config->save();
         $this->wait = $this->config->get("wait");
