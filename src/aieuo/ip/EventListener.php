@@ -92,7 +92,9 @@ class EventListener implements Listener {
     public function entityDamage(EntityDamageEvent $event){
         $this->onEvent($event, "EntityDamageEvent");
     }
-
+    public function entityDamageByEntity(EntityDamageByEntityEvent $event){
+        $this->onEvent($event, "EntityAttackEvent");
+    }
     public function entityDeath(EntityDeathEvent $event){
         $this->onEvent($event, "EntityDeathEvent");
     }
@@ -120,8 +122,10 @@ class EventListener implements Listener {
                 $player = $event->getEntity();
                 if(!($player instanceof Player)) return;
                 break;
-            default:
-                return;
+            case "EntityAttackEvent":
+                $player = $event->getDamager();
+                if(!($player instanceof Player)) return;
+                break;
         }
         $manager = $this->getOwner()->getEventManager();
         $datas = $manager->getFromEvent($eventname);
