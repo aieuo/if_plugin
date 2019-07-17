@@ -3,6 +3,9 @@
 namespace aieuo\ip\manager;
 
 use pocketmine\Player;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\block\SignPost;
+use pocketmine\tile\Sign;
 
 use aieuo\ip\ifPlugin;
 
@@ -107,6 +110,12 @@ class EventManager extends ifManager{
             $variables["block_ids"] = new StringVariable("block_ids", $block->getId().":".$block->getDamage());
             $variables["block_pos"] = new StringVariable("block_pos", $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName());
             $variables["block_level"] = new StringVariable("block_level", $block->level->getFolderName());
+            if($block instanceof SignPost) {
+                $sign = $block->level->getTile($block);
+                if($sign instanceof Sign) {
+                    $variables["sign_lines"] = new ListVariable("sign_lines", $sign->getText());
+                }
+            }
         }
         if(
             $eventname == "PlayerChatEvent"
