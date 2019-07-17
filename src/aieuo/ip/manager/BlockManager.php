@@ -2,6 +2,9 @@
 
 namespace aieuo\ip\manager;
 
+use pocketmine\block\SignPost;
+use pocketmine\tile\Sign;
+
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
@@ -38,6 +41,12 @@ class BlockManager extends ifManager {
             "block_level" => new StringVariable("block_level", $block->level->getFolderName()),
             "touch_face" => new NumberVariable("touch_face", $event->getFace())
         ];
+        if($block instanceof SignPost) {
+            $sign = $block->level->getTile($block);
+            if($sign instanceof Sign) {
+                $variables["sign_lines"] = new ListVariable("sign_lines", $sign->getText());
+            }
+        }
         return array_merge($variables, $add);
     }
 }
