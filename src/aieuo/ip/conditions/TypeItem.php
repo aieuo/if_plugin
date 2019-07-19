@@ -6,6 +6,7 @@ use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class TypeItem extends Condition {
 	public function getItem() {
@@ -29,9 +30,9 @@ class TypeItem extends Condition {
 		if($item instanceof Item) {
 			$id = $item->getId().":".$item->getDamage();
 			$count = $item->getCount();
-			if($count === 0) $mes .= "§e個数が0になっています§f";
+			if($count === 0) $mes .= Language::get("condition.item.form.zero");
 		} elseif($default !== "") {
-			$mes .= "§c正しく入力できていません(idは数字で0以上の数を入力してください)§f";
+			$mes .= Language::get("condition.item.form.invalid");
 		}
         $data = [
             "type" => "custom_form",
@@ -40,8 +41,8 @@ class TypeItem extends Condition {
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
                 Elements::getInput("\n§7<count>§f アイテムの数を入力してください", "例) 5", $count),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);

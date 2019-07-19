@@ -6,24 +6,25 @@ use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class ExistsItem extends TypeItem {
 
 	protected $id = self::EXISTS_ITEM;
-	protected $name = "インベントリに指定したアイテムが入ってるか";
-	protected $description = "インベントリにidが§7<id>§fのアイテムが§7<count>§f個以上あるなら";
+	protected $name = "@condition.existsitem.name";
+	protected $description = "@condition.existsitem.description";
 
 	public function getMessage() {
 		$item = $this->getItem();
 		if(!($item instanceof Item)) return false;
-		return "インベントリに(".$item->getId().":".$item->getDamage().")"."が".$item->getCount()."個あるなら";
+		return Language::get("condition.existsitem.detail", [$item->getId(), $item->getDamage(), $item->getCount()]);
 	}
 
 	public function check() {
 		$player = $this->getPlayer();
 		$item = $this->getItem();
 		if(!($item instanceof Item)) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			$player->sendMessage(Language::get("input.invalid", [$this->getName()]));
 			return self::ERROR;
 		}
         if($player->getInventory()->contains($item)) return self::MATCHED;
