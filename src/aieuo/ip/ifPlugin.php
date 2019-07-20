@@ -41,7 +41,10 @@ use aieuo\ip\utils\Language;
 
 class ifPlugin extends PluginBase implements Listener{
     const VERSION = "3.2.0";
+
     private static $instance;
+
+    private $loaded = false;
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
@@ -57,14 +60,16 @@ class ifPlugin extends PluginBase implements Listener{
         $this->config->save();
         $this->wait = $this->config->get("wait");
         $language = $this->config->get("language", "jpn");
+        $languages = [];
         foreach($this->getResources() as $resource) {
-            $this->saveResource($resource->getFilename());
+            if(strrchr($resource->getFilename(), ".") == ".ini") $languages[] = basename($resource->getFilename(), ".ini");
             if($resource->getFilename() === $language.".ini") {
                 $messages = parse_ini_file($resource->getPathname());
             }
         }
         if(!isset($messages)) {
-            $this->getLogger->warning("言語ファイルの読み込みに失敗しました");
+            $this->getLogger()->warning("言語ファイルの読み込みに失敗しました");
+            $this->getLogger()->warning(implode(", ", $languages)." が使用できます");
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }
@@ -89,9 +94,12 @@ class ifPlugin extends PluginBase implements Listener{
 
         ConditionFactory::init();
         ProcessFactory::init();
+
+        $this->loaded = true;
     }
 
     public function onDisable(){
+        if(!$this->loaded) return;
         $this->command->save();
         $this->block->save();
         $this->event->save();
