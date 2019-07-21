@@ -16,6 +16,7 @@ class ProcessFactory {
 		self::register(new Command());
 		self::register(new CommandConsole());
 		self::register(new DelayedCommand());
+		self::register(new DelayedCommandConsole());
 		self::register(new AddMoney());
 		self::register(new TakeMoney());
 		self::register(new Teleport());
