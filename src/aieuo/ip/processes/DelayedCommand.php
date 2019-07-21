@@ -18,7 +18,7 @@ class DelayedCommand extends Process {
 		if($this->getValues() === false) return false;
 		$command = $this->getCommand();
 		$time = $this->getTime();
-		return round($time / 20, 2)."秒遅れて/".$command." を実行する";
+		return $time."秒遅れて/".$command." を実行する";
 	}
 
 	public function getTime() {
@@ -65,7 +65,7 @@ class DelayedCommand extends Process {
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<command>§f 実行するコマンドを入力してください", "例) help", $command),
-                Elements::getInput("\n§7<time>§f 遅らせるtick数(20tickで1秒)を入力してください", "例) 10", $time),
+                Elements::getInput("\n§7<time>§f 遅らせる秒数を入力してください", "例) 10", $time),
                 Elements::getToggle("削除する"),
                 Elements::getToggle("キャンセル")
             ]
