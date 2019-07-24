@@ -39,8 +39,8 @@ class TypeItem extends Condition {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
-                Elements::getInput("\n§7<count>§f アイテムの数を入力してください", "例) 5", $count),
+                Elements::getInput(Language::get("condition.item.form.id"), Language::get("input.example", ["1:0"]), $id),
+                Elements::getInput(Language::get("condition.item.form.count"), Language::get("input.example", ["5"]), $count),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

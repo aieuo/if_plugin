@@ -4,24 +4,23 @@ namespace aieuo\ip\conditions;
 
 use aieuo\ip\ifPlugin;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class TakeMoney extends TypeMoney {
 
 	protected $id = self::TAKEMONEY;
-    protected $name = "お金を減らす";
-    protected $description = "お金を§7<amount>§f払えるなら";
+    protected $name = "@condition.takemoney.name";
+    protected $description = "@condition.takemoney.description";
 
 	public function getMessage() {
-		return "お金を".$this->getAmount()."払えるなら";
+		return Language::get("condition.takemoney.detail", [$this->getAmount()]);
 	}
 
 	public function check() {
 		$player = $this->getPlayer();
         $economy = ifPlugin::getInstance()->getEconomy();
         if($economy === null) {
-            $player->sendMessage("§c経済システムプラグインが見つかりません");
+            $player->sendMessage("§c".Language::get("economy.notfound"));
             return self::ERROR;
         }
         $mymoney = $economy->getMoney($player->getName());

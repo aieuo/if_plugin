@@ -4,24 +4,23 @@ namespace aieuo\ip\conditions;
 
 use aieuo\ip\ifPlugin;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class OverMoney extends TypeMoney {
 
 	protected $id = self::OVERMONEY;
-    protected $name = "所持金が指定した金額以上か";
-    protected $description = "所持金が§7<amount>§f以上なら";
+    protected $name = "@condition.overmoney.name";
+    protected $description = "@condition.overmoney.description";
 
 	public function getMessage() {
-		return "所持金が".$this->getAmount()."以上なら";
+		return Language::get("condition.overmoney.detail", [$this->getAmount()]);
 	}
 
 	public function check() {
 		$player = $this->getPlayer();
         $economy = ifPlugin::getInstance()->getEconomy();
         if($economy === null) {
-            $player->sendMessage("§c経済システムプラグインが見つかりません");
+            $player->sendMessage("§c".Language::get("economy.notfound"));
             return self::ERROR;
         }
         $mymoney = $economy->getMoney($player->getName());
