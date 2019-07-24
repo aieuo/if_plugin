@@ -211,9 +211,10 @@ class EventListener implements Listener {
 	                        $player->sendMessage("そのブロックには追加されていません");
 	                        return;
 	                    }
+                        $session->setData("if_key", $pos);
                         $form = (new Form())->getConfirmDeleteForm();
                         Form::sendForm($player, $form, new Form(), "onDeleteIf");
-						break;
+						return;
 				}
 				$session->setValid(false);
                 return;
