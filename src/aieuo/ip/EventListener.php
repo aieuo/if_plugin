@@ -66,6 +66,8 @@ class EventListener implements Listener {
     }
 
     public function join(PlayerJoinEvent $event){
+        Session::register($event->getPlayer());
+
         $this->onEvent($event, "PlayerJoinEvent");
     }
 
