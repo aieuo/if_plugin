@@ -4,24 +4,23 @@ namespace aieuo\ip\conditions;
 
 use aieuo\ip\ifPlugin;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class LessMoney extends TypeMoney {
 
 	protected $id = self::LESSMONEY;
-    protected $name = "所持金が指定した金額以下か";
-    protected $description = "所持金が§7<amount>§f以下なら";
+    protected $name = "@condition.lessmoney.name";
+    protected $description = "@condition.lessmoney.description";
 
 	public function getMessage() {
-		return "所持金が".$this->getAmount()."なら";
+		return Language::get("condition.lessmoney.detail", [$this->getAmount()]);
 	}
 
 	public function check() {
 		$player = $this->getPlayer();
         $economy = ifPlugin::getInstance()->getEconomy();
         if($economy === null){
-            $player->sendMessage("§c経済システムプラグインが見つかりません");
+            $player->sendMessage("§c".Language::get("economy.notfound"));
             return self::ERROR;
         }
         $mymoney = $economy->getMoney($player->getName());

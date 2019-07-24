@@ -4,26 +4,25 @@ namespace aieuo\ip\conditions;
 
 use pocketmine\item\Item;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class InHand extends TypeItem {
 
 	protected $id = self::IN_HAND;
-    protected $name = "指定したアイテムを手に持ってるか";
-    protected $description = "idが§7<id>§fのアイテムを§7<count>§f個以上手に持っているなら";
+    protected $name = "@condition.inhand.name";
+    protected $description = "@condition.inhand.description";
 
 	public function getMessage() {
 		$item = $this->getItem();
 		if(!($item instanceof Item)) return false;
-		return "手に(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."を持っているなら";
+		return Language::get("condition.isop.detail", [$item->getId(), $item->getDamage(), $item->getCount()]);
 	}
 
 	public function check() {
 		$player = $this->getPlayer();
 	    $item = $this->getItem();
 	    if(!($item instanceof Item)) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			$player->sendMessage(Language::get("input.invalid", [$this->getName()]));
 			return self::ERROR;
 		}
 	    $hand = $player->getInventory()->getItemInHand();

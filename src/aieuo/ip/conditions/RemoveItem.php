@@ -6,24 +6,25 @@ use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class RemoveItem extends TypeItem {
 
 	protected $id = self::REMOVE_ITEM;
-    protected $name = "指定したアイテムがインベントリにあるなら削除する";
-    protected $description = "インベントリからidが§7<id>§fのアイテムを§7<count>§f個削除できるなら";
+    protected $name = "@condition.removeitem.namei";
+    protected $description = "@condition.removeitem.description";
 
 	public function getMessage() {
 		$item = $this->getItem();
 		if(!($item instanceof Item)) return false;
-		return "インベントリから(".$item->getId().":".$item->getDamage().")"."を".$item->getCount()."個削除できるなら";
+		return Language::get("condition.removeitem.detail", [$item->getId(), $item->getDamage(), $item->getCount()]);
 	}
 
 	public function check() {
 		$player = $this->getPlayer();
 		$item = $this->getItem();
 	    if(!($item instanceof Item)) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			$player->sendMessage(Language::get("input.invalid", [$this->getName()]));
 			return self::ERROR;
 		}
 		if($item->getCount() === 0) {
@@ -59,8 +60,8 @@ class RemoveItem extends TypeItem {
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
                 Elements::getInput("\n§7<count>§f アイテムの数を入力してください(全て消す場合は0を入力するか空白にしてください)", "例) 5", $count),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);

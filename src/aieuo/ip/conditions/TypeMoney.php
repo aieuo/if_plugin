@@ -3,9 +3,9 @@
 namespace aieuo\ip\conditions;
 
 use aieuo\ip\ifPlugin;
-
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class TypeMoney extends Condition {
 	public function __construct($player = null, $amount = 0) {
@@ -35,9 +35,9 @@ class TypeMoney extends Condition {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)."\n"),
-                Elements::getInput("\n§7<amount>§f 値段を入力してください", "例) 1000", $money),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput("\n§7<amount>§f 値段を入力してください", Language::get("input.example", ["1000"]), $money),
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
