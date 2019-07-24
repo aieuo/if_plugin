@@ -73,7 +73,7 @@ class ifPlugin extends PluginBase implements Listener{
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }
-        $language = new Language($messages);
+        $this->language = new Language($messages);
 
         $this->loadEconomySystemPlugin();
 

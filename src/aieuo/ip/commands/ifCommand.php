@@ -11,6 +11,7 @@ use aieuo\ip\ifAPI;
 use aieuo\ip\Session;
 use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
+use aieuo\ip\utils\Language;
 use aieuo\ip\manager\ifManager;
 
 class ifCommand extends PluginCommand implements CommandExecutor {
@@ -37,6 +38,26 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 
 		$session = Session::get($sender);
 		switch ($args[0]) {
+			case "language":
+				if(!isset($args[1])) {
+					$sender->sendMessage(Language::get("command.language.usage"));
+					return true;
+				}
+				$languages = [];
+		        foreach($this->owner->getResources() as $resource) {
+		            if(strrchr($resource->getFilename(), ".") == ".ini") $languages[] = basename($resource->getFilename(), ".ini");
+		            if($resource->getFilename() === $args[1].".ini") {
+		                $messages = parse_ini_file($resource->getPathname());
+		            }
+		        }
+		        if(!isset($messages)) {
+		        	$sender->sendMessage(Language::get("command.language.notfound", [$args[1], implode(", ", $languages)]));
+		        	return true;
+		        }
+		        $this->owner->language->setMessages($messages);
+		        $this->owner->config->set("language", $args[1]);
+		        $sender->sendMessage(Language::get("language.selected", [Language::get("language.name")]));
+				break;
 			case 'block':
 				if(!isset($args[1])) {
 	                $form = $this->form->getBlockForm()->getSelectActionForm();
@@ -66,7 +87,6 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 				}
 				$session->setValid()->setIfType(ifManager::BLOCK)->setData("action", $args[1]);
 				break;
-
 			case 'command':
 				if(!isset($args[1])){
 	                $form = $this->form->getCommandForm()->getSelectActionForm();
