@@ -7,6 +7,10 @@ class Language {
     static $messages = [];
 
     public function __construct($messages) {
+        $this->setMessages($messages);
+    }
+
+    public function setMessages($messages) {
         self::$messages = $messages;
     }
 

@@ -6,11 +6,6 @@ class StringVariable extends Variable{
 
 	public $type = Variable::STRING;
 
-	public function __construct($name, $value) {
-		$this->name = $name;
-		$this->value = $value;
-	}
-
 	public function Addition(Variable $var, string $name = "result") {
 		$result = $this->getValue().$var->getValue();
 		return new StringVariable($name, $result);
@@ -33,10 +28,10 @@ class StringVariable extends Variable{
 	}
 
 	public function Division(Variable $var, string $name = "result") {
-		if($var->getType() !== Variable::STRING) {
+		if($var->getType() !== Variable::STRING and $var->getType() !== Variable::NUMBER) {
 			return new StringVariable("ERROR", "文字列を文字列以外で割ることはできません");
 		}
-		$result = explode($var->getValue(), $this->getValue());
+		$result = explode($var->getValue(), (string)$this->getValue());
 		return new ListVariable($name, $result);
 	}
 
