@@ -6,11 +6,6 @@ class ListVariable extends Variable {
 
 	public $type = Variable::LIST;
 
-	public function __construct($name, $value) {
-		$this->name = $name;
-		$this->value = $value;
-	}
-
 	public function Addition(Variable $var, string $name = "result") {
 		if($var->getType() !== Variable::LIST) {
 			return new StringVariable("ERROR", "リストにリスト以外を足すことはできません");
@@ -29,8 +24,15 @@ class ListVariable extends Variable {
 	}
 
 	public function Multiplication(Variable $var, string $name = "result") {
-		return new StringVariable("ERROR", "リストは掛け算できません");
-		// TODO    convert StringVariable
+		if($var->getType() !== Variable::NUMBER) {
+			return new StringVariable("ERROR", "リスト数字以外をかける事はできません");
+		}
+		$result = [];
+		$max = (int)$var->getValue();
+		for($i=0; $i<$max; $i ++) {
+			$result = array_merge($result, $this->getValue());
+		}
+		return new ListVariable($name, $result);
 	}
 
 	public function Division(Variable $var, string $name = "result") {
@@ -50,8 +52,8 @@ class ListVariable extends Variable {
 		return count($this->value);
 	}
 
-	public function toStringVariable($glue = ", ") {
-		$variable = new StringVariable($this->getName(), implode($glue, $this->getValue()));
+	public function toStringVariable() {
+		$variable = new StringVariable($this->getName(), implode(", ", $this->getValue()));
 		return $variable;
 	}
 }
