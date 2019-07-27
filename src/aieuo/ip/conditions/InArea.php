@@ -6,12 +6,13 @@ use pocketmine\math\Vector3;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class InArea extends Condition {
 
 	protected $id = self::IN_AREA;
-    protected $name = "指定した範囲内にいたら";
-    protected $description = "プレイヤーが§7<x|y|z>§r軸が§7<min>§r～§7<max>§rの範囲にいたら";
+    protected $name = "@condition.inarea.name";
+    protected $description = "@condition.inarea.description";
 
 	public function __construct($player = null, $area = false) {
 		parent::__construct($player);
@@ -21,11 +22,12 @@ class InArea extends Condition {
 	public function getMessage() {
 		$areas = $this->getArea();
 		if($areas === false) return false;
+        $message = Language::get("condition.inarean.detail1");
 		$mes = [];
 		foreach ($areas as $axis => $area) {
-			$mes[] = $axis."軸が".$area[0]."~".$area[1]."の範囲";
+			$mes[] = Language::get("condition.inarea.detail2", [$axis, $area[0], $area[1]]);
 		}
-		return implode(",", $mes)."にいるなら";
+		return $message.Language::get("condition.inarean.detail3", implode(",", $mes));
 	}
 
 	public function getArea() {
@@ -53,7 +55,7 @@ class InArea extends Condition {
 		$player = $this->getPlayer();
 		$areas = $this->getArea();
 		if($areas === false) {
-			$player->sendMessage("§c[指定した範囲内にいたら] 正しく入力できていません§f");
+			$player->sendMessage(Language::get("input.invalid", [$this->getName()]));
 			return self::ERROR;
 		}
         foreach ($areas as $axis => $area) {
@@ -66,17 +68,17 @@ class InArea extends Condition {
 		$areas = $this->parse($default);
 		if($areas === false) {
 			$areas = ["x" => $default, "y" => "", "z" => ""];
-			if($default !== "") $mes .= "§c正しく入力できていません§f";
+			if($default !== "") $mes .= Language::get("form.error");
 		}
 
 		$content = [Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes))];
 		foreach (["x", "y", "z"] as $axis) {
 			if(!isset($areas[$axis])) $areas[$axis] = "";
 			if(is_array(($areas[$axis]))) $areas[$axis] = implode(",", $areas[$axis]);
-			$content[] = Elements::getInput("\n§7<".$axis.">§f ".$axis."軸の範囲を入力してください (指定しない場合は空白で)", "例) 0,100", $areas[$axis]);
+			$content[] = Elements::getInput(Language::get("condition.inarea.form.area"), Language::get("input.example", ["0,100"]), $areas[$axis]);
 		}
-		$content[] = Elements::getToggle("削除する");
-		$content[] = Elements::getToggle("キャンセル");
+		$content[] = Elements::getToggle(Language::get("form.delete"));
+		$content[] = Elements::getToggle(Language::get("form.cancel"));
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

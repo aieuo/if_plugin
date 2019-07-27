@@ -6,17 +6,25 @@ use pocketmine\Server;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class GameMode extends Condition {
 
 	protected $id = self::GAMEMODE;
-    protected $name = "ゲームモードが指定したものだったら";
-    protected $description = "プレーヤーのゲームモードが§7<gamemode>§fだったら";
+    protected $name = "@condition.gamemode.name";
+    protected $description = "@condition.gamemode.description";
+
+    private $gamemodes = [
+        "condition.gamemode.survival",
+        "condition.gamemode.creative",
+        "condition.gamemode.adventure",
+        "condition.gamemode.spectator"
+    ];
 
 	public function getMessage() {
 		$gamemode = $this->getGamemode();
 		if($gamemode === false) return false;
-		return "ゲームモードが".$gamemode."なら";
+		return Language::get("condition.gamemode.detail", [Language::get($this->gamemodes[$gamemode])]);
 	}
 
 	public function getGamemode() {
@@ -37,7 +45,7 @@ class GameMode extends Condition {
 		$player = $this->getPlayer();
 		$gamemode = $this->getGamemode();
 		if($gamemode === false) {
-			$player->sendMessage("§c[".$this->getName()."] ゲームモードが見つかりません");
+			$player->sendMessage(Language::get("condition.gamemode.notfound"));
 			return self::ERROR;
 		}
         return $player->getGamemode() === $gamemode ? self::MATCHED : self::NOT_MATCHED;
@@ -48,7 +56,7 @@ class GameMode extends Condition {
 		if($default === "") {
 			$gamemode = 0;
 		} elseif(($gamemode = $this->parse($default)) === false) {
-			$mes .= "§cゲームモードが見つかりません§f";
+			$mes .= Language::get("condition.gamemode.notfound");
 			$gamemode = 0;
 		}
         $data = [
@@ -56,7 +64,8 @@ class GameMode extends Condition {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getDropdown("\n§7<gamemode>§f ゲームモードを選択して下さい", ["サバイバル", "クリエイティブ", "アドベンチャー", "スペクテイター"], $gamemode),
+                Elements::getDropdown(Language::get("condition.gamemode.form.gamemode"),
+                    array_map(function($g) { return Language::get($g); }, $this->gamemodes), $gamemode),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

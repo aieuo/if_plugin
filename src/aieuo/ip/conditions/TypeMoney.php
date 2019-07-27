@@ -29,13 +29,13 @@ class TypeMoney extends Condition {
 	public function getEditForm(string $default = "", string $mes = "") {
 		$money = $this->parse($default);
 		if($money <= 0) $money = $default;
-		if($money <= 0 and $default !== "") $mes .= "§e1以上の数字を入力することを推奨します§f";
+		if($money <= 0 and $default !== "") $mes .= Language::get("condition.overmoney.zero");
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)."\n"),
-                Elements::getInput("\n§7<amount>§f 値段を入力してください", Language::get("input.example", ["1000"]), $money),
+                Elements::getInput(Language::get("condition.overmoney.form.amount"), Language::get("input.example", ["1000"]), $money),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

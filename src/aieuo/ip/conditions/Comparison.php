@@ -4,12 +4,13 @@ namespace aieuo\ip\conditions;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class Comparison extends Condition {
 
     protected $id = self::COMPARISON;
-    protected $name = "二つの値を比較する";
-    protected $description = "§7<value1>§rと§7<value2>§rが§7<operator>§rなら";
+    protected $name = "@condition.comparison.name";
+    protected $description = "@condition.comparison.description";
 
 	const ERROR = -1;
 	const EQUAL = 0;
@@ -27,28 +28,28 @@ class Comparison extends Condition {
 		$value2 = $this->getValue2();
         switch ($this->getOperator()){
             case self::EQUAL:
-                $mes = $value1."と".$value2."が等しいなら";
+                $mes = Language::get("condition.condition.comparison.detail.equal");
                 break;
             case self::NOT_EQUAL:
-                $mes = $value1."と".$value2."が等しくないから";
+                $mes = Language::get("condition.condition.comparison.detail.not_equal");
                 break;
             case self::GREATER:
-                $mes = $value1."より".$value2."が小さいなら";
+                $mes = Language::get("condition.condition.comparison.detail.greater");
                 break;
             case self::LESS:
-                $mes = $value1."より".$value2."が大きいなら";
+                $mes = Language::get("condition.condition.comparison.detail.less");
                 break;
             case self::GREATER_EQUAL:
-                $mes = $value1."が".$value2."以上なら";
+                $mes = Language::get("condition.condition.comparison.detail.greater_equal");
                 break;
             case self::LESS_EQUAL:
-                $mes = $value1."が".$value2."以下なら";
+                $mes = Language::get("condition.condition.comparison.detail.less_equal");
                 break;
             case self::CONTAINS:
-                $mes = $value1."の中に".$value2."が含まれているなら";
+                $mes = Language::get("condition.condition.comparison.detail.contains");
                 break;
             case self::NOT_CONTAINS:
-                $mes = $value1."の中に".$value2."が含まれていないなら";
+                $mes = Language::get("condition.condition.comparison.detail.not_contains");
                 break;
             default:
                 return false;
@@ -85,7 +86,7 @@ class Comparison extends Condition {
 	public function check() {
 		$player = $this->getPlayer();
 		if($this->getValues() === false) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+			$player->sendMessage(Language::get("input.invalid", [$this->getName()]));
 			return self::ERROR;
 		}
 		$value1 = $this->getValue1();
@@ -117,7 +118,7 @@ class Comparison extends Condition {
                 if(strpos($value1, $value2) === false) $result = self::MATCHED;
                 break;
             default:
-                $player->sendMessage("§c[二つの値を比較する] 正しく入力できていません§r");
+                $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
                 break;
         }
         return $result;
@@ -134,27 +135,27 @@ class Comparison extends Condition {
 			$operator = $values[2];
 			$value2 = $values[1];
 		} elseif($default !== "") {
-			$mes .= "§c正しく入力できていません§f";
+			$mes .= Language::get("form.error");
 		}
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<value1>§f 一つ目の値を入力してください", "例) 100", $value1),
-                Elements::getDropdown("\n§7<operator>§f 選んでください", [
-                	"二つの値が等しい (value1 == value2)",
-                	"二つの値が等しくない (value1 != value2)",
-                	"一つ目の値が二つ目の値より大きい (value1 > value2)",
-                	"一つ目の値が二つ目の値より小さい (value1 < value2)",
-                	"一つ目の値が二つ目の値以上 (value1 >= value2)",
-                	"一つ目の値が二つ目の値以上 (value1 <= value2)",
-                	"一つ目の値の中に二つ目の値が含まれている (value2 in value1)",
-                	"一つ目の値の中に二つ目の値が含まれていない (value2 not in value1)",
+                Elements::getInput(Language::get("condition.comparison.form.value1"), Language::get("input.example", ["100"]), $value1),
+                Elements::getDropdown(Language::get("condition.comparison.form.operator"), [
+                	Language::get("condition.comparison.form.equal"),
+                	Language::get("condition.comparison.form.not_equal"),
+                	Language::get("condition.comparison.form.greater"),
+                	Language::get("condition.comparison.form.less"),
+                	Language::get("condition.comparison.form.greater_equal"),
+                	Language::get("condition.comparison.form.less_equal"),
+                	Language::get("condition.comparison.form.contains"),
+                	Language::get("condition.comparison.form.not_contains"),
                 ], $operator),
-                Elements::getInput("\n§7<value2>§f 二つ目の値を入力してください", "例) 50", $value2),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(Language::get("condition.comparison.form.value2"), Language::get("input.example", ["100"]), $value2),
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
