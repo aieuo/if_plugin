@@ -6,16 +6,17 @@ use aieuo\ip\ifPlugin;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class ExistsVariable extends Condition {
 
 	protected $id = self::EXISTS_VARIABLE;
-    protected $name = "変数が存在するか";
-	protected $description = "変数§7<variable>§fが存在するか";
+    protected $name = "@condition.existsvariable.name";
+	protected $description = "@condition.existsvariable.description";
 
 	public function getMessage() {
 		$name = $this->getVariableName();
-		return $name."という名前の変数が存在するなら";
+		return Language::get("condition.existsvariable.detail", [$name]);
 	}
 
 	public function getVariableName() {
@@ -38,9 +39,9 @@ class ExistsVariable extends Condition {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<variable>§f 変数の名前を入力してください", "例) aieuo", $default),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(Language::get("condition.existsvariable.form.name"), Language::get("input.example", ["aieuo"]), $default),
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);

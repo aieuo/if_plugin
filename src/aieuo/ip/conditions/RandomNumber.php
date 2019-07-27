@@ -4,16 +4,17 @@ namespace aieuo\ip\conditions;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class RandomNumber extends Condition {
 
 	protected $id = self::RANDOM_NUMBER;
-    protected $name = "乱数が指定したものだったら";
-    protected $description = "§7<min>§r～§7<max>§rの範囲で生成した乱数が§7<number>§7だったら";
+    protected $name = "@condition.randomnumber.name";
+    protected $description = "@condition.randomnumber.description";
 
 	public function getMessage() {
 		if($this->getValues() === false) return false;
-		return $this->getMin()."~".$this->getMax()."の範囲の乱数が".$this->getCheck()."なら";
+		return Language::get("condition.randomnumber.detail", [$this->getMin(), $this->getMax(), $this->getCheck()]);
 	}
 
 	public function getMin() {
@@ -42,7 +43,7 @@ class RandomNumber extends Condition {
 	public function check() {
 		$player = $this->getPlayer();
 		if($this->getValues() === false) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません§f");
+			$player->sendMessage(Language::get("input.invalid", [$this->getName()]));
 			return self::ERROR;
 		}
         $rand = mt_rand($this->getMin(), $this->getMax());
@@ -61,21 +62,21 @@ class RandomNumber extends Condition {
 			$max = $numbers[1];
 			$check = $numbers[2];
 			if($check > $max or $check < $min) {
-				$mes .= "§e指定した数".$check."は".$min."~".$max."の範囲の乱数で生成されることはありません§f";
+				$mes .= Language::get("condition.randomnumber.form.warning", [$check, $min, $max]);
 			}
 		} elseif($default !== "") {
-			$mes .= "§c正しく入力できていません§f";
+			$mes .= Language::get("form.error");
 		}
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<min>§f 乱数の範囲の最小値を入力してください", "例) 1", $min),
-                Elements::getInput("\n§7<max>§f 乱数の範囲の最大値を入力してください", "例) 5", $max),
-                Elements::getInput("\n§7<check>§f 確認する数を入力してください", "例) 3", $check),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(Language::get("condition.randomnumber.form.min"), Language::get("input.example", ["1"]), $min),
+                Elements::getInput(Language::get("condition.randomnumber.form.max"), Language::get("input.example", ["5"]), $max),
+                Elements::getInput(Language::get("condition.randomnumber.form.check"), Language::get("input.example", ["3"]), $check),
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);

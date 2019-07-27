@@ -49,17 +49,17 @@ class RemoveItem extends TypeItem {
 		if($item instanceof Item) {
 			$id = $item->getId().":".$item->getDamage();
 			$count = $item->getCount();
-			if($count === 0) $mes .= "§e指定したアイテムをインベントリからすべて削除します§f";
+			if($count === 0) $mes .= Language::get("condition.removeitem.all");
 		} elseif($default !== "") {
-			$mes .= "§c正しく入力できていません (idは0以上の数字で入力してください)§f";
+			$mes .= Language::get("condition.item.form.invalid");
 		}
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<id>§f アイテムのidを入力してください", "例) 1:0", $id),
-                Elements::getInput("\n§7<count>§f アイテムの数を入力してください(全て消す場合は0を入力するか空白にしてください)", "例) 5", $count),
+                Elements::getInput(Language::get("condition.item.form.id"), Language::get("input.example", ["1:0"]), $id),
+                Elements::getInput(Language::get("condition.removeitem.form.count"), Language::get("input.example", ["5"]), $count),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
