@@ -130,6 +130,7 @@ class Form {
                 Elements::getButton("条件に合った時を編集する"),
                 Elements::getButton("条件に合わなかった時を編集する"),
                 Elements::getButton("削除する"),
+                Elements::getButton("名前を設定する"),
                 Elements::getButton("ファイル出力する"),
                 Elements::getButton("終了")
             ]
@@ -163,6 +164,10 @@ class Form {
             Form::sendForm($player, $form, $this, "onDeleteIf");
             return;
         } elseif($data == 4) {
+            $form = $this->getChangeNameForm();
+            Form::sendForm($player, $form, $this, "onChangeName");
+            return;
+        } elseif($data == 5) {
             $form = $this->getExportForm()->getExportForm();
             Form::sendForm($player, $form, $this->getExportForm(), "onExport");
             return;
@@ -496,5 +501,50 @@ class Form {
         $session->setData("contents", $datas);
         $form = $datas->getEditForm();
         Form::sendForm($player, $form, $this, "onEdit");
+    }
+
+    public function getChangeNameForm($name = "") {
+        $data = [
+            "type" => "custom_form",
+            "title" => "名前設定",
+            "content" => [
+                Elements::getLabel("IFに名前を設定します"),
+                Elements::getInput("名前を入力してください", "", $name),
+                Elements::getToggle("名前を削除する"),
+                Elements::getToggle("キャンセル"),
+            ]
+        ];
+        $data = self::encodeJson($data);
+        return $data;
+    }
+
+    public function onChangeName($player, $data) {
+        $session = Session::get($player);
+        if($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $type = $session->getIfType();
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        $key = $session->getData("if_key");
+        $datas = $manager->get($key, $options);
+        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        if($data[3]) {
+            $form = $this->getEditIfForm($mes);
+            Form::sendForm($player, $form, $this, "onEditIf");
+            return;
+        }
+        if($data[2]) {
+            $mes = "§e名前を削除しました§f\n".$mes;
+            $player->sendMessage("§e名前を削除しました");
+            $manager->setName($key, "", $options);
+        } else {
+            $mes = "§b名前を設定しました§f\n".$mes;
+            $player->sendMessage("§b名前を設定しました");
+            $manager->setName($key, $data[1], $options);
+        }
+        $form = $this->getEditIfForm($mes);
+        Form::sendForm($player, $form, $this, "onEditIf");
     }
 }

@@ -69,7 +69,7 @@ class EventForm {
     	$datas = $manager->getFromEvent($event);
     	$buttons = [Elements::getButton("<1つ前のページに戻る>"), Elements::getButton("<追加する>")];
     	foreach ($datas as $n => $data) {
-    		$buttons[] = Elements::getButton($n);
+    		$buttons[] = Elements::getButton(empty($data["name"]) ? $n : $data["name"]);
     	}
         $data = [
             "type" => "form",
