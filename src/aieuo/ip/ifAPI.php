@@ -6,6 +6,7 @@ use aieuo\ip\manager\ifManager;
 
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\event\Event;
 use pocketmine\item\Item;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
@@ -32,31 +33,34 @@ use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
 class ifAPI {
-    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $args = []){
-        $stat = "2";
-        foreach($datas1 as $datas){
-            $result = ($co = Condition::get($datas["id"]))
+
+    public function checkCondition($player, $datas, $options = []) {
+        $matched = true;
+        foreach($datas as $data){
+            $result = ($co = Condition::get($data["id"]))
                         ->setPlayer($player)
                         ->setValues(
                             $co->parse(
                                 ifPlugin::getInstance()
                                   ->getVariableHelper()
-                                  ->replaceVariables($datas["content"], $this->getReplaceDatas($args))
+                                  ->replaceVariables($data["content"], $this->getReplaceDatas($options))
                             )
                         )->check();
-            if($result === Condition::NOT_FOUND){
-                $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
-                return false;
-            }elseif($result === Condition::ERROR){
-                return false;
-            }elseif($result === Condition::NOT_MATCHED){
-                $stat = "3";
+            if($result === Condition::ERROR or $result === Condition::NOT_FOUND) {
+                return $result;
+            } elseif($result === Condition::NOT_MATCHED) {
+                $matched = false;
             }
         }
-        foreach (${"datas".$stat} as $datas) {
-            $process = Process::get($datas["id"]);
-            if($datas["id"] === Process::EVENT_CANCEL) {
-                $process->setValues($args["event"])->execute();
+        return $matched ? Condition::MATCHED : Condition::NOT_MATCHED;
+    }
+
+    public function executeProcess($player, $datas, $options) {
+        foreach ($datas as $data) {
+            $process = Process::get($data["id"]);
+            if(isset($options["event"]) and $options["event"] instanceof Event) $process->setEvent($options["event"]);
+            if($data["id"] === Process::EVENT_CANCEL) {
+                $process->setValues($options["event"])->execute();
                 continue;
             }
             $process->setPlayer($player)
@@ -64,10 +68,28 @@ class ifAPI {
                 $process->parse(
                     ifPlugin::getInstance()
                       ->getVariableHelper()
-                      ->replaceVariables($datas["content"], $this->getReplaceDatas($args))
+                      ->replaceVariables($data["content"], $this->getReplaceDatas($options))
                 )
               )->execute();
         }
+    }
+
+    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $options = []) {
+        $match = $this->checkCondition($player, $datas1, $options);
+        switch ($match) {
+            case Condition::MATCHED:
+                $datas = $datas2;
+                break;
+            case Condition::NOT_MATCHED:
+                $datas = $datas3;
+                break;
+            case Condition::NOT_FOUND:
+                $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
+            case Condition::ERROR:
+            default:
+                return false;
+        }
+        $this->executeProcess($player, $datas, $options);
         return true;
     }
 
