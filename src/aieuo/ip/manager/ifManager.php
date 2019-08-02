@@ -122,6 +122,19 @@ class ifManager extends ifAPI {
     }
 
     /**
+     * @param string $key
+     * @param string $name
+     * @param array $options
+     */
+    public function setName($key, $name, $options = []) {
+        if(!$this->isAdded($key)) return false;
+        $datas = $this->get($key);
+        $datas["name"] = $name;
+        $this->config->set($key, $datas);
+        return true;
+    }
+
+    /**
      * @param  string $key
      */
     public function remove($key) {
