@@ -2,9 +2,10 @@
 
 namespace aieuo\ip\processes;
 
+use pocketmine\event\Event;
+
 use aieuo\ip\ifPlugin;
 use aieuo\ip\variable\Variable;
-
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 
@@ -50,14 +51,16 @@ class CooperationRepeat extends Process {
         $datas = $manager->get($this->getCooperationName());
         $count = $this->getCount();
         for($i = 0; $i < $count; $i ++) {
+            $options = [
+                "player" => $player,
+                "count" => $i,
+            ];
+            if($this->getEvent() instanceof Event) $options["event"] = $this->getEvent();
 	        $manager->executeIfMatchCondition($player,
 	            $datas["if"],
 	            $datas["match"],
 	            $datas["else"],
-	            [
-	            	"player" => $player,
-	            	"count" => $i
-	            ]
+	            $options
 	        );
 	    }
 	}
