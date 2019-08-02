@@ -19,8 +19,8 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 	public function __construct($owner) {
 		parent::__construct('if', $owner);
 		$this->setPermission('op');
-		$this->setDescription("条件にあった時、イベントが起きた時に何かをする");
-		$this->setUsage("if <block | command | event>");
+		$this->setDescription(Language::get("command.if.description"));
+		$this->setUsage("if <block | command | event | chain | import | language>");
 		$this->setExecutor($this);
 		$this->owner = $owner;
 		$this->form = new Form();
@@ -66,23 +66,23 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 	            }
 				switch ($args[1]) {
 					case "edit":
-						$sender->sendMessage("編集するブロックを触ってください");
+						$sender->sendMessage(Language::get("command.block.edit"));
 						break;
 					case "check":
-						$sender->sendMessage("確認するブロックを触ってください");
+						$sender->sendMessage(Language::get("command.block.check"));
 						break;
 					case "del":
-						$sender->sendMessage("削除するブロックを触ってください");
+						$sender->sendMessage(Language::get("command.block.del"));
 						break;
 					case "copy":
-						$sender->sendMessage("コピーするブロックを触ってください");
+						$sender->sendMessage(Language::get("command.block.copy"));
 						break;
 					case "cancel":
 						$session->setValid(false);
-						$sender->sendMessage("キャンセルしました");
+						$sender->sendMessage(Language::get("command.block.cancel"));
 						return true;
 					default:
-						$sender->sendMessage("Usage: /if block <edit|check|del|copy|cancel>");
+						$sender->sendMessage(Language::get("command.block.usage"));
 						return true;
 				}
 				$session->setValid()->setIfType(ifManager::BLOCK)->setData("action", $args[1]);
@@ -108,7 +108,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 			                break;
 			            }
 						if(!$manager->isAdded($args[2])) {
-							$sender->sendMessage("そのコマンドはまだ追加されていません");
+							$sender->sendMessage(Language::get("command.command.not_added"));
 							$session->setValid(false);
 							break;
 						}
@@ -125,7 +125,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 							break;
 						}
 						if(!$manager->isAdded($args[2])) {
-							$sender->sendMessage("そのコマンドはまだ追加されていません");
+							$sender->sendMessage(Language::get("command.command.not_added"));
 							$session->setValid(false);
 							break;
 						}
@@ -141,7 +141,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 							break;
 						}
 						if(!$manager->isAdded($args[2])) {
-							$sender->sendMessage("そのコマンドはまだ追加されていません");
+							$sender->sendMessage(Language::get("command.command.not_added"));
 							$session->setValid(false);
 							break;
 						}
@@ -151,7 +151,10 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 						break;
 					case "cancel":
 						$session->setValid(false);
-						$sender->sendMessage("キャンセルしました");
+						$sender->sendMessage(Language::get("command.command.cancel"));
+						return true;
+					default:
+						$sender->sendMessage(Language::get("command.command.usage"));
 						return true;
 				}
 				break;
