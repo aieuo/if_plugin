@@ -3,6 +3,7 @@
 namespace aieuo\ip\processes;
 
 use pocketmine\Player;
+use pocketmine\event\Event;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
@@ -14,6 +15,9 @@ class Process implements ProcessIds {
 
     /** @var array */
     private $values = [];
+
+    /** @var Event */
+    private $event = null;
 
     /** @var int */
     protected $id;
@@ -64,6 +68,14 @@ class Process implements ProcessIds {
 
     public function getValues() {
         return $this->values;
+    }
+
+    public function setEvent(Event $event) {
+        $this->event = $event;
+    }
+
+    public function getEvent() : ?Event {
+        return $this->event;
     }
 
     public function getEditForm(string $default = "", string $mes = "") {

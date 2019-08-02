@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use pocketmine\event;
+use pocketmine\event\Event;
 use pocketmine\event\Cancellable;
 
 use aieuo\ip\form\Form;
@@ -18,16 +18,16 @@ class EventCancel extends Process {
 		return "イベントをキャンセルする";
 	}
 
-	public function getEvent() {
+	public function getCancelEvent() {
 		return $this->getValues();
 	}
 
-	public function setEvent(Event $effect) {
-		$this->setValues($effect);
+	public function setCancelEvent(Event $event) {
+		$this->setValues($event);
 	}
 
 	public function execute() {
-		$event = $this->getEvent();
+		$event = $this->getCancelEvent();
 		if($event instanceof Cancellable) $event->setCancelled();
 	}
 }
