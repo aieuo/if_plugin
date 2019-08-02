@@ -1,10 +1,8 @@
 ---
 name: if
 main: aieuo\ip\ifPlugin
-version: 3.2.1
-api:
-- 3.0.0
-- 4.0.0
+version: 3.2.2
+api: 3.0.0
 load: POSTWORLD
 author: aieuo
 permissions:
