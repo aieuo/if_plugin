@@ -103,12 +103,12 @@ class Form {
             case 2:
                 $session->setIfType(Session::EVENT);
                 $form = $this->getEventForm()->getSelectEventForm();
-                Form::sendForm($player, $form, $this->getEventForm(), "onselectEvent");
+                Form::sendForm($player, $form, $this->getEventForm(), "onSelectEvent");
                 break;
             case 3:
                 $session->setIfType(Session::CHAIN);
                 $form = $this->getChainForm()->getSelectActionForm();
-                Form::sendForm($player, $form, $this->getChainForm(), "onselectAction");
+                Form::sendForm($player, $form, $this->getChainForm(), "onSelectAction");
                 break;
             case 4:
                 $form = $this->getImportForm()->getImportListForm();
