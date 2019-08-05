@@ -21,6 +21,7 @@ class ProcessFactory {
 		self::register(new TakeMoney());
 		self::register(new Teleport());
 		self::register(new Motion());
+        self::register(new SetScale());
 		self::register(new Calculation());
 		self::register(new AddVariable());
 		self::register(new DeleteVariable());
