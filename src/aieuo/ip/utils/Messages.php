@@ -2,7 +2,6 @@
 
 namespace aieuo\ip\utils;
 
-use aieuo\ip\ifPlugin;
 use aieuo\ip\conditions\Condition;
 use aieuo\ip\processes\Process;
 

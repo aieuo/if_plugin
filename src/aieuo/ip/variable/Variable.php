@@ -1,23 +1,18 @@
 <?php
-
 namespace aieuo\ip\variable;
 
 abstract class Variable {
-
 	const STRING = 0;
 	const NUMBER = 1;
 	const LIST = 2;
 	const MAP = 3;
-
 	/** @var string •Ï”‚Ì–¼‘O */
 	protected $name;
-
 	/** @var string •Ï”‚Ì’l */
 	protected $value;
-
 	/** @var int •Ï”‚ÌŒ^ */
 	protected $type;
-
+	
 	public static function create($name, $value, $type = self::STRING) {
 		if($type === self::STRING) {
 			$var = new StringVariable($name, $value);
@@ -27,7 +22,7 @@ abstract class Variable {
 			if(is_array($value)) {
 				$var = new ListVariable($name, $value);
 			} else {
-				$var = (new StringVariable("string", $value))->Division(new StringVariable("delimiter", ", "), $name);
+                $var = (new StringVariable("string", $value))->division(new StringVariable("delimiter", ", "), $name);
 			}
 		}
 		return $var;
@@ -42,6 +37,9 @@ abstract class Variable {
 		return $this->name;
 	}
 
+    /**
+     * @return string|int|array
+     */
 	public function getValue(){
 		return $this->value;
 	}
@@ -55,33 +53,33 @@ abstract class Variable {
 	 * @param Variable $var
 	 * @param string   $name
 	 */
-	abstract function Addition(Variable $var, string $name = "result");
-
+    abstract public function addition(Variable $var, string $name = "result");
+    
 	/**
 	 * •Ï”“¯m‚ğˆø‚­
 	 * @param Variable $var
 	 * @param string   $name
 	 */
-	abstract function Subtraction(Variable $var, string $name = "result");
-
+    abstract public function subtraction(Variable $var, string $name = "result");
+    
 	/**
 	 * •Ï”“¯m‚ğŠ|‚¯‚é
 	 * @param Variable $var
 	 * @param string   $name
 	 */
-	abstract function Multiplication(Variable $var, string $name = "result");
-
+    abstract public function multiplication(Variable $var, string $name = "result");
+    
 	/**
 	 * •Ï”“¯m‚ğŠ„‚é
 	 * @param Variable $var
 	 * @param string   $name
 	 */
-	abstract function Division(Variable $var, string $name = "result");
-
+    abstract public function division(Variable $var, string $name = "result");
+    
 	/**
 	 * •Ï”“¯m‚ğŠ„‚Á‚½—]‚è
 	 * @param Variable $var
 	 * @param string   $name
 	 */
-	abstract function Modulo(Variable $var, string $name = "result");
+    abstract public function modulo(Variable $var, string $name = "result");
 }

@@ -2,7 +2,6 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
@@ -106,7 +105,6 @@ class ImportForm {
 					"author" => $file["author"]
 				]);
 				$count ++;
-
 			} elseif($datas["type"] === Session::COMMAND) {
 				$manager = ifPlugin::getInstance()->getCommandManager();
 
@@ -133,7 +131,6 @@ class ImportForm {
 				]);
 				$manager->register($key, $datas["description"], $datas["permission"]);
 				$count ++;
-
 			} elseif($datas["type"] === Session::EVENT) {
 				$manager = ifPlugin::getInstance()->getEventManager();
 				$manager->addByEvent($datas["options"]["eventname"], $datas + ["author" => $file["author"]]);
@@ -159,7 +156,6 @@ class ImportForm {
 					"author" => $file["author"]
 				]);
 				$count ++;
-
 			}
 			unset($file["ifs"][$key]);
 		}
@@ -193,7 +189,6 @@ class ImportForm {
 				$session->setData("overwrite", $overwrite);
 			}
 			$this->importDatas($player, $session->getData("file"), $session->getData("count"));
-
 		} else {
 			if(($overwrite = $session->getData("overwrite")) === "") {
 				$session->setData("overwrite", [$session->getData("if_key") => false]);

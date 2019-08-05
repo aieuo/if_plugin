@@ -2,9 +2,7 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifAPI;
 use aieuo\ip\Session;
-use aieuo\ip\form\BlockForm;
 use aieuo\ip\form\Form;
 
 class BlockForm {

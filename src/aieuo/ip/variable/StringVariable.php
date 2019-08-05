@@ -6,17 +6,17 @@ class StringVariable extends Variable{
 
 	public $type = Variable::STRING;
 
-	public function Addition(Variable $var, string $name = "result") {
+    public function addition(Variable $var, string $name = "result") {
 		$result = $this->getValue().$var->getValue();
 		return new StringVariable($name, $result);
 	}
 
-	public function Subtraction(Variable $var, string $name = "result") {
+    public function subtraction(Variable $var, string $name = "result") {
 		$result = str_replace((string)$var->getValue(), "", $this->getValue());
 		return new StringVariable($name, $result);
 	}
 
-	public function Multiplication(Variable $var, string $name = "result") {
+    public function multiplication(Variable $var, string $name = "result") {
 		if($var->getType() !== Variable::NUMBER) {
 			return new StringVariable("ERROR", "文字列と文字列を掛けることはできません");
 		}
@@ -27,7 +27,7 @@ class StringVariable extends Variable{
 		return new StringVariable($name, $result);
 	}
 
-	public function Division(Variable $var, string $name = "result") {
+    public function division(Variable $var, string $name = "result") {
 		if($var->getType() !== Variable::STRING and $var->getType() !== Variable::NUMBER) {
 			return new StringVariable("ERROR", "文字列を文字列以外で割ることはできません");
 		}
@@ -35,7 +35,7 @@ class StringVariable extends Variable{
 		return new ListVariable($name, $result);
 	}
 
-	public function Modulo(Variable $var, string $name = "result") {
+    public function modulo(Variable $var, string $name = "result") {
 		return new StringVariable("ERROR", "文字列は割り算できません");
 	}
 }

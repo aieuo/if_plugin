@@ -6,7 +6,7 @@ class ListVariable extends Variable {
 
 	public $type = Variable::LIST;
 
-	public function Addition(Variable $var, string $name = "result") {
+    public function addition(Variable $var, string $name = "result") {
 		if($var->getType() !== Variable::LIST) {
 			return new StringVariable("ERROR", "リストにリスト以外を足すことはできません");
 		}
@@ -14,7 +14,7 @@ class ListVariable extends Variable {
 		return new ListVariable($name, $result);
 	}
 
-	public function Subtraction(Variable $var, string $name = "result") {
+    public function subtraction(Variable $var, string $name = "result") {
 		if($var->getType() !== Variable::LIST) {
 			return new StringVariable("ERROR", "リストからリスト以外を引くことはできません");
 		}
@@ -23,7 +23,7 @@ class ListVariable extends Variable {
 		return new ListVariable($name, $result);
 	}
 
-	public function Multiplication(Variable $var, string $name = "result") {
+    public function multiplication(Variable $var, string $name = "result") {
 		if($var->getType() !== Variable::NUMBER) {
 			return new StringVariable("ERROR", "リスト数字以外をかける事はできません");
 		}
@@ -35,11 +35,11 @@ class ListVariable extends Variable {
 		return new ListVariable($name, $result);
 	}
 
-	public function Division(Variable $var, string $name = "result") {
+    public function division(Variable $var, string $name = "result") {
 		return new StringVariable("ERROR", "リストは割り算できません");
 	}
 
-	public function Modulo(Variable $var, string $name = "result") {
+    public function modulo(Variable $var, string $name = "result") {
 		return new StringVariable("ERROR", "リストは割り算できません");
 	}
 

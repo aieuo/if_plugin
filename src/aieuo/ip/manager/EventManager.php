@@ -7,13 +7,11 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\block\SignPost;
 use pocketmine\tile\Sign;
 
-use aieuo\ip\ifPlugin;
-
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
-class EventManager extends ifManager{
+class EventManager extends IFManager {
 
 	public function __construct($owner){
         parent::__construct($owner, "events");
@@ -41,7 +39,7 @@ class EventManager extends ifManager{
         return count($datas);
     }
 
-    public function add_empty($event){
+    public function addEmpty($event) {
         $datas = $this->getFromEvent($event);
         $data = [
             "if" => [],
@@ -97,8 +95,7 @@ class EventManager extends ifManager{
         $event = $datas["event"];
         $eventname = $datas["eventname"];
         $variables = [];
-        if(
-            $eventname == "PlayerInteractEvent"
+        if ($eventname == "PlayerInteractEvent"
             or $eventname == "BlockBreakEvent"
             or $eventname == "BlockPlaceEvent"
         ){
@@ -117,8 +114,7 @@ class EventManager extends ifManager{
                 }
             }
         }
-        if(
-            $eventname == "PlayerChatEvent"
+        if ($eventname == "PlayerChatEvent"
             or $eventname == "PlayerCommandPreprocessEvent"
         ){
             $variables["mes"] = new StringVariable("mes", $event->getMessage());

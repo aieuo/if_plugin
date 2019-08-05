@@ -2,11 +2,9 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\Session;
-use aieuo\ip\form\BlockForm;
 use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
 
