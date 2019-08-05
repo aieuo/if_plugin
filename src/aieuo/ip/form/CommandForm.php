@@ -2,7 +2,6 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;

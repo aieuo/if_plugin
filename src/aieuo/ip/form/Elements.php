@@ -19,19 +19,31 @@ class Elements {
         ];
     }
 
-    public static function getToggle($text){
+    public static function getToggle($text, $default = false){
         return [
             "type" => "toggle",
-            "text" => (string)$text
+            "text" => (string)$text,
+            "default" => $default,
         ];
     }
 
-    public static function getDropdown($text, $options, $default = 0){
+    public static function getDropdown($text, $options = [], $default = 0){
     	return [
             "type" => "dropdown",
             "text" => (string)$text,
             "options" => $options,
             "default" => $default
+        ];
+    }
+
+    public static function getSlider($text, $min = 0, $max = 0, $default = 0, $step = 1) {
+        return [
+            "type" => "slider",
+            "text" => (string)$text,
+            "min" => (int)$min,
+            "max" => (int)$max,
+            "default" => (int)$default,
+            "step" => (int)$step
         ];
     }
 

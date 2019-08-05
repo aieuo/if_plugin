@@ -7,14 +7,13 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 
-use aieuo\ip\ifAPI;
 use aieuo\ip\Session;
 use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
 use aieuo\ip\utils\Language;
-use aieuo\ip\manager\ifManager;
+use aieuo\ip\manager\IFManager;
 
-class ifCommand extends PluginCommand implements CommandExecutor {
+class IFCommand extends PluginCommand implements CommandExecutor {
 
 	public function __construct($owner) {
 		parent::__construct('if', $owner);
@@ -45,13 +44,15 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 				}
 				$languages = [];
 		        foreach($this->owner->getResources() as $resource) {
-		            if(strrchr($resource->getFilename(), ".") == ".ini") $languages[] = basename($resource->getFilename(), ".ini");
-		            if($resource->getFilename() === $args[1].".ini") {
+                    $filename = $resource->getFilename();
+                    if (strrchr($filename, ".") == ".ini") $languages[] = basename($filename, ".ini");
+                    if ($filename === $args[1].".ini") {
 		                $messages = parse_ini_file($resource->getPathname());
 		            }
 		        }
 		        if(!isset($messages)) {
-		        	$sender->sendMessage(Language::get("command.language.notfound", [$args[1], implode(", ", $languages)]));
+                    $available = implode(", ", $languages);
+                    $sender->sendMessage(Language::get("command.language.notfound", [$args[1], $available]));
 		        	return true;
 		        }
 		        $this->owner->language->setMessages($messages);
@@ -85,7 +86,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 						$sender->sendMessage(Language::get("command.block.usage"));
 						return true;
 				}
-				$session->setValid()->setIfType(ifManager::BLOCK)->setData("action", $args[1]);
+                $session->setValid()->setIfType(IFManager::BLOCK)->setData("action", $args[1]);
 				break;
 			case 'command':
 				if(!isset($args[1])){
@@ -93,7 +94,7 @@ class ifCommand extends PluginCommand implements CommandExecutor {
 	                Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectAction");
 					break;
 				}
-				$session->setValid()->setIfType(ifManager::COMMAND)->setData("action", $args[1]);
+                $session->setValid()->setIfType(IFManager::COMMAND)->setData("action", $args[1]);
 				$manager = $this->owner->getCommandManager();
 				switch ($args[1]) {
 					case "add":

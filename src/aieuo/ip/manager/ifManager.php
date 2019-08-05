@@ -4,10 +4,9 @@ namespace aieuo\ip\manager;
 
 use pocketmine\utils\Config;
 
-use aieuo\ip\ifPlugin;
-use aieuo\ip\ifAPI;
+use aieuo\ip\IFAPI;
 
-class ifManager extends ifAPI {
+class IFManager extends IFAPI {
 
     const BLOCK = 0;
     const COMMAND = 1;

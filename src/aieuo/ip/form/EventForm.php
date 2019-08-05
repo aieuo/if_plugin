@@ -2,7 +2,6 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifAPI;
 use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
@@ -95,7 +94,7 @@ class EventForm {
         $manager = ifPlugin::getInstance()->getEventManager();
         $eventname = $session->getData("eventname");
         if($data === 1) {
-            $key = $manager->add_empty($eventname);
+            $key = $manager->addEmpty($eventname);
         	$session->setData("if_key", $key);
 	        $datas = $manager->repairIF([]);
 	        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);

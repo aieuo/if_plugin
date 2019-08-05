@@ -4,7 +4,7 @@ namespace aieuo\ip\utils;
 
 class Language {
 
-    static $messages = [];
+    public static $messages = [];
 
     public function __construct($messages) {
         $this->setMessages($messages);

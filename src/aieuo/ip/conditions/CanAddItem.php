@@ -4,9 +4,6 @@ namespace aieuo\ip\conditions;
 
 use pocketmine\item\Item;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
-
 use aieuo\ip\utils\Language;
 
 class CanAddItem extends TypeItem {

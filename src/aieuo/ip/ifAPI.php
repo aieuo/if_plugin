@@ -2,37 +2,16 @@
 
 namespace aieuo\ip;
 
-use aieuo\ip\manager\ifManager;
-
-use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\event\Event;
-use pocketmine\item\Item;
-use pocketmine\item\enchantment\Enchantment;
-use pocketmine\item\enchantment\EnchantmentInstance;
-use pocketmine\lang\TranslationContainer;
-use pocketmine\command\ConsoleCommandSender;
-use pocketmine\level\Position;
-use pocketmine\math\Vector3;
-use pocketmine\entity\Effect;
-use pocketmine\entity\EffectInstance;
-use pocketmine\entity\Entity;
-use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
-use pocketmine\network\mcpe\protocol\AddEntityPacket;
-use pocketmine\network\mcpe\protocol\types\EntityLink;
-use pocketmine\event\entity\EntityDamageEvent;
-
-use aieuo\ip\task\DelayedCommandTask;
-use aieuo\ip\variable\Variable;
 
 use aieuo\ip\conditions\Condition;
 use aieuo\ip\processes\Process;
-
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
-class ifAPI {
+class IFAPI {
 
     public function checkCondition($player, $datas, $options = []) {
         $matched = true;

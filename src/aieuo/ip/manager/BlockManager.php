@@ -9,7 +9,7 @@ use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
-class BlockManager extends ifManager {
+class BlockManager extends IFManager {
 
 	public function __construct($owner) {
 		parent::__construct($owner ,"blocks");

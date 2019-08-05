@@ -2,14 +2,12 @@
 
 namespace aieuo\ip\manager;
 
-use pocketmine\command\Command;
 use pocketmine\command\PluginCommand;
 
 use aieuo\ip\variable\StringVariable;
-use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
 
-class CommandManager extends ifManager{
+class CommandManager extends IFManager {
 
     private $command_list = [];
 

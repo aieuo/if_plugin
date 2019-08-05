@@ -5,7 +5,6 @@ namespace aieuo\ip\form;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 
 use aieuo\ip\ifPlugin;
-use aieuo\ip\ifAPI;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Messages;
 
@@ -164,7 +163,7 @@ class Form {
             Form::sendForm($player, $form, $this, "onDeleteIf");
             return;
         } elseif($data == 4) {
-            $form = $this->getChangeNameForm();
+            $form = $this->getChangeNameForm(isset($datas["name"]) ? $datas["name"] : "");
             Form::sendForm($player, $form, $this, "onChangeName");
             return;
         } elseif($data == 5) {
@@ -397,10 +396,11 @@ class Form {
             Form::sendForm($player, $form, $this, "onEditIfContents");
             $player->sendMessage("削除しました");
         } else {
+            $contents = $manager->get($key, $options);
             $ifData = $contents[$session->getData("type")][$session->getData("num")];
-            $form = $manager->get($key, $options)->getEditForm($ifData["contents"], "§e削除キャンセルしました§f\n");
+            $form = $manager->get($key, $options)->getEditForm($ifData["contents"], "§eキャンセルしました§f\n");
             Form::sendForm($player, $form, $this, "onEdit");
-            $player->sendMessage("削除キャンセルしました");
+            $player->sendMessage("キャンセルしました");
         }
     }
 

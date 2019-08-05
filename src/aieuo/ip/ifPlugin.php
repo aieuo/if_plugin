@@ -3,34 +3,18 @@ namespace aieuo\ip;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\Player;
-use pocketmine\item\Item;
-use pocketmine\level\Position;
 use pocketmine\utils\Config;
 
-use pocketmine\event\player\PlayerInteractEvent;
-
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\command\ConsoleCommandSender;
-use pocketmine\command\PluginCommand;
-
-use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
-
-use aieuo\ip\commands\ifCommand;
-use aieuo\ip\manager\ifManager;
+use aieuo\ip\commands\IFCommand;
 use aieuo\ip\manager\BlockManager;
 use aieuo\ip\manager\CommandManager;
 use aieuo\ip\manager\EventManager;
 use aieuo\ip\manager\ChainIfManager;
-use aieuo\ip\utils\Messages;
-use aieuo\ip\form\Form;
 use aieuo\ip\economy\EconomyLoader;
 use aieuo\ip\economy\EconomyAPILoader;
 use aieuo\ip\economy\MoneySystemLoader;
 use aieuo\ip\economy\PocketMoneyLoader;
-use aieuo\ip\ifAPI;
+use aieuo\ip\IFAPI;
 use aieuo\ip\task\SaveTask;
 use aieuo\ip\variable\VariableHelper;
 
@@ -48,7 +32,7 @@ class ifPlugin extends PluginBase implements Listener{
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
-        $this->getServer()->getCommandMap()->register("ifPlugin", new ifCommand($this));
+        $this->getServer()->getCommandMap()->register("ifPlugin", new IFCommand($this));
         if(!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
         if(!file_exists($this->getDataFolder()."exports")) @mkdir($this->getDataFolder()."exports", 0721, true);
         if(!file_exists($this->getDataFolder()."imports")) @mkdir($this->getDataFolder()."imports", 0721, true);
@@ -62,8 +46,9 @@ class ifPlugin extends PluginBase implements Listener{
         $language = $this->config->get("language", "jpn");
         $languages = [];
         foreach($this->getResources() as $resource) {
-            if(strrchr($resource->getFilename(), ".") == ".ini") $languages[] = basename($resource->getFilename(), ".ini");
-            if($resource->getFilename() === $language.".ini") {
+            $filename = $resource->getFilename();
+            if (strrchr($filename, ".") == ".ini") $languages[] = basename($filename, ".ini");
+            if ($filename === $language.".ini") {
                 $messages = parse_ini_file($resource->getPathname());
             }
         }
@@ -82,7 +67,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->event = new EventManager($this);
         $this->chain = new ChainIfManager($this);
 
-        $this->api = new ifAPI();
+        $this->api = new IFAPI();
 
         $this->variables = new VariableHelper($this);
         $this->variables->loadDataBase();
@@ -127,7 +112,7 @@ class ifPlugin extends PluginBase implements Listener{
         return $this->chain;
     }
 
-    public function getAPI() : ifAPI{
+    public function getAPI() : IFAPI{
         return $this->api;
     }
 

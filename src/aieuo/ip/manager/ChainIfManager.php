@@ -4,9 +4,8 @@ namespace aieuo\ip\manager;
 
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
-use aieuo\ip\variable\ListVariable;
 
-class ChainIfManager extends ifManager {
+class ChainIfManager extends IFManager {
 
 	public function __construct($owner) {
 		parent::__construct($owner ,"chains");
