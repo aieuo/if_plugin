@@ -34,17 +34,15 @@ class SetScale extends Process {
         return $scale;
     }
 
-	public function execute() {
-		$player = $this->getPlayer();
-		$scale = $this->getScale();
-		if($slace === false) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
-			return;
-		}
-		$item = $player->getInventory()->getItemInHand();
-        $item->addEnchantment($enchant);
-		$player->getInventory()->setItemInHand($item);
-	}
+    public function execute() {
+        $player = $this->getPlayer();
+        $scale = $this->getScale();
+        if ($scale === false) {
+            $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            return;
+        }
+        $player->setScale($scale);
+    }
 
 
     public function getEditForm(string $default = "", string $mes = "") {
