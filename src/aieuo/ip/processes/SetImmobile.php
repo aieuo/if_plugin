@@ -2,23 +2,20 @@
 
 namespace aieuo\ip\processes;
 
-use pocketmine\item\Item;
-
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class SetImmobile extends Process {
 
     protected $id = self::SET_IMMOBILE;
-    protected $name = "動けないようにする";
-    protected $description = "プレイヤーを動けないようにする";
+    protected $name = "@process.immobile.name";
+    protected $description = "@process.immobile.description";
 
-	public function getMessage() {
-		return "プレイヤーを動けないようにする";
-	}
+    public function getMessage() {
+        return Language::get("process.immobile.detail");
+    }
 
-	public function execute() {
-		$player = $this->getPlayer();
-		$player->setImmobile();
-	}
+    public function execute() {
+        $player = $this->getPlayer();
+        $player->setImmobile();
+    }
 }

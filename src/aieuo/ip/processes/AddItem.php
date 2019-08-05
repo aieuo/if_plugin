@@ -4,28 +4,27 @@ namespace aieuo\ip\processes;
 
 use pocketmine\item\Item;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class AddItem extends TypeItem {
 
-	protected $id = self::ADD_ITEM;
-	protected $name = "インベントリにアイテムを追加する";
-	protected $description = "インベントリにidが§7<id>§fの§7<name>§fという名前のアイテムを§7<count>§f追加する";
+    protected $id = self::ADD_ITEM;
+    protected $name = "process.additem.name";
+    protected $description = "process.additem.description";
 
-	public function getMessage() {
-		$item = $this->getItem();
-		if(!($item instanceof Item)) return false;
-		return "インベントリに(".$item->getId().":".$item->getDamage().",".$item->getName().")"."を".$item->getCount()."個追加する";
-	}
+    public function getMessage() {
+        $item = $this->getItem();
+        if (!($item instanceof Item)) return false;
+        return Language::get("process.additem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);
+    }
 
-	public function execute() {
-		$player = $this->getPlayer();
-		$item = $this->getItem();
-		if(!($item instanceof Item)) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
-			return;
-		}
-		$player->getInventory()->addItem($item);
-	}
+    public function execute() {
+        $player = $this->getPlayer();
+        $item = $this->getItem();
+        if (!($item instanceof Item)) {
+            $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            return;
+        }
+        $player->getInventory()->addItem($item);
+    }
 }
