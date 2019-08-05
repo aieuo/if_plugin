@@ -6,24 +6,25 @@ use pocketmine\math\Vector3;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class Motion extends TypePosition {
 
     protected $id = self::MOTION;
-    protected $name = "プレイヤーを動かす";
-    protected $description = "プレイヤーを§7<x> <y> <z>§fブロック動かす";
+    protected $name = "@process.motion.name";
+    protected $description = "@process.motion.description";
 
     public function getMessage() {
         $pos = $this->getPosition();
-        if($pos === false) return false;
-        return "プレイヤーを".$pos->x.",".$pos->y.",".$pos->z."ブロック動かす";
+        if ($pos === false) return false;
+        return Language::get("process.motion.detail", [$pos->x, $pos->y, $pos->z]);
     }
 
     public function execute() {
         $player = $this->getPlayer();
         $pos = $this->getPosition();
-        if(!($pos instanceof Vector3)) {
-            $player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
+        if (!($pos instanceof Vector3)) {
+            $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
             return;
         }
         $player->setMotion($pos);
@@ -34,23 +35,23 @@ class Motion extends TypePosition {
         $x = $default;
         $y = "";
         $z = "";
-        if($pos instanceof Vector3) {
+        if ($pos instanceof Vector3) {
             $x = $pos->x;
             $y = $pos->y;
             $z = $pos->z;
-        } elseif($default !== "") {
-            $mes .= "§c正しく入力できていません§f";
+        } elseif ($default !== "") {
+            $mes .= Language::get("form.error");
         }
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<x>§f x軸方向に動かす値を入力してください", "例) 1", $x),
-                Elements::getInput("\n§7<y>§f y軸方向に動かす値を入力してください", "例) 10", $y),
-                Elements::getInput("\n§7<z>§f z軸方向に動かす値を入力してください", "例) 100", $z),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(Language::get("process.motion.form.x"), Language::get("form.example", ["1"]), $x),
+                Elements::getInput(Language::get("process.motion.form.y"), Language::get("form.example", ["10"]), $y),
+                Elements::getInput(Language::get("process.motion.form.z"), Language::get("form.example", ["100"]), $z),
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
@@ -59,11 +60,11 @@ class Motion extends TypePosition {
 
     public function parseFormData(array $datas) {
         $status = true;
-        if($datas[1] === "" and $datas[2] === "" and $datas[3] === "") {
+        if ($datas[1] === "" and $datas[2] === "" and $datas[3] === "") {
             $status = null;
         } else {
             $pos = $this->parse($datas[1].",".$datas[2].",".$datas[3]);
-            if($pos === false) $status = false;
+            if ($pos === false) $status = false;
         }
         return ["status" => $status, "contents" => $datas[1].",".$datas[2].",".$datas[3], "delete" => $datas[4], "cancel" => $datas[5]];
     }

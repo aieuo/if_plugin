@@ -4,28 +4,27 @@ namespace aieuo\ip\processes;
 
 use pocketmine\level\Position;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class SetSleeping extends TypePosition {
 
     protected $id = self::SET_SLEEPING;
-    protected $name = "寝かせる";
-    protected $description = "プレイヤーを§7<pos>§fに寝かせる";
+    protected $name = "@process.setsleeping.name";
+    protected $description = "@process.setsleeping.description";
 
-	public function getMessage() {
-		$pos = $this->getPosition();
-		if($pos === false) return false;
-		return $pos->__toString()."で寝る";
-	}
+    public function getMessage() {
+        $pos = $this->getPosition();
+        if ($pos === false) return false;
+        return Language::get("process.setsleeping.description", [$pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName()]);
+    }
 
-	public function execute() {
-		$player = $this->getPlayer();
-		$pos = $this->getPosition();
-		if(!($pos instanceof Position)) {
-			$player->sendMessage("§c[".$this->getName()."] 正しく入力できていません");
-			return;
-		}
-		$player->sleepOn($pos);
-	}
+    public function execute() {
+        $player = $this->getPlayer();
+        $pos = $this->getPosition();
+        if (!($pos instanceof Position)) {
+            $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            return;
+        }
+        $player->sleepOn($pos);
+    }
 }

@@ -4,26 +4,25 @@ namespace aieuo\ip\processes;
 
 use pocketmine\Server;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class SendMessageToOp extends TypeMessage {
 
     protected $id = self::SENDMESSAGE_TO_OP;
-    protected $name = "opだけにメッセージを送る";
-    protected $description = "opだけにメッセージ§7<message>§fを送る";
+    protected $name = "@process.sendmessagetoop.name";
+    protected $description = "@process.sendmessagetoop.description";
 
-	public function getMessage() {
-		$message = $this->getSendMessage();
-		return "opだけに".$message."と送る";
-	}
+    public function getMessage() {
+        $message = $this->getSendMessage();
+        return Language::get("process.sendmessagetoop.detail", [$message]);
+    }
 
-	public function execute() {
-    	$players = Server::getInstance()->getOnlinePlayers();
-    	foreach ($players as $player) {
-    		if($player->isOp()){
-    			$player->sendMessage($this->getSendMessage());
-    		}
-    	}
-	}
+    public function execute() {
+        $players = Server::getInstance()->getOnlinePlayers();
+        foreach ($players as $player) {
+            if ($player->isOp()) {
+                $player->sendMessage($this->getSendMessage());
+            }
+        }
+    }
 }
