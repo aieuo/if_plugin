@@ -41,4 +41,16 @@ class SetSitting extends TypePosition {
             Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_INVISIBLE]
         ];
         $player->dataPacket($pk);
+        self::leave($player);
+        self::$entityIds[$player->getName()] = $pk->entityRuntimeId;
+    }
+
+    public static function leave(Player $player) {
+        if (isset(self::$entityIds[$player->getName()])) {
+            $pk = new RemoveActorPacket();
+            $pk->entityUniqueId = self::$entityIds[$player->getName()];
+            if ($player->isOnline()) $player->dataPacket($pk);
+            unset(self::$entityIds[$player->getName()]);
+        }
+    }
 }
