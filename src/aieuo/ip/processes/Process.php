@@ -7,6 +7,7 @@ use pocketmine\event\Event;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
+use aieuo\ip\utils\Language;
 
 class Process implements ProcessIds {
 
@@ -21,12 +22,12 @@ class Process implements ProcessIds {
 
     /** @var int */
     protected $id;
-
     /** @var string */
-    protected $name = "";
-
+    protected $name;
     /** @var string */
-    protected $description = "";
+    protected $description;
+    /** @var string */
+    protected $detail;
 
     public function __construct($player = null) {
         $this->player = $player;
@@ -41,11 +42,24 @@ class Process implements ProcessIds {
     }
 
     public function getName() {
+        if ($this->name[0] === "@") {
+            return Language::get(substr($this->name, 1));
+        }
         return $this->name;
     }
 
     public function getDescription() {
+        if ($this->description[0] === "@") {
+            return Language::get(substr($this->description, 1));
+        }
         return $this->description;
+    }
+
+    public function getDetail() {
+        if ($this->detail[0] === "@") {
+            return Language::get(substr($this->detail, 1));
+        }
+        return $this->detail;
     }
 
     public function parse(string $str) {
@@ -79,7 +93,7 @@ class Process implements ProcessIds {
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
-        if($mes !== "") $mes = "\n".$mes;
+        if ($mes !== "") $mes = "\n".$mes;
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
