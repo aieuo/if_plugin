@@ -20,7 +20,7 @@ class Language {
             foreach($replaces as $cnt => $value) {
                 $message = str_replace("{%".$cnt."}", $value, $message);
             }
-            $message = str_replace(["\\n", "\\q"], ["\n", "\'"], $message);
+            $message = str_replace(["\\n", "\\q", "\\dq"], ["\n", "\'", "\""], $message);
             return $message;
         }
         return $key;
