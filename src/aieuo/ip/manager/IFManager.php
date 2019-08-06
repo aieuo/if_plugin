@@ -13,17 +13,17 @@ class IFManager extends IFAPI {
     const EVENT = 2;
     const CHAIN = 3;
 
-	private $owner;
-	private $config;
+    private $owner;
+    private $config;
 
-	public function __construct($owner, $type) {
-		$this->owner = $owner;
+    public function __construct($owner, $type) {
+        $this->owner = $owner;
         $this->config = new Config($owner->getDataFolder() . $type. ".yml", Config::YAML, []);
-	}
+    }
 
-	public function getOwner() {
-		return $this->owner;
-	}
+    public function getOwner() {
+        return $this->owner;
+    }
 
     public function getServer() {
         return $this->getOwner()->getServer();
@@ -42,7 +42,7 @@ class IFManager extends IFAPI {
      * @return boolean
      */
     public function isAdded($key, $options = []) {
-    	return $this->config->exists($key);
+        return $this->config->exists($key);
     }
 
     /**
@@ -51,7 +51,7 @@ class IFManager extends IFAPI {
      * @return bool | array
      */
     public function get($key, $options = []) {
-        if(!$this->isAdded($key))return false;
+        if (!$this->isAdded($key)) return false;
         $datas = $this->config->get($key);
         $datas = $this->repairIF($datas);
         return $datas;
@@ -61,7 +61,7 @@ class IFManager extends IFAPI {
      * @return array
      */
     public function getAll() {
-    	return $this->config->getAll();
+        return $this->config->getAll();
     }
 
     /**
@@ -73,7 +73,7 @@ class IFManager extends IFAPI {
      */
     public function add($key, $type, $id, $content, $options = []) {
         $datas = [];
-        if($this->isAdded($key))$datas = $this->get($key);
+        if ($this->isAdded($key))$datas = $this->get($key);
         $datas = $this->repairIF($datas);
         $datas[$type][] = [
             "id" => $id,
@@ -88,7 +88,7 @@ class IFManager extends IFAPI {
      * @param array  $options
      */
     public function set($key, $datas = [], $options = []) {
-    	$this->config->set($key, $datas);
+        $this->config->set($key, $datas);
     }
 
     /**
@@ -98,7 +98,7 @@ class IFManager extends IFAPI {
      * @return bool
      */
     public function del($key, $type, $num, $options = []) {
-        if(!$this->isAdded($key))return false;
+        if (!$this->isAdded($key)) return false;
         $datas = $this->get($key);
         unset($datas[$type][$num]);
         $datas[$type] = array_merge($datas[$type]);
@@ -113,7 +113,7 @@ class IFManager extends IFAPI {
      * @return bool
      */
     public function updateContent($key, $type, $num, $new, $options = []) {
-        if(!$this->isAdded($key))return false;
+        if (!$this->isAdded($key)) return false;
         $datas = $this->get($key);
         $datas[$type][$num]["content"] = $new;
         $this->config->set($key, $datas);
@@ -126,7 +126,7 @@ class IFManager extends IFAPI {
      * @param array $options
      */
     public function setName($key, $name, $options = []) {
-        if(!$this->isAdded($key)) return false;
+        if (!$this->isAdded($key)) return false;
         $datas = $this->get($key);
         $datas["name"] = $name;
         $this->config->set($key, $datas);
@@ -137,21 +137,21 @@ class IFManager extends IFAPI {
      * @param  string $key
      */
     public function remove($key) {
-    	$this->config->remove($key);
+        $this->config->remove($key);
     }
 
-	public function save() {
-		$this->config->save();
-	}
+    public function save() {
+        $this->config->save();
+    }
 
     /**
      * @param  array $datas
      * @return array
      */
-    public function repairIF($datas){
-        if(!isset($datas["if"]))$datas["if"] = [];
-        if(!isset($datas["match"]))$datas["match"] = [];
-        if(!isset($datas["else"]))$datas["else"] = [];
+    public function repairIF($datas) {
+        if (!isset($datas["if"]))$datas["if"] = [];
+        if (!isset($datas["match"]))$datas["match"] = [];
+        if (!isset($datas["else"]))$datas["else"] = [];
         return $datas;
     }
 

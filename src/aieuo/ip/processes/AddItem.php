@@ -9,8 +9,8 @@ use aieuo\ip\utils\Language;
 class AddItem extends TypeItem {
 
     protected $id = self::ADD_ITEM;
-    protected $name = "process.additem.name";
-    protected $description = "process.additem.description";
+    protected $name = "@process.additem.name";
+    protected $description = "@process.additem.description";
 
     public function getMessage() {
         $item = $this->getItem();

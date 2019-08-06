@@ -11,8 +11,8 @@ use aieuo\ip\utils\Language;
 class SetGamemode extends Process {
 
     protected $id = self::SET_GAMEMODE;
-    protected $name = "@process.pname.name";
-    protected $description = "@process.pname.description";
+    protected $name = "@process.gamemode.name";
+    protected $description = "@process.gamemode.description";
 
     private $gamemodes = [
         "process.gamemode.survival",
@@ -40,7 +40,7 @@ class SetGamemode extends Process {
     public function getMessage() {
         $gamemode = $this->getGamemode();
         if ($gamemode === false) return false;
-        return Language::get("process.pname.detail", [Language::get($this->gamemodes[$gamemode])]);
+        return Language::get("process.gamemode.detail", [Language::get($this->gamemodes[$gamemode])]);
     }
 
     public function execute() {
