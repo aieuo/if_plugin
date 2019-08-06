@@ -98,14 +98,14 @@ class EventForm {
         	$session->setData("if_key", $key);
 	        $datas = $manager->repairIF([]);
 	        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-	        $form = (new Form)->getEditIfForm($mes);
+            $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
 	        Form::sendForm($player, $form, new Form(), "onEditIf");
         	return;
         }
         $session->setData("if_key", $data - 2);
         $datas = $manager->get($data - 2, ["eventname" => $eventname]);
         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-        $form = (new Form)->getEditIfForm($mes);
+        $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
 }

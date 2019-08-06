@@ -35,7 +35,7 @@ class ExportForm {
         $datas = $manager->get($key, $options);
         if($data[3]) {
             $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-            $form = (new Form())->getEditIfForm($mes);
+            $form = (new Form())->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
         	return;
         }

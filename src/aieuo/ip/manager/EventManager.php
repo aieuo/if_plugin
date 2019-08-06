@@ -64,29 +64,36 @@ class EventManager extends IFManager {
         $this->set($event, $datas);
     }
 
-    public function del($key, $type, $num, $args = []){
-        $datas = $this->getFromEvent($args["eventname"]);
+    public function del($key, $type, $num, $options = []) {
+        $datas = $this->getFromEvent($options["eventname"]);
         if(!isset($datas[$key]))return false;
         unset($datas[$key][$type][$num]);
         $datas[$key][$type] = array_merge($datas[$key][$type]);
-        $this->set($args["eventname"], $datas);
+        $this->set($options["eventname"], $datas);
         return true;
     }
 
-    public function updateContent($key, $type, $num, $new, $args = []){
-        $datas = $this->getFromEvent($args["eventname"]);
+    public function updateContent($key, $type, $num, $new, $options = []) {
+        $datas = $this->getFromEvent($options["eventname"]);
         if(!isset($datas[$key]))return false;
         $datas[$key][$type][$num]["content"] = $new;
-        $this->set($args["eventname"], $datas);
+        $this->set($options["eventname"], $datas);
         return true;
     }
 
-    public function remove($key, $args = []){
-        $datas = $this->getFromEvent($args["eventname"]);
+    public function remove($key, $options = []) {
+        $datas = $this->getFromEvent($options["eventname"]);
         if(!isset($datas[$key]))return false;
         unset($datas[$key]);
         $datas = array_merge($datas);
-        $this->set($args["eventname"], $datas);
+        $this->set($options["eventname"], $datas);
+        return true;
+    }
+    public function setName($key, $name, $options = []) {
+        $datas = $this->getFromEvent($options["eventname"]);
+        if (!isset($datas[$key])) return false;
+        $datas[$key]["name"] = $name;
+        $this->set($options["eventname"], $datas);
         return true;
     }
 

@@ -119,10 +119,10 @@ class Form {
         }
     }
 
-    public function getEditIfForm($mes) {
+    public function getEditIfForm($mes, $name = null) {
         $data = [
             "type" => "form",
-            "title" => "IF編集",
+            "title" => empty($name) ? "IF編集" : $name,
             "content" => $mes,
             "buttons" => [
                 Elements::getButton("もし~を編集する"),
@@ -213,7 +213,7 @@ class Form {
         if($data == 0) {
             // ひとつ前のformに戻る
             $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-            $form = $this->getEditIfForm($mes);
+            $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, $this, "onEditIf");
             return;
         }
@@ -531,7 +531,7 @@ class Form {
         $datas = $manager->get($key, $options);
         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
         if($data[3]) {
-            $form = $this->getEditIfForm($mes);
+            $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, $this, "onEditIf");
             return;
         }
@@ -544,7 +544,7 @@ class Form {
             $player->sendMessage("§b名前を設定しました");
             $manager->setName($key, $data[1], $options);
         }
-        $form = $this->getEditIfForm($mes);
+        $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, $this, "onEditIf");
     }
 }
