@@ -28,28 +28,28 @@ class Comparison extends Condition {
         $value2 = $this->getValue2();
         switch ($this->getOperator()) {
             case self::EQUAL:
-                $mes = Language::get("condition.comparison.detail.equal");
+                $mes = Language::get("condition.comparison.detail.equal", [$value1, $value2]);
                 break;
             case self::NOT_EQUAL:
-                $mes = Language::get("condition.comparison.detail.not_equal");
+                $mes = Language::get("condition.comparison.detail.not_equal", [$value1, $value2]);
                 break;
             case self::GREATER:
-                $mes = Language::get("condition.comparison.detail.greater");
+                $mes = Language::get("condition.comparison.detail.greater", [$value1, $value2]);
                 break;
             case self::LESS:
-                $mes = Language::get("condition.comparison.detail.less");
+                $mes = Language::get("condition.comparison.detail.less", [$value1, $value2]);
                 break;
             case self::GREATER_EQUAL:
-                $mes = Language::get("condition.comparison.detail.greater_equal");
+                $mes = Language::get("condition.comparison.detail.greater_equal", [$value1, $value2]);
                 break;
             case self::LESS_EQUAL:
-                $mes = Language::get("condition.comparison.detail.less_equal");
+                $mes = Language::get("condition.comparison.detail.less_equal", [$value1, $value2]);
                 break;
             case self::CONTAINS:
-                $mes = Language::get("condition.comparison.detail.contains");
+                $mes = Language::get("condition.comparison.detail.contains", [$value1, $value2]);
                 break;
             case self::NOT_CONTAINS:
-                $mes = Language::get("condition.comparison.detail.not_contains");
+                $mes = Language::get("condition.comparison.detail.not_contains", [$value1, $value2]);
                 break;
             default:
                 return false;
