@@ -104,7 +104,7 @@ class ChainIfForm {
         $datas = $manager->repairIF([]);
         $manager->set($data[0], $datas);
         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-        $form = (new Form)->getEditIfForm($mes);
+        $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
 
@@ -150,7 +150,7 @@ class ChainIfForm {
         if($action === "edit") {
             $datas = $manager->repairIF([]);
             $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-            $form = (new Form)->getEditIfForm($mes);
+            $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
         } elseif($action === "del") {
             $form = (new Form())->getConfirmDeleteForm();
@@ -191,7 +191,7 @@ class ChainIfForm {
         $datas = current($ifs);
         $session->setData("if_key", $key);
         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-        $form = (new Form)->getEditIfForm($mes);
+        $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
 }
