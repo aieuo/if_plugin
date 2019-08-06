@@ -5,6 +5,7 @@ namespace aieuo\ip\conditions;
 use aieuo\ip\ifPlugin;
 
 use aieuo\ip\utils\Language;
+use pocketmine\utils\TextFormat;
 
 class OverMoney extends TypeMoney {
 
@@ -20,7 +21,7 @@ class OverMoney extends TypeMoney {
         $player = $this->getPlayer();
         $economy = ifPlugin::getInstance()->getEconomy();
         if ($economy === null) {
-            $player->sendMessage("?c".Language::get("economy.notfound"));
+            $player->sendMessage(TextFormat::RED.Language::get("economy.notfound"));
             return self::ERROR;
         }
         $mymoney = $economy->getMoney($player->getName());
