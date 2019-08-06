@@ -182,7 +182,7 @@ class EventListener implements Listener {
                             $manager->set($pos);
                         }
                         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-                        $form = (new Form)->getEditIfForm($mes);
+                        $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
                         Form::sendForm($player, $form, new Form(), "onEditIf");
                         return;
                     case 'check':
