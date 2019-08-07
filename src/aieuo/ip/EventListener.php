@@ -111,7 +111,8 @@ class EventListener implements Listener {
     public function entityLevelChange(EntityLevelChangeEvent $event){
         $this->onEvent($event, "EntityLevelChangeEvent");
 
-        SetSitting::leave($event->getPlayer());
+        $player = $event->getEntity();
+        if ($player instanceof Player) SetSitting::leave($player);
     }
 
     public function onEvent($event, $eventname){
