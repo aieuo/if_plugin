@@ -168,6 +168,23 @@ class EventManager extends IFManager {
                 }
             }
         }
+        if ($eventname == "EntityAttackEvent") {
+            $entity = $event->getEntity();
+            $variables["event_damage"] = new NumberVariable("event_damage", $event->getBaseDamage());
+            $variables["evant_cause"] = new NumberVariable("evant_cause", $event->getCause());
+            if ($event instanceof EntityDamageByEntityEvent) {
+                $player = $event->getEntity();
+                if ($player instanceof Player) {
+                    $variables["target"] = new StringVariable("target", $player->__toString());
+                    $variables["target_name"] = new StringVariable("target_name", $player->getName());
+                    $variables["target_pos"] = new StringVariable("target_pos", $player->x.",".$player->y.",".$player->z.",".$player->level->getFolderName());
+                    $variables["target_x"] = new NumberVariable("target_x", $player->x);
+                    $variables["target_y"] = new NumberVariable("target_y", $player->y);
+                    $variables["target_z"] = new NumberVariable("target_z", $player->z);
+                    $variables["target_level"] = new StringVariable("target_level", $player->level->getFolderName());
+                }
+            }
+        }
         if($eventname == "EntityLevelChangeEvent"){
             $variables["origin_level"] = new StringVariable("origin_level", $event->getOrigin()->getFolderName());
             $variables["target_level"] = new StringVariable("target_level", $event->getTarget()->getFolderName());
