@@ -104,7 +104,8 @@ class EventListener implements Listener {
     public function entityDeath(EntityDeathEvent $event){
         $this->onEvent($event, "EntityDeathEvent");
 
-        SetSitting::leave($event->getPlayer());
+        $player = $event->getEntity();
+        if ($player instanceof Player) SetSitting::leave($player);
     }
 
     public function entityLevelChange(EntityLevelChangeEvent $event){
@@ -263,6 +264,7 @@ class EventListener implements Listener {
     }
 
     public function teleport(EntityTeleportEvent $event) {
-        SetSitting::leave($event->getPlayer());
+        $player = $event->getEntity();
+        if ($player instanceof Player) SetSitting::leave($player);
     }
 }
