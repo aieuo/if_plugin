@@ -18,7 +18,7 @@ class AddEffect extends Process {
     public function getMessage() {
         $effect = $this->getEffect();
         if (!($effect instanceof EffectInstance)) return false;
-        return Language::get("process.addeffect.detail", [$effect->getId(), $effect->getAmplifier(), $effect->getDuration() * 20]);
+        return Language::get("process.addeffect.detail", [$effect->getId(), $effect->getAmplifier(), $effect->getDuration() / 20]);
     }
 
     public function getEffect() {
@@ -34,6 +34,7 @@ class AddEffect extends Process {
         if (!isset($args[1]) or (int)$args[1] <= 0) $args[1] = 1;
         if (!isset($args[2]) or (float)$args[2] <= 0) $args[2] = 30;
         $effect = Effect::getEffectByName($args[0]);
+        $args[1] --;
         if ($effect === null) $effect = Effect::getEffect((int)$args[0]);
         if ($effect === null) return null;
         return new EffectInstance($effect, (float)$args[2] * 20, (int)$args[1], true);
@@ -58,8 +59,8 @@ class AddEffect extends Process {
         $time = "";
         if ($effect instanceof EffectInstance) {
             $id = $effect->getId();
-            $power = $effect->getAmplifier();
-            $time = $effect->getDuration() * 20;
+            $power = $effect->getAmplifier() + 1;
+            $time = $effect->getDuration() / 20;
         } elseif ($default !== "") {
             if ($effect === false)$mes .= Language::get("form.error");
             if ($effect === null)$mes .= Language::get("process.addeffect.notfound");
