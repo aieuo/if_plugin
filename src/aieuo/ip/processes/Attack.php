@@ -38,7 +38,7 @@ class Attack extends Process {
         $player = $this->getPlayer();
         $damage = $this->getDamage();
         if ($damage === false) {
-            $player->sendMessage("process.attack.error", [$this->getName()]);
+            $player->sendMessage(Language::get("process.attack.error", [$this->getName()]));
             return;
         }
         $event = new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, (float)$damage);
