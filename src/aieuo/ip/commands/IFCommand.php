@@ -198,6 +198,29 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 $form = $this->form->getChainForm()->getSelectActionForm();
                 Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
 				return true;
+            case "form":
+                if (!isset($args[1])) {
+                    $form = $this->form->getFormIFForm()->getSelectActionForm();
+                    Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onSelectAction");
+                    break;
+                }
+                switch ($args[1]) {
+                    case "add":
+                        $session->setData("action", "add");
+                        $form = $this->form->getFormIFForm()->getAddIFformForm();
+                        Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onAddIFformForm");
+                        break;
+                    case "edit":
+                    case "del":
+                        $session->setData("action", $args[1]);
+                        $form = $this->form->getFormIFForm()->getSelectIFformForm();
+                        Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onSelectIFformForm");
+                        break;
+                    default:
+                        $sender->sendMessage(Language::get("command.block.usage"));
+                        break;
+                }
+                break;
 			case "import":
                 $form = $this->form->getImportForm()->getImportListForm();
                 Form::sendForm($sender, $form, $this->form->getImportForm(), "onImportList");
