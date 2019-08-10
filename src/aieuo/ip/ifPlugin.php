@@ -10,6 +10,7 @@ use aieuo\ip\manager\BlockManager;
 use aieuo\ip\manager\CommandManager;
 use aieuo\ip\manager\EventManager;
 use aieuo\ip\manager\ChainIfManager;
+use aieuo\ip\manager\FormIFManager;
 use aieuo\ip\economy\EconomyLoader;
 use aieuo\ip\economy\EconomyAPILoader;
 use aieuo\ip\economy\MoneySystemLoader;
@@ -24,7 +25,7 @@ use aieuo\ip\processes\ProcessFactory;
 use aieuo\ip\utils\Language;
 
 class ifPlugin extends PluginBase implements Listener{
-    const VERSION = "3.2.0";
+    const VERSION = "3.3.0";
 
     private static $instance;
 
@@ -67,6 +68,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->block = new BlockManager($this);
         $this->event = new EventManager($this);
         $this->chain = new ChainIfManager($this);
+        $this->formif = new FormIFManager($this);
 
         $this->api = new IFAPI();
 
@@ -90,11 +92,12 @@ class ifPlugin extends PluginBase implements Listener{
         $this->block->save();
         $this->event->save();
         $this->chain->save();
+        $this->formif->save();
         $this->variables->save();
         $this->config->save();
     }
 
-    public static function getInstance(){
+    public static function getInstance(): self {
         return self::$instance;
     }
 
@@ -112,6 +115,10 @@ class ifPlugin extends PluginBase implements Listener{
 
     public function getChainManager() : ChainIfManager{
         return $this->chain;
+    }
+
+    public function getFormIFManager() : FormIFManager{
+        return $this->formif;
     }
 
     public function getAPI() : IFAPI{
@@ -152,6 +159,8 @@ class ifPlugin extends PluginBase implements Listener{
             $manager = $this->getEventManager();
         }elseif($type === Session::CHAIN) {
             $manager = $this->getChainManager();
+        } elseif ($type === Session::FORM) {
+            $manager = $this->getFormIFManager();
         }
         return $manager;
     }
@@ -166,6 +175,8 @@ class ifPlugin extends PluginBase implements Listener{
             $options = ["eventname" => $session->getData("eventname")];
         }elseif($type === Session::CHAIN) {
             $options = [];
+        } elseif ($type === Session::FORM) {
+            $options = ["place" => $session->getData("form_place")];
         }
         return $options;
     }

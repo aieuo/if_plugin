@@ -44,4 +44,5 @@ interface ProcessIds {
     const COOPERATION_REPEAT = 138;
     const EXECUTE_OTHER_PLAYER = 139;
     const DELAYED_COMMAND_CONSOLE = 140;
+    const SEND_FORM = 141;
 }

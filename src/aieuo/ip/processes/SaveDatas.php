@@ -20,6 +20,7 @@ class SaveDatas extends Process {
         ifPlugin::getInstance()->getCommandManager()->save();
         ifPlugin::getInstance()->getEventManager()->save();
         ifPlugin::getInstance()->getChainManager()->save();
+        ifPlugin::getInstance()->getFormIFManager()->save();
         ifPlugin::getInstance()->getVariableHelper()->save();
     }
 }
