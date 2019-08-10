@@ -20,7 +20,7 @@ class FormIFForm {
             "buttons" => [
                 Elements::getButton(Language::get("form.action.add")),
                 Elements::getButton(Language::get("form.action.edit")),
-                Elements::getButton(Language::get("form.action.del")),
+                Elements::getButton(Language::get("form.action.delete")),
                 Elements::getButton(Language::get("form.cancel")),
                 Elements::getButton(Language::get("form.back"))
             ]
