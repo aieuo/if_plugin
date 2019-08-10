@@ -32,7 +32,6 @@ class ifPlugin extends PluginBase implements Listener{
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
-        $this->getServer()->getCommandMap()->register("ifPlugin", new IFCommand($this));
         if(!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
         if(!file_exists($this->getDataFolder()."exports")) @mkdir($this->getDataFolder()."exports", 0721, true);
         if(!file_exists($this->getDataFolder()."imports")) @mkdir($this->getDataFolder()."imports", 0721, true);
@@ -59,6 +58,8 @@ class ifPlugin extends PluginBase implements Listener{
             return;
         }
         $this->language = new Language($messages);
+
+        $this->getServer()->getCommandMap()->register("ifPlugin", new IFCommand($this));
 
         $this->loadEconomySystemPlugin();
 
@@ -90,6 +91,7 @@ class ifPlugin extends PluginBase implements Listener{
         $this->event->save();
         $this->chain->save();
         $this->variables->save();
+        $this->config->save();
     }
 
     public static function getInstance(){
