@@ -12,13 +12,13 @@ use aieuo\ip\utils\Language;
 class ExecuteOtherPlayer extends Process {
 
     protected $id = self::EXECUTE_OTHER_PLAYER;
-    protected $name = "@process.executeotherplayler.name";
-    protected $description = "@process.executeotherplayler.description";
+    protected $name = "@process.executeotherplayer.name";
+    protected $description = "@process.executeotherplayer.description";
 
     public function getMessage() {
         $cname = $this->getCooperationName();
         $pname = $this->getPlayerName();
-        return Language::get("process.executeotherplayler.detail", [$cname, $pname]);
+        return Language::get("process.executeotherplayer.detail", [$cname, $pname]);
     }
 
     public function getCooperationName() {
@@ -84,8 +84,8 @@ class ExecuteOtherPlayer extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.executeotherplayler.form.name"), Language::get("form.example", ["aieuo"]), $cname),
-                Elements::getInput(Language::get("process.executeotherplayler.form.player"), Language::get("form.example", ["aiueo421"]), $pname),
+                Elements::getInput(Language::get("process.executeotherplayer.form.name"), Language::get("input.example", ["aieuo"]), $cname),
+                Elements::getInput(Language::get("process.executeotherplayer.form.player"), Language::get("input.example", ["aiueo421"]), $pname),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

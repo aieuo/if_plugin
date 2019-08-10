@@ -11,7 +11,7 @@ use aieuo\ip\utils\Language;
 class RemoveItem extends TypeItem {
 
 	protected $id = self::REMOVE_ITEM;
-    protected $name = "@condition.removeitem.namei";
+    protected $name = "@condition.removeitem.name";
     protected $description = "@condition.removeitem.description";
 
 	public function getMessage() {

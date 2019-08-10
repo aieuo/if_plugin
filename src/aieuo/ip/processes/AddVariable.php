@@ -68,8 +68,8 @@ class AddVariable extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.addvariable.form.name"), Language::get("form.example", ["aieuo"]), $name),
-                Elements::getInput(Language::get("process.addvariable.form.value"), Language::get("form.example", ["1000"]), $value),
+                Elements::getInput(Language::get("process.addvariable.form.name"), Language::get("input.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.addvariable.form.value"), Language::get("input.example", ["1000"]), $value),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

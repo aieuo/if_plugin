@@ -83,8 +83,8 @@ class CooperationRepeat extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.cooperation.form.name"), Language::get("form.example", ["aieuo"]), $name),
-                Elements::getInput(Language::get("process.cooperationrepeat.form.count"), Language::get("form.example", ["5"]), $count),
+                Elements::getInput(Language::get("process.cooperation.form.name"), Language::get("input.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.cooperationrepeat.form.count"), Language::get("input.example", ["5"]), $count),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

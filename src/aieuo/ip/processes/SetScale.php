@@ -56,7 +56,7 @@ class SetScale extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.setscale.form.scale"), Language::get("form.example", ["2"]), $scale),
+                Elements::getInput(Language::get("process.setscale.form.scale"), Language::get("input.example", ["2"]), $scale),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

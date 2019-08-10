@@ -65,8 +65,8 @@ class DelayedCommand extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.delayedcommand.form.command"), Language::get("form.example", ["help"]), $command),
-                Elements::getInput(Language::get("process.delayedcommand.form.time"), Language::get("form.example", ["10"]), $time),
+                Elements::getInput(Language::get("process.delayedcommand.form.command"), Language::get("input.example", ["help"]), $command),
+                Elements::getInput(Language::get("process.delayedcommand.form.time"), Language::get("input.example", ["10"]), $time),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

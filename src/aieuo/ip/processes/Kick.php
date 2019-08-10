@@ -40,7 +40,7 @@ class Kick extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.kick.form.reason"), Language::get("form.example", ["悪いことをしたから"]), $default),
+                Elements::getInput(Language::get("process.kick.form.reason"), Language::get("input.example", ["悪いことをしたから"]), $default),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

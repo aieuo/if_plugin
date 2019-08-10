@@ -56,7 +56,7 @@ class Attack extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.attack.form.damage"), Language::get("form.example", ["5"]), $damage),
+                Elements::getInput(Language::get("process.attack.form.damage"), Language::get("input.example", ["5"]), $damage),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

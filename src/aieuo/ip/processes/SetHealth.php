@@ -55,7 +55,7 @@ class SetHealth extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.sethealth.form.health"), Language::get("form.example", ["10"]), $health),
+                Elements::getInput(Language::get("process.sethealth.form.health"), Language::get("input.example", ["10"]), $health),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

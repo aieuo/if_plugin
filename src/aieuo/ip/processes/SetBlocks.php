@@ -111,10 +111,10 @@ class SetBlocks extends TypePosition {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.setblocks.form.spos"), Language::get("form.example", ["0,0,0"]), $spos_str),
-                Elements::getInput(Language::get("process.setblocks.form.epos"), Language::get("form.example", ["5,10,5"]), $epos_str),
-                Elements::getInput(Language::get("process.setblocks.form.level"), Language::get("form.example", ["world"]), $level_str),
-                Elements::getInput(Language::get("process.setblocks.form.id"), Language::get("form.example", ["1:0"]), $id),
+                Elements::getInput(Language::get("process.setblocks.form.spos"), Language::get("input.example", ["0,0,0"]), $spos_str),
+                Elements::getInput(Language::get("process.setblocks.form.epos"), Language::get("input.example", ["5,10,5"]), $epos_str),
+                Elements::getInput(Language::get("process.setblocks.form.level"), Language::get("input.example", ["world"]), $level_str),
+                Elements::getInput(Language::get("process.setblocks.form.id"), Language::get("input.example", ["1:0"]), $id),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

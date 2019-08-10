@@ -47,9 +47,9 @@ class Motion extends TypePosition {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.motion.form.x"), Language::get("form.example", ["1"]), $x),
-                Elements::getInput(Language::get("process.motion.form.y"), Language::get("form.example", ["10"]), $y),
-                Elements::getInput(Language::get("process.motion.form.z"), Language::get("form.example", ["100"]), $z),
+                Elements::getInput(Language::get("process.motion.form.x"), Language::get("input.example", ["1"]), $x),
+                Elements::getInput(Language::get("process.motion.form.y"), Language::get("input.example", ["10"]), $y),
+                Elements::getInput(Language::get("process.motion.form.z"), Language::get("input.example", ["100"]), $z),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
