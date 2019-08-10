@@ -13,6 +13,7 @@ class ProcessFactory {
 		self::register(new BroadcastMessage());
 		self::register(new SendMessageToOp());
 		self::register(new SendVoiceMessage());
+        self::register(new SendForm());
 		self::register(new Command());
 		self::register(new CommandConsole());
 		self::register(new DelayedCommand());

@@ -10,6 +10,7 @@ class Session {
 	const COMMAND = 1;
 	const EVENT = 2;
 	const CHAIN = 3;
+    const FORM = 4;
 
     private static $sessions = [];
 
