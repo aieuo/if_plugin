@@ -7,16 +7,17 @@ use aieuo\ip\ifPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\Session;
+use aieuo\ip\utils\Language;
 
 class SendForm extends Process {
 
     protected $id = self::SEND_FORM;
-    protected $name = "フォームを送信する";
-    protected $description = "プレイヤーに§7<name>§fという名前のフォームを送信する";
+    protected $name = "@process.sendform.name";
+    protected $description = "@process.sendform.description";
 
     public function getMessage() {
         $name = $this->getFormName();
-        return "プレイヤーに".$name."という名前のフォームを送信する";
+        return Language::get("process.sendform.detail", [$name]);
     }
 
     public function getFormName() {
@@ -32,7 +33,7 @@ class SendForm extends Process {
         $name = $this->getFormName();
         $manager = ifPlugin::getInstance()->getFormIFManager();
         if (!$manager->isAdded($name)) {
-            $player->sendMessage("§c[".$this->getName()."] その名前のフォームは存在しません");
+            $player->sendMessage(Language::get("process.sendform.notfound", [$this->getName()]));
             return;
         }
         $form = $manager->getIF($name)["form"];
@@ -49,7 +50,7 @@ class SendForm extends Process {
         $formName = $session->getData("form_name");
         $manager = ifPlugin::getInstance()->getFormIFManager();
         if (!$manager->isAdded($formName)) {
-            $player->sendMessage("§c[".$this->getName()."] その名前のフォームは存在しません");
+            $player->sendMessage(Language::get("process.sendform.notfound", [$this->getName()]));
             return;
         }
         $datas = $manager->getIF($formName);
@@ -76,9 +77,9 @@ class SendForm extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput("\n§7<name>§f フォームの名前", "例) aieuo", $default),
-                Elements::getToggle("削除する"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(Language::get("process.sendform.form.name"), Language::get("input.example", ["aieuo"]), $default),
+                Elements::getToggle(Language::get("form.delete")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);

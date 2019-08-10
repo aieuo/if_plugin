@@ -16,7 +16,7 @@ class FormIFForm {
         $data = [
             "type" => "form",
             "title" => Language::get("form.formif.action.title"),
-            "content" => Language::get("form.listform.content"),
+            "content" => Language::get("form.selectButton"),
             "buttons" => [
                 Elements::getButton(Language::get("form.action.add")),
                 Elements::getButton(Language::get("form.action.edit")),
@@ -257,12 +257,12 @@ class FormIFForm {
                         $data["content"][] = Elements::getInput(Language::get("form.formif.selectparts.parts.text"), "", $form["content"]);
                         break;
                     case 2:
-                        $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button1"));
+                        $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button1")."\n".Language::get("form.formif.recive", ["{form_data} <- true"]));
                         $data["content"][] = Elements::getInput(Language::get("form.formif.selectparts.parts.text"), "", $form["button1"]);
                         $data["content"][] = Elements::getToggle(Language::get("form.formif.selectparts.parts.editif"));
                         break;
                     case 3:
-                        $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button2"));
+                        $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button2")."\n".Language::get("form.formif.recive", ["{form_data} <- false"]));
                         $data["content"][] = Elements::getInput(Language::get("form.formif.selectparts.parts.text"), "", $form["button2"]);
                         $data["content"][] = Elements::getToggle(Language::get("form.formif.selectparts.parts.editif"));
                         break;
@@ -286,7 +286,7 @@ class FormIFForm {
                     $data["content"][] = Elements::getToggle(Language::get("form.formif.selectparts.parts.editif"));
                     break;
                 }
-                $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button"));
+                $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button")."\n".Language::get("form.formif.recive", ["{form_data} <- $place"]));
                 $data["content"][] = Elements::getInput(Language::get("form.formif.selectparts.parts.text"), "", $form["buttons"][$place]["text"]);
                 $data["content"][] = Elements::getToggle(Language::get("form.formif.selectparts.parts.editif"));
                 break;
@@ -303,7 +303,7 @@ class FormIFForm {
                     break;
                 }
                 $parts = $form["content"][$place];
-                $data["content"] = array_merge($data["content"], $this->getCustomFormParts($parts["type"], $parts));
+                $data["content"] = array_merge($data["content"], $this->getCustomFormParts($parts["type"], $parts, $place));
                 break;
         }
         $json = Form::encodeJson($data);
@@ -463,42 +463,47 @@ class FormIFForm {
         Form::sendForm($player, $this->getEditIFformForm($form, Language::get("form.changed")), $this, "onEditIFformForm");
     }
 
-    public function getCustomFormParts($name = "", $default = null) {
+    public function getCustomFormParts($name = "", $default = null, $place = null) {
         $parts = [
             "label" => [
-                Elements::getLabel("label (文字を表示する)"),
-                Elements::getInput("テキスト", "", !isset($default["text"]) ? "" : $default["text"]),
+                Elements::getLabel(Language::get("form.formif.custom.label")
+                    .($place === null ? "" : "\n".Language::get("form.formif.recive", ["{form_data}[$place] <-\"\""]))),
+                Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
             ],
             "input" => [
-                Elements::getLabel("input (文字を入力する)"),
-                Elements::getInput("テキスト", "", !isset($default["text"]) ? "" : $default["text"]),
-                Elements::getInput("プレースホルダー (何も入力されていないときに表示される薄い文字)", "", !isset($default["placeholder"]) ? "" : $default["placeholder"]),
-                Elements::getInput("デフォルト (最初から入力されている文字)", "", !isset($default["default"]) ? "" : $default["default"]),
+                Elements::getLabel(Language::get("form.formif.custom.input")
+                    .($place === null ? "" : "\n".Language::get("form.formif.recive.input", [$place]))),
+                Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
+                Elements::getInput(Language::get("form.formif.custom.input.placeholder"), "", $default["placeholder"] ?? ""),
+                Elements::getInput(Language::get("form.formif.custom.input.default"), "", $default["default"] ?? ""),
             ],
             "toggle" => [
-                Elements::getLabel("toggle (トグルボタン)"),
-                Elements::getInput("テキスト", "", !isset($default["text"]) ? "" : $default["text"]),
-                Elements::getToggle("初期値", !isset($default["default"]) ? false : $default["default"]),
+                Elements::getLabel(Language::get("form.formif.custom.toggle")
+                    .($place === null ? "" : "\n".Language::get("form.formif.recive", ["{form_data}[$place] <- (true | false)"]))),
+                Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
+                Elements::getToggle(Language::get("form.formif.custom.toggle.default"), $default["default"] ?? false),
             ],
             "slider" => [
-                Elements::getLabel("slider (スライダー)"),
-                Elements::getInput("テキスト", "", !isset($default["text"]) ? "" : $default["text"]),
-                Elements::getInput("最小値", "", !isset($default["min"]) ? "" : $default["min"]),
-                Elements::getInput("最大値", "", !isset($default["max"]) ? "" : $default["max"]),
-                Elements::getInput("初期値", "", !isset($default["default"]) ? "" : $default["default"]),
-                Elements::getInput("目盛り", "", !isset($default["step"]) ? "" : $default["step"]),
+                Elements::getLabel(Language::get("form.formif.custom.slider")
+                    .($place === null ? "" : "\n".Language::get("form.formif.recive.slider", [$place]))),
+                Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
+                Elements::getInput(Language::get("form.formif.custom.slider.min"), "", $default["min"] ?? ""),
+                Elements::getInput(Language::get("form.formif.custom.slider.max"), "", $default["max"] ?? ""),
+                Elements::getInput(Language::get("form.formif.custom.slider.default"), "", $default["default"] ?? ""),
+                Elements::getInput(Language::get("form.formif.custom.slider.step"), "", $default["step"] ?? ""),
             ],
             "dropdown" => [
-                Elements::getLabel("dropdown (ドロップダウン)"),
-                Elements::getInput("テキスト", "", !isset($default["text"]) ? "" : $default["text"]),
+                Elements::getLabel(Language::get("form.formif.custom.dropdown")
+                    .($place === null ? "" : "\n".Language::get("form.formif.recive.dropdown", [$place]))),
+                Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
             ],
         ];
         if (isset($default["options"])) {
             foreach ($default["options"] as $i => $option) {
-                $parts["dropdown"][] = Elements::getInput("選択肢{$i} (空白にすると削除します)", "", $option);
+                $parts["dropdown"][] = Elements::getInput(Language::get("form.formif.custom.dropdown.option", [$i]), "", $option);
             }
         }
-        $parts["dropdown"][] = Elements::getInput("--------------------\n選択肢追加 (,で区切って複数入力できます)");
+        $parts["dropdown"][] = Elements::getInput(Language::get("form.formif.custom.dropdowm.addOption"));
         if (empty($name)) return $parts;
         return $parts[$name];
     }
