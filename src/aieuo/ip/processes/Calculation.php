@@ -164,7 +164,7 @@ class Calculation extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.calculation.form.value1"), Language::get("form.example", ["100"]), $value0),
+                Elements::getInput(Language::get("process.calculation.form.value1"), Language::get("input.example", ["100"]), $value0),
                 Elements::getDropdown(Language::get("process.calculation.form.operator"), [
                     Language::get("process.calculation.form.operator.add"),
                     Language::get("process.calculation.form.operator.sub"),
@@ -172,8 +172,8 @@ class Calculation extends Process {
                     Language::get("process.calculation.form.operator.div"),
                     Language::get("process.calculation.form.operator.mod"),
                 ], $operator),
-                Elements::getInput(Language::get("process.calculation.form.value2"), Language::get("form.example", ["50"]), $value1),
-                Elements::getInput(Language::get("process.calculation.form.result"), Language::get("form.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.calculation.form.value2"), Language::get("input.example", ["50"]), $value1),
+                Elements::getInput(Language::get("process.calculation.form.result"), Language::get("input.example", ["aieuo"]), $name),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

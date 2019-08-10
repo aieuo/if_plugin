@@ -70,9 +70,9 @@ class AddEffect extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.addeffect.form.id"), Language::get("form.example", ["1"]), $id),
-                Elements::getInput(Language::get("process.addeffect.form.power"), Language::get("form.example", ["5"]), $power),
-                Elements::getInput(Language::get("process.addeffect.form.time"), Language::get("form.example", ["5"]), $time),
+                Elements::getInput(Language::get("process.addeffect.form.id"), Language::get("input.example", ["1"]), $id),
+                Elements::getInput(Language::get("process.addeffect.form.power"), Language::get("input.example", ["5"]), $power),
+                Elements::getInput(Language::get("process.addeffect.form.time"), Language::get("input.example", ["5"]), $time),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

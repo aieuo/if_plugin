@@ -73,10 +73,10 @@ class SetItem extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.item.form.id"), Language::get("form.example", ["1:0"]), $id),
-                Elements::getInput(Language::get("process.item.form.count"), Language::get("form.example", ["5"]), $count),
-                Elements::getInput(Language::get("process.item.form.name"), Language::get("form.example", ["aieuo"]), $name),
-                Elements::getInput(Language::get("process.setitem.form.index"), Language::get("form.example", ["0"]), $index),
+                Elements::getInput(Language::get("process.item.form.id"), Language::get("input.example", ["1:0"]), $id),
+                Elements::getInput(Language::get("process.item.form.count"), Language::get("input.example", ["5"]), $count),
+                Elements::getInput(Language::get("process.item.form.name"), Language::get("input.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.setitem.form.index"), Language::get("input.example", ["0"]), $index),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

@@ -24,7 +24,7 @@ class TypeCommand extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.command.form.command"), Language::get("form.example", ["help"]), $default),
+                Elements::getInput(Language::get("process.command.form.command"), Language::get("input.example", ["help"]), $default),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

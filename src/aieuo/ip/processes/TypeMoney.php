@@ -30,7 +30,7 @@ class TypeMoney extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)."\n"),
-                Elements::getInput(Language::get("process.money.form.amount"), Language::get("form.example", ["1000"]), $money),
+                Elements::getInput(Language::get("process.money.form.amount"), Language::get("input.example", ["1000"]), $money),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

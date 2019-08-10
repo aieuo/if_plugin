@@ -43,7 +43,7 @@ class TypePosition extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.position.form.position"), Language::get("form.example", ["1,15,30,world"]), $position),
+                Elements::getInput(Language::get("process.position.form.position"), Language::get("input.example", ["1,15,30,world"]), $position),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

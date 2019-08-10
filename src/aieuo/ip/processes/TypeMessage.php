@@ -24,7 +24,7 @@ class TypeMessage extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.message.form.message"), Language::get("form.example", ["aieuo"]), $default),
+                Elements::getInput(Language::get("process.message.form.message"), Language::get("input.example", ["aieuo"]), $default),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]

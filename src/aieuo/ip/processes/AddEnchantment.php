@@ -71,8 +71,8 @@ class AddEnchantment extends Process {
             "title" => $this->getName(),
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
-                Elements::getInput(Language::get("process.addenchant.form.id"), Language::get("form.example", ["1"]), $id),
-                Elements::getInput(Language::get("process.addenchant.form.power"), Language::get("form.example", ["5"]), $power),
+                Elements::getInput(Language::get("process.addenchant.form.id"), Language::get("input.example", ["1"]), $id),
+                Elements::getInput(Language::get("process.addenchant.form.power"), Language::get("input.example", ["5"]), $power),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
