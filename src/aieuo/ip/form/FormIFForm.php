@@ -293,6 +293,7 @@ class FormIFForm {
                 $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.parts.button")."\n".Language::get("form.formif.recive", ["{form_data} <- $place"]));
                 $data["content"][] = Elements::getInput(Language::get("form.formif.selectparts.parts.text"), "", $form["buttons"][$place]["text"]);
                 $data["content"][] = Elements::getToggle(Language::get("form.formif.selectparts.parts.editif"));
+                $data["content"][] = Elements::getToggle(Language::get("form.action.delete"));
                 break;
             case "custom_form":
                 if ($place == 0) {
@@ -390,6 +391,11 @@ class FormIFForm {
                     default:
                         $place -= 2;
                         $form["buttons"][$place] = ["text" => $data[2]];
+                        if (isset($data[4]) and $data[4]) {
+                            unset($form["buttons"][$place]);
+                            $form["buttons"] = array_merge($form["buttons"]);
+                            break;
+                        }
                         if ($data[3]) {
                             $session->setData("form", $form);
                             $datas["form"] = Form::encodeJson($form);
@@ -433,19 +439,24 @@ class FormIFForm {
                             $form["content"][] = Elements::{"get".$partsname}($partsname);
                             break;
                         }
+                        if ($data[1]) {
+                            unset($form["content"][$place]);
+                            $form["content"] = array_merge($form["content"]);
+                            break;
+                        }
                         $parts = $form["content"][$place];
                         switch ($parts["type"]) {
                             case 'label':
-                                $form["content"][$place] = Elements::getLabel($data[2]);
+                                $form["content"][$place] = Elements::getLabel($data[3]);
                                 break;
                             case "input":
-                                $form["content"][$place] = Elements::getInput($data[2], $data[3], $data[4]);
+                                $form["content"][$place] = Elements::getInput($data[3], $data[4], $data[5]);
                                 break;
                             case "toggle":
-                                $form["content"][$place] = Elements::getToggle($data[2], $data[3]);
+                                $form["content"][$place] = Elements::getToggle($data[3], $data[4]);
                                 break;
                             case "slider":
-                                $form["content"][$place] = Elements::getSlider($data[2], (int)$data[3], (int)$data[4], (int)$data[5], (int)$data[6]);
+                                $form["content"][$place] = Elements::getSlider($data[3], (int)$data[4], (int)$data[5], (int)$data[6], (int)$data[7]);
                                 break;
                             case "dropdown":
                                 $options = $form["content"][$place]["options"];
@@ -475,11 +486,13 @@ class FormIFForm {
     public function getCustomFormParts($name = "", $default = null, $place = null) {
         $parts = [
             "label" => [
+                Elements::getToggle(Language::get("form.action.delete")),
                 Elements::getLabel(Language::get("form.formif.custom.label")
                     .($place === null ? "" : "\n".Language::get("form.formif.recive", ["{form_data}[$place] <-\"\""]))),
                 Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
             ],
             "input" => [
+                Elements::getToggle(Language::get("form.action.delete")),
                 Elements::getLabel(Language::get("form.formif.custom.input")
                     .($place === null ? "" : "\n".Language::get("form.formif.recive.input", [$place]))),
                 Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
@@ -487,12 +500,14 @@ class FormIFForm {
                 Elements::getInput(Language::get("form.formif.custom.input.default"), "", $default["default"] ?? ""),
             ],
             "toggle" => [
+                Elements::getToggle(Language::get("form.action.delete")),
                 Elements::getLabel(Language::get("form.formif.custom.toggle")
                     .($place === null ? "" : "\n".Language::get("form.formif.recive", ["{form_data}[$place] <- (true | false)"]))),
                 Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
                 Elements::getToggle(Language::get("form.formif.custom.toggle.default"), $default["default"] ?? false),
             ],
             "slider" => [
+                Elements::getToggle(Language::get("form.action.delete")),
                 Elements::getLabel(Language::get("form.formif.custom.slider")
                     .($place === null ? "" : "\n".Language::get("form.formif.recive.slider", [$place]))),
                 Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
@@ -502,6 +517,7 @@ class FormIFForm {
                 Elements::getInput(Language::get("form.formif.custom.slider.step"), "", $default["step"] ?? ""),
             ],
             "dropdown" => [
+                Elements::getToggle(Language::get("form.action.delete")),
                 Elements::getLabel(Language::get("form.formif.custom.dropdown")
                     .($place === null ? "" : "\n".Language::get("form.formif.recive.dropdown", [$place]))),
                 Elements::getInput(Language::get("form.formif.custom.text"), "", $default["text"] ?? ""),
