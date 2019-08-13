@@ -21,6 +21,7 @@ class FormIFForm {
                 Elements::getButton(Language::get("form.action.add")),
                 Elements::getButton(Language::get("form.action.edit")),
                 Elements::getButton(Language::get("form.action.delete")),
+                Elements::getButton(Language::get("form.formif.action.formList")),
                 Elements::getButton(Language::get("form.cancel")),
                 Elements::getButton(Language::get("form.back"))
             ]
@@ -45,10 +46,13 @@ class FormIFForm {
                 $session->setData("action", "del");
                 break;
             case 3:
+                Form::sendForm($player, $this->getFormIFListForm(), $this, "onFormIFList");
+                return;
+            case 4:
                 $session->setValid(false);
                 $player->sendMessage(Language::get("form.cancelled"));
                 return;
-            case 4:
+            case 5:
                 $session->setValid(false);
                 $form = (new Form())->getSelectIfTypeForm();
                 Form::sendForm($player, $form, new Form(), "onSelectIfType");
@@ -568,5 +572,54 @@ class FormIFForm {
             $player->sendMessage(Language::get("form.cancelled"));
         }
         $session->setValid(false);
+    }
+
+    public function getFormIFListForm() {
+        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $forms = $manager->getAll();
+        $buttons = [Elements::getButton(Language::get("form.back"))];
+        foreach ($forms as $formName => $value) {
+            switch (json_decode($value["form"], true)["type"]) {
+                case "form":
+                    $formType = Language::get("form.formif.list");
+                    break;
+                case "modal":
+                    $formType = Language::get("form.formif.modal");
+                    break;
+                case "custom_form":
+                    $formType = Language::get("form.formif.custom");
+                    break;
+                default:
+                    $formType = "";
+            }
+            $buttons[] = Elements::getButton(Language::get("form.formif.formList.button", [$formName, $formType]));
+        }
+        $data = [
+            "type" => "form",
+            "title" => Language::get("form.formif.formList.title"),
+            "content" => Language::get("form.formif.formList.title"),
+            "buttons" => $buttons
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
+    }
+
+    public function onFormIFList($player, $data) {
+        $session = Session::get($player);
+        if ($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        if ($data === 0) {
+            $form = $this->getSelectActionForm();
+            Form::sendForm($player, $form, $this, "onSelectAction");
+            return;
+        }
+        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $formName = key(array_slice($manager->getAll(), $data - 1, 1, true));
+        $form = $manager->getIF($formName)["form"];
+        $session->setData("if_key", $formName);
+        $session->setData("form", json_decode($form, true));
+        Form::sendForm($player, $this->getEditIFformForm(json_decode($form, true)), $this, "onEditIFformForm");
     }
 }
