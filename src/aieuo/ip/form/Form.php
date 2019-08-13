@@ -83,7 +83,7 @@ class Form {
                 Elements::getButton(Language::get("form.event")),
                 Elements::getButton(Language::get("form.formif")),
                 Elements::getButton(Language::get("form.chain")),
-                Elements::getButton(Language::get("form.impoer")),
+                Elements::getButton(Language::get("form.import")),
                 Elements::getButton(Language::get("form.exit"))
             ]
         ];
