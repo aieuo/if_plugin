@@ -190,7 +190,7 @@ class Form {
     public function getEditContentsForm($datas, $mes = "", $type = "") {
         $data = [
             "type" => "form",
-            "title" => Language::get("form.form.editContents.title", [Language::get("form.form.editIF".$type)]),
+            "title" => Language::get("form.form.editContents.title", [Language::get("form.form.editIF.".$type)]),
             "content" => ($mes === "" ? "" : $mes."\n").Language::get("form.selectButton"),
             "buttons" => []
         ];
