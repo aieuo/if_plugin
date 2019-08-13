@@ -99,14 +99,18 @@ class FormIFManager extends IFManager {
                 break;
             case "custom_form":
                 $add = [];
+                $dropdowns = [];
                 foreach ($datas["form_data"] as $key => $value) {
                     $content = $form["content"][$key];
                     switch ($content["type"]) {
                         case 'label':
                         case 'input':
                         case "slider":
+                            $add[] = $value;
+                            break;
                         case "dropdown":
                             $add[] = $value;
+                            $dropdowns[] = $content["options"][$value];
                             break;
                         case "toggle":
                             $add[] = $value ? "true" : "false";
@@ -114,6 +118,7 @@ class FormIFManager extends IFManager {
                     }
                 }
                 $variables["form_data"] = new ListVariable("form_data", $add);
+                $variables["form_dropdown"] = new ListVariable("form_dropdown", $dropdowns);
                 break;
         }
         return $variables;
