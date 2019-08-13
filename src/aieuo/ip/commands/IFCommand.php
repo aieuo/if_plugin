@@ -199,6 +199,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
 				return true;
             case "form":
+                $session->setValid(true)->setIfType(Session::FORM);
                 if (!isset($args[1])) {
                     $form = $this->form->getFormIFForm()->getSelectActionForm();
                     Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onSelectAction");
@@ -217,7 +218,8 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                         Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onSelectIFformForm");
                         break;
                     default:
-                        $sender->sendMessage(Language::get("command.block.usage"));
+                        $sender->sendMessage(Language::get("command.form.usage"));
+                        $session->setValid(false);
                         break;
                 }
                 break;

@@ -462,14 +462,14 @@ class FormIFForm {
                                 $options = $form["content"][$place]["options"];
                                 $count = count($options);
                                 for ($i=0; $i<$count; $i++) {
-                                    $options[$i] = $data[$i+3];
+                                    $options[$i] = $data[$i+4];
                                 }
-                                $options = array_merge($options, explode(",", $data[$count+3]));
+                                $options = array_merge($options, explode(",", $data[$count+4]));
                                 $options = array_filter($options, function ($option) {
                                     return(trim(rtrim($option)) !== "");
                                 });
                                 $options = array_values($options);
-                                $form["content"][$place] = Elements::getDropdown($data[2], $options);
+                                $form["content"][$place] = Elements::getDropdown($data[3], $options);
                                 break;
                         }
                         break;

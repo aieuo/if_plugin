@@ -155,7 +155,6 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
         $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
