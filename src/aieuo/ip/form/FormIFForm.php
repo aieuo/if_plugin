@@ -371,8 +371,8 @@ class FormIFForm {
                         $manager->add($session->getData("if_key"), "if", Condition::COMPARISON, "{form_data}[ope:0]".($partsname === "button1" ? "true" : "false"), $options);
                         $ifdata = $manager->get($session->getData("if_key"), $options);
                     } else {
-                        $session->setData("form_place", $place);
                         $ifdata = array_shift($responses);
+                        $session->setData("form_place", array_keys($datas["ifs"], $ifdata)[0]);
                     }
                     $mes = Messages::createMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
                     $form = (new Form)->getEditIfForm($mes);
@@ -416,8 +416,8 @@ class FormIFForm {
                                 $manager->add($session->getData("if_key"), "if", Condition::COMPARISON, "{form_data}[ope:0]$place", $options);
                                 $ifdata = $manager->get($session->getData("if_key"), $options);
                             } else {
-                                $session->setData("form_place", $place);
                                 $ifdata = array_shift($responses);
+                                $session->setData("form_place", array_keys($datas["ifs"], $ifdata)[0]);
                             }
                             $mes = Messages::createMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
                             $form = (new Form)->getEditIfForm($mes);
