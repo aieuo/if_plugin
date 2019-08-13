@@ -202,7 +202,7 @@ class FormIFForm {
                 break;
             case "custom_form":
                 foreach ($form["content"] as $content) {
-                    $buttons[] = ["text" => Language::get("form.formif.editformif.custom.content", [$content["type"], $content["text"]])];
+                    $buttons[] = ["text" => Language::get("form.formif.editformif.custom.content", [Language::get("form.formif.custom.".$content["type"].".index"), $content["text"]])];
                 }
                 $buttons[] = ["text" => Language::get("form.formif.editformif.custom.addparts")];
                 break;
@@ -303,7 +303,12 @@ class FormIFForm {
                 $place -= 1;
                 if (!isset($form["content"][$place])) {
                     $data["content"][] = Elements::getLabel(Language::get("form.formif.selectparts.addparts"));
-                    $data["content"][] = Elements::getDropdown(Language::get("form.formif.selectparts.select_custom_parts"), array_keys($this->getCustomFormParts()));
+                    $data["content"][] = Elements::getDropdown(
+                        Language::get("form.formif.selectparts.select_custom_parts"),
+                        array_map(function ($partsname) {
+                            return Language::get("form.formif.custom.".$partsname);
+                        }, array_keys($this->getCustomFormParts()))
+                    );
                     break;
                 }
                 $parts = $form["content"][$place];
@@ -522,7 +527,7 @@ class FormIFForm {
         $data = [
             "type" => "form",
             "title" => Language::get("form.formif.iflist.title"),
-            "content" => Language::get("form.formif.iflist.content"),
+            "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
         $json = Form::encodeJson($data);
