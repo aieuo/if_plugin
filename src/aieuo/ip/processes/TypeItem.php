@@ -21,7 +21,7 @@ class TypeItem extends Process {
     }
 
     public function parse(string $id) {
-        if (!preg_match("/\s*([0-9]+)\s*:?\s*([0-9]*)\s*:?\s*([0-9]*)\s*:?\s*(\.*)\s*/", $id, $ids)) return false;
+        if (!preg_match("/\s*([0-9]+)\s*:?\s*([0-9]*)\s*:?\s*([0-9]*)\s*:?\s*(.*)\s*/", $id, $ids)) return false;
         $item = Item::get((int)$ids[1], empty($ids[2]) ? 0 : (int)$ids[2], empty($ids[3]) ? 0 : (int)$ids[3]);
         if (!empty($ids[4])) $item->setCustomName($ids[4]);
         return $item;
