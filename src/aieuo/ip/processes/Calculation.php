@@ -37,7 +37,7 @@ class Calculation extends Process {
             } elseif (${"variable".$i} instanceof NumberVariable and !is_numeric(${"value".$i})) {
                 ${"value".$i} = "(num)".${"value".$i};
             } elseif (${"variable".$i} instanceof ListVariable) {
-                ${"value".$i} = "(list)".${"variable".$i}->toStringVariable()->getValue();
+                ${"value".$i} = ${"variable".$i}->toStringVariable()->getValue();
             }
         }
         $operator = $this->getOperator();
@@ -151,7 +151,7 @@ class Calculation extends Process {
                 } elseif ($values[$i] instanceof NumberVariable and !is_numeric(${"value".$i})) {
                     ${"value".$i} = "(num)".${"value".$i};
                 } elseif ($values[$i] instanceof ListVariable) {
-                    ${"value".$i} = "(list)".$values[$i]->toStringVariable()->getValue();
+                    ${"value".$i} = $values[$i]->toStringVariable()->getValue();
                 }
             }
             $operator = $values[2];

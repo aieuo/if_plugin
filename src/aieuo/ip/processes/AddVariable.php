@@ -18,7 +18,7 @@ class AddVariable extends Process {
     public function getMessage() {
         $variable = $this->getVariable();
         if ($variable === false) return false;
-        return Language::get("process.addvariable.detail", [$variable->getName(), $variable->getValue()]);
+        return Language::get("process.addvariable.detail", [$variable->getName(), $variable->getString()]);
     }
 
     public function getVariable() {
@@ -54,7 +54,7 @@ class AddVariable extends Process {
         $value = "";
         if ($var instanceof Variable) {
             $name = $var->getName();
-            $value = $var->getValue();
+            $value = $var->getString();
             if (is_numeric($value) and $var->getType() === Variable::STRING) {
                 $value = "(str)".$value;
             } elseif (!is_numeric($value) and $var->getType() === Variable::NUMBER) {
