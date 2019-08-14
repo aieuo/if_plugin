@@ -542,7 +542,7 @@ class FormIFForm {
         }
         $data = [
             "type" => "form",
-            "title" => Language::get("form.formif.iflist.title"),
+            "title" => Language::get("form.formif.iflist.title", [$name]),
             "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
@@ -566,15 +566,15 @@ class FormIFForm {
         if ($data === 1) {
             $session->setData("form_place", count($datas["ifs"]));
             $mes = Messages::createMessage([], [], []);
-            $form = (new Form)->getEditIfForm($mes);
-            Form::sendForm($player, $form, new Form(), "onEditIf");
+            $form = $this->getEditIfForm($mes);
+            Form::sendForm($player, $form, $this, "onEditIf");
             return;
         }
         $session->setData("form_place", $data - 2);
         $datas = $datas["ifs"][$data-2];
         $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
-        $form = (new Form)->getEditIfForm($mes);
-        Form::sendForm($player, $form, new Form(), "onEditIf");
+        $form = $this->getEditIfForm($mes);
+        Form::sendForm($player, $form, $this, "onEditIf");
     }
 
     public function onDeleteIf($player, $data) {
@@ -643,4 +643,66 @@ class FormIFForm {
         $session->setData("form", json_decode($form, true));
         Form::sendForm($player, $this->getEditIFformForm(json_decode($form, true)), $this, "onEditIFformForm");
     }
+
+    public function getEditIfForm($mes, $name = null) {
+        $data = [
+            "type" => "form",
+            "title" => empty($name) ? Language::get("form.form.editIF.title") : $name,
+            "content" => $mes,
+            "buttons" => [
+                Elements::getButton(Language::get("form.form.editIF.if")),
+                Elements::getButton(Language::get("form.form.editIF.match")),
+                Elements::getButton(Language::get("form.form.editIF.else")),
+                Elements::getButton(Language::get("form.action.delete")),
+                Elements::getButton(Language::get("form.form.editIF.changeName")),
+                Elements::getButton(Language::get("form.form.editIF.export")),
+                Elements::getButton(Language::get("form.back")),
+                Elements::getButton(Language::get("form.exit")),
+            ]
+        ];
+        $data = Form::encodeJson($data);
+        return $data;
+    }
+
+    public function onEditIf($player, $data) {
+        $session = Session::get($player);
+        if ($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        $key = $session->getData("if_key");
+        $datas = $manager->get($key, $options);
+        if ($data == 0) {
+            $form = (new Form)->getEditContentsForm($datas["if"], "", "if");
+            $session->setData("type", "if");
+        } elseif ($data == 1) {
+            $form = (new Form)->getEditContentsForm($datas["match"], "", "match");
+            $session->setData("type", "match");
+        } elseif ($data == 2) {
+            $form = (new Form)->getEditContentsForm($datas["else"], "", "else");
+            $session->setData("type", "else");
+        } elseif ($data == 3) {
+            $form = (new Form)->getConfirmDeleteForm();
+            Form::sendForm($player, $form, (new Form), "onDeleteIf");
+            return;
+        } elseif ($data == 4) {
+            $form = (new Form)->getChangeNameForm(isset($datas["name"]) ? $datas["name"] : "");
+            Form::sendForm($player, $form, (new Form), "onChangeName");
+            return;
+        } elseif ($data == 5) {
+            $form = (new Form)->getExportForm()->getExportForm();
+            Form::sendForm($player, $form, (new Form)->getExportForm(), "onExport");
+            return;
+        } elseif ($data == 6) {
+            Form::sendForm($player, $this->getIfListForm($session->getData("if_key")), $this, "onSelectIf");
+            return;
+        } else {
+            $session->setValid(false);
+            return;
+        }
+        Form::sendForm($player, $form, (new Form), "onEditIfContents");
+    }
+
 }

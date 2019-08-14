@@ -96,7 +96,6 @@ class ExecuteOtherPlayer extends Process {
 
     public function parseFormData(array $datas) {
         $status = true;
-        $status = true;
         if ($datas[1] === "" or $datas[2] === "") {
             $status = null;
         } else {
