@@ -29,6 +29,8 @@ class Process implements ProcessIds {
     /** @var string */
     protected $detail;
 
+    public $replaceDatas = [];
+
     public function __construct($player = null) {
         $this->player = $player;
     }
