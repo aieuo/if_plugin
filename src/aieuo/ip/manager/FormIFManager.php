@@ -5,6 +5,8 @@ namespace aieuo\ip\manager;
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
+use aieuo\ip\ifPlugin;
+use aieuo\ip\form\Elements;
 
 class FormIFManager extends IFManager {
 
@@ -93,6 +95,7 @@ class FormIFManager extends IFManager {
         switch ($form["type"]) {
             case 'form':
                 $variables["form_data"] = new NumberVariable("form_data", $datas["form_data"]);
+                $variables["form_button"] = new StringVariable("form_button", $form["buttons"][$datas["form_data"]]["text"]);
                 break;
             case "modal":
                 $variables["form_data"] = new StringVariable("form_data", $datas["form_data"]?"true":"false");
@@ -122,5 +125,71 @@ class FormIFManager extends IFManager {
                 break;
         }
         return $variables;
+    }
+
+    public function getForm($name, $replaces) {
+        $form = json_decode($this->getIF($name)["form"], true);
+        $variableHelper = ifPlugin::getInstance()->getVariableHelper();
+        $form["title"] = $variableHelper->replaceVariables($form["title"], $replaces);
+        switch ($form["type"]) {
+            case "modal":
+                $form["content"] = $variableHelper->replaceVariables($form["content"], $replaces);
+                $form["button1"] = $variableHelper->replaceVariables($form["button1"], $replaces);
+                $form["button2"] = $variableHelper->replaceVariables($form["button2"], $replaces);
+                break;
+            case "form":
+                $form["content"] = $variableHelper->replaceVariables($form["content"], $replaces);
+                $buttons = [];
+                foreach ($form["buttons"] as $button) {
+                    $variables = $variableHelper->findVariables($button["text"], $replaces);
+                    foreach ($variables as $variableName => $variable) {
+                        if ($variable instanceof ListVariable) {
+                            $add = array_map(function ($value) use ($button, $variableName, $variableHelper, $replaces) {
+                                $text = str_replace("{".$variableName."}", $value, $button["text"]);
+                                $text = $variableHelper->replaceVariables($text, $replaces);
+                                return Elements::getButton($text);
+                            }, $variable->getValue());
+                            $buttons = array_merge($buttons, $add);
+                            continue 2;
+                        }
+                    }
+                    $buttons[] = Elements::getButton($variableHelper->replaceVariables($button["text"], $replaces));
+                }
+                $form["buttons"] = $buttons;
+                break;
+            case "custom_form":
+                $contents = [];
+                foreach ($form["content"] as $content) {
+                    $content["text"] = $variableHelper->replaceVariables($content["text"], $replaces);
+                    switch ($content["type"]) {
+                        case "input":
+                            $content["default"] = $variableHelper->replaceVariables($content["default"], $replaces);
+                            $content["placeholder"] = $variableHelper->replaceVariables($content["placeholder"], $replaces);
+                            break;
+                        case "dropdown":
+                            $options = [];
+                            foreach ($content["options"] as $option) {
+                                $variables = $variableHelper->findVariables($option, $replaces);
+                                foreach ($variables as $variableName => $variable) {
+                                    if ($variable instanceof ListVariable) {
+                                        $add = array_map(function ($value) use ($option, $variableName, $variableHelper, $replaces) {
+                                            $text = str_replace("{".$variableName."}", $value, $option);
+                                            return $variableHelper->replaceVariables($text, $replaces);
+                                        }, $variable->getValue());
+                                        $options = array_merge($options, $add);
+                                        continue 2;
+                                    }
+                                }
+                                $options[] = $variableHelper->replaceVariables($option, $replaces);
+                            }
+                            $content["options"] = $options;
+                            break;
+                    }
+                    $contents[] = $content;
+                }
+                $form["content"] = $contents;
+                break;
+        }
+        return $form;
     }
 }

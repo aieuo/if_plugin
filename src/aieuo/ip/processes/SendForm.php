@@ -36,7 +36,7 @@ class SendForm extends Process {
             $player->sendMessage(Language::get("process.sendform.notfound", [$this->getName()]));
             return;
         }
-        $form = $manager->getIF($name)["form"];
+        $form = json_encode($manager->getForm($name, $this->replaceDatas));
         Session::get($player)->setData("form_name", $name);
         Form::sendForm($player, $form, $this, "onRecive");
     }
@@ -54,7 +54,7 @@ class SendForm extends Process {
             return;
         }
         $datas = $manager->getIF($formName);
-        $form = json_decode($datas["form"], true);
+        $form = $manager->getForm($formName, $this->replaceDatas);
         foreach ($datas["ifs"] as $ifdata) {
             $manager->executeIfMatchCondition(
                 $player,
