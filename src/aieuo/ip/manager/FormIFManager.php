@@ -28,7 +28,9 @@ class FormIFManager extends IFManager {
     }
 
     public function getIF($key) {
-        return parent::get($key);
+        $datas = parent::get($key);
+        $datas["form"] = str_replace("\\\\n", "\\n", $datas["form"]);
+        return $datas;
     }
 
     public function add($key, $type, $id, $content, $options = []) {
