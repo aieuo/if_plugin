@@ -27,6 +27,7 @@ use aieuo\ip\form\Form;
 use aieuo\ip\utils\Messages;
 use aieuo\ip\Session;
 use aieuo\ip\processes\SetSitting;
+use pocketmine\event\player\PlayerDropItemEvent;
 
 class EventListener implements Listener {
     public function __construct($owner) {
@@ -98,9 +99,15 @@ class EventListener implements Listener {
     public function entityDamage(EntityDamageEvent $event){
         $this->onEvent($event, "EntityDamageEvent");
     }
+
     public function entityDamageByEntity(EntityDamageByEntityEvent $event){
         $this->onEvent($event, "EntityAttackEvent");
     }
+
+    public function playerDropItemEvent(PlayerDropItemEvent $event) {
+        $this->onEvent($event, "PlayerDropItemEvent");
+    }
+
     public function entityDeath(EntityDeathEvent $event){
         $this->onEvent($event, "EntityDeathEvent");
 
@@ -124,6 +131,7 @@ class EventListener implements Listener {
             case 'PlayerJoinEvent':
             case 'PlayerQuitEvent':
             case 'PlayerToggleFlightEvent':
+            case 'PlayerDropItemEvent':
             case 'BlockBreakEvent':
             case 'BlockPlaceEvent':
                 $player = $event->getPlayer();

@@ -23,6 +23,7 @@ class EventForm {
         "PlayerDeathEvent" => "プレイヤーが死亡したとき",
         "EntityLevelChangeEvent" => "プレイヤーがワールドを移動したとき",
         "CraftItemEvent" => "プレイヤーがクラフトしたとき",
+        "PlayerDropItemEvent" => "プレイヤーがアイテムを捨てたとき",
     ];
 
     public function getEvents() {
