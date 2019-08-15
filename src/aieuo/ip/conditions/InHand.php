@@ -15,7 +15,7 @@ class InHand extends TypeItem {
     public function getMessage() {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
-        return Language::get("condition.isop.detail", [$item->getId(), $item->getDamage(), $item->getCount()]);
+        return Language::get("condition.inhand.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);
     }
 
     public function check() {
@@ -29,6 +29,7 @@ class InHand extends TypeItem {
         if ($hand->getId() == $item->getId()
             and $hand->getDamage() == $item->getDamage()
             and $hand->getCount() >= $item->getCount()
+            and $hand->getName() == $item->getName()
         ) {
             return self::MATCHED;
         }
