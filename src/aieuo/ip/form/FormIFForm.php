@@ -224,9 +224,8 @@ class FormIFForm {
             return;
         }
         $form = $session->getData("form");
-        $manager = ifPlugin::getInstance()->getFormIFManager();
         if ($data === 0) {
-            Form::sendForm($player, Form::encodeJson($form), $this, "onPreviewIFform");
+            Form::sendForm($player, str_replace("\\\\n", "\\n", Form::encodeJson($form)), $this, "onPreviewIFform");
             return;
         }
         if ($data === 1) {
@@ -704,5 +703,4 @@ class FormIFForm {
         }
         Form::sendForm($player, $form, (new Form), "onEditIfContents");
     }
-
 }

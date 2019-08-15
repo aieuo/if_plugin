@@ -15,19 +15,19 @@ class IFAPI {
 
     public function checkCondition($player, $datas, $options = []) {
         $matched = true;
-        foreach($datas as $data){
+        foreach ($datas as $data) {
             $result = ($co = Condition::get($data["id"]))
                         ->setPlayer($player)
                         ->setValues(
                             $co->parse(
-                                ifPlugin::getInstance()
+                                str_replace("\\n", "\n", ifPlugin::getInstance()
                                   ->getVariableHelper()
-                                  ->replaceVariables($data["content"], $this->getReplaceDatas($options))
+                                  ->replaceVariables($data["content"], $this->getReplaceDatas($options)))
                             )
                         )->check();
-            if($result === Condition::ERROR or $result === Condition::NOT_FOUND) {
+            if ($result === Condition::ERROR or $result === Condition::NOT_FOUND) {
                 return $result;
-            } elseif($result === Condition::NOT_MATCHED) {
+            } elseif ($result === Condition::NOT_MATCHED) {
                 $matched = false;
             }
         }
@@ -39,19 +39,19 @@ class IFAPI {
         foreach ($datas as $data) {
             $process = Process::get($data["id"]);
             $process->replaceDatas = $replaceDatas;
-            if(isset($options["event"]) and $options["event"] instanceof Event) $process->setEvent($options["event"]);
-            if($data["id"] === Process::EVENT_CANCEL) {
+            if (isset($options["event"]) and $options["event"] instanceof Event) $process->setEvent($options["event"]);
+            if ($data["id"] === Process::EVENT_CANCEL) {
                 $process->setValues($options["event"])->execute();
                 continue;
             }
             $process->setPlayer($player)
-              ->setValues(
-                $process->parse(
-                    ifPlugin::getInstance()
-                      ->getVariableHelper()
-                        ->replaceVariables($data["content"], $replaceDatas)
-                )
-              )->execute();
+                ->setValues(
+                    $process->parse(
+                        str_replace("\\n", "\n", ifPlugin::getInstance()
+                        ->getVariableHelper()
+                        ->replaceVariables($data["content"], $replaceDatas))
+                    )
+                )->execute();
         }
     }
 
@@ -77,7 +77,6 @@ class IFAPI {
     public function getReplaceDatas($datas) {
         $player = $datas["player"];
         $server = Server::getInstance();
-        $variableHelper = ifPlugin::getInstance()->getVariableHelper();
         $onlines = [];
         foreach ($server->getOnlinePlayers() as $p) {
             $onlines[] = $p->getName();
