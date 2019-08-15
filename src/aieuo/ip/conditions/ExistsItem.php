@@ -15,7 +15,7 @@ class ExistsItem extends TypeItem {
     public function getMessage() {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
-        return Language::get("condition.existsitem.detail", [$item->getId(), $item->getDamage(), $item->getCount()]);
+        return Language::get("condition.existsitem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);
     }
 
     public function check() {
