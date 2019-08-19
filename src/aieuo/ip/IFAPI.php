@@ -104,7 +104,8 @@ class IFAPI {
             "hand_count" => new NumberVariable("hand_count", $player->getInventory()->getItemInHand()->getCount()),
             "server_name" => new StringVariable("server_name", $server->getName()),
             "microtime" => new NumberVariable("microtime", microtime(true)),
-            "date" => new StringVariable("date", date("m/d h:i:s")),
+            "time" => new StringVariable("time", date("h:i:s")),
+            "date" => new StringVariable("date", date("m/d")),
             "default_level" => new StringVariable("default_level", $server->getDefaultLevel()->getFolderName()),
             "onlines" => new ListVariable("onlines", $onlines),
             "ops" => new ListVariable("ops", $ops)
