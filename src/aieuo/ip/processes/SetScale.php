@@ -37,7 +37,7 @@ class SetScale extends Process {
     public function execute() {
         $player = $this->getPlayer();
         $scale = $this->getScale();
-        if ($scale === false) {
+        if ($scale === null) {
             $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
             return;
         }
