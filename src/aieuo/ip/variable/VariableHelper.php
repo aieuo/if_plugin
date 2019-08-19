@@ -61,7 +61,7 @@ class VariableHelper {
         if (!($val instanceof StringVariable)) $val = $val->toStringVariable();
         $value = $val->getValue();
         if ($this->exists($name, true)) {
-            $stmt = $this->db->prepare("UPDATE variables set value=:value type=:type WHERE name=:name");
+            $stmt = $this->db->prepare("UPDATE variables set value=:value, type=:type WHERE name=:name");
         } else {
             $stmt = $this->db->prepare("INSERT OR REPLACE INTO variables VALUES(:name,:value,:type)");
         }
