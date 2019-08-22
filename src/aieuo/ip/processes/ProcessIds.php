@@ -46,4 +46,5 @@ interface ProcessIds {
     const DELAYED_COMMAND_CONSOLE = 140;
     const SEND_FORM = 141;
     const SETMONEY = 142;
+    const CLEAR_INVENTORY = 143;
 }

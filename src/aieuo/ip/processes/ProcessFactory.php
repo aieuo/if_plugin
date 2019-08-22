@@ -30,6 +30,7 @@ class ProcessFactory {
         self::register(new AddItem());
         self::register(new RemoveItem());
         self::register(new SetItem());
+        self::register(new ClearInventory());
         self::register(new SetImmobile());
         self::register(new UnSetImmobile());
         self::register(new AddEnchantment());
