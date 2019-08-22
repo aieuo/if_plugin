@@ -43,8 +43,8 @@ class CooperationRepeat extends Process {
 
     public function execute() {
         $player = $this->getPlayer();
-        $manager = ifPlugin::getInstance()->getChainManager();
-        if (!$manager->isAdded($this->getCooperationName())) {
+        $manager = IFPlugin::getInstance()->getChainManager();
+        if (!$manager->exists($this->getCooperationName())) {
             $player->sendMessage(Language::get("process.cooperation.notfound"));
             return;
         }
@@ -77,7 +77,7 @@ class CooperationRepeat extends Process {
             $name = $names[0];
             $count = $names[1];
         }
-        if ($default !== "" and !$manager->isAdded($name)) $mes .= Language::get("process.cooperation.notfound");
+        if ($default !== "" and !$manager->exists($name)) $mes .= Language::get("process.cooperation.notfound");
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

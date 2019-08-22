@@ -44,29 +44,29 @@ class IFManager extends IFAPI {
      * @param  array  $options
      * @return array|null
      */
-    public function getConfig() {
-        return $this->config;
+    public function get(string $key, array $options = []): ?array {
+        if (!$this->exists($key)) return null;
+        $datas = $this->config->get($key);
+        $datas = $this->repairIF($datas);
+        return $datas;
     }
 
     /**
-     * @param  string  $key
-     * @param  array   $options
+     * @param string $key
+     * @param array  $options
      * @return boolean
      */
-    public function isAdded($key, $options = []) {
+    public function exists(string $key, array $options = []): bool {
         return $this->config->exists($key);
     }
 
     /**
-     * @param  strign $key
-     * @param  bool $options
-     * @return bool | array
+     * @param string $key
+     * @param array  $datas
+     * @param array  $options
      */
-    public function get($key, $options = []) {
-        if (!$this->isAdded($key)) return false;
-        $datas = $this->config->get($key);
-        $datas = $this->repairIF($datas);
-        return $datas;
+    public function set(string $key, array $datas = [], array $options = []) {
+        $this->config->set($key, $datas);
     }
 
     /**
@@ -85,21 +85,12 @@ class IFManager extends IFAPI {
      */
     public function add($key, $type, $id, $content, $options = []) {
         $datas = [];
-        if ($this->isAdded($key))$datas = $this->get($key);
+        if ($this->exists($key))$datas = $this->get($key);
         $datas = $this->repairIF($datas);
         $datas[$type][] = [
             "id" => $id,
             "content" => $content
         ];
-        $this->config->set($key, $datas);
-    }
-
-    /**
-     * @param string $key
-     * @param array  $datas
-     * @param array  $options
-     */
-    public function set($key, $datas = [], $options = []) {
         $this->config->set($key, $datas);
     }
 
@@ -110,7 +101,7 @@ class IFManager extends IFAPI {
      * @return bool
      */
     public function del($key, $type, $num, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->get($key);
         unset($datas[$type][$num]);
         $datas[$type] = array_merge($datas[$type]);
@@ -125,7 +116,7 @@ class IFManager extends IFAPI {
      * @return bool
      */
     public function updateContent($key, $type, $num, $new, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->get($key);
         $datas[$type][$num]["content"] = $new;
         $this->config->set($key, $datas);
@@ -138,7 +129,7 @@ class IFManager extends IFAPI {
      * @param array $options
      */
     public function setName($key, $name, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->get($key);
         $datas["name"] = $name;
         $this->config->set($key, $datas);

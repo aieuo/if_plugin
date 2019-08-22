@@ -87,7 +87,7 @@ class ImportForm {
             if ($datas["type"] === Session::BLOCK) {
                 $manager = IFPlugin::getInstance()->getBlockManager();
 
-				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])) {
+                if ($manager->exists($key) and !isset($session->get("overwrite")[$key])) {
                     $session->set("file", $file);
                     $session->set("if_key", $key);
                     $session->set("count", $count);
@@ -108,15 +108,15 @@ class ImportForm {
             } elseif ($datas["type"] === Session::COMMAND) {
                 $manager = IFPlugin::getInstance()->getCommandManager();
 
-				if(!$manager->isAdded($key) and $manager->exists($key)) continue;
-				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])){
-					$session->setData("file", $file);
-					$session->setData("if_key", $key);
-					$session->setData("count", $count);
-					$form = $this->getConfirmOverwriteForm($key);
-					Form::sendForm($player, $form, $this, "onConfirmOverwrite");
-					return;
-				} elseif($manager->isAdded($key) and !$session->getData("overwrite")[$key]) {
+                if (!$manager->exists($key) and $manager->isRegisterd($key)) continue;
+                if ($manager->exists($key) and !isset($session->get("overwrite")[$key])) {
+                    $session->set("file", $file);
+                    $session->set("if_key", $key);
+                    $session->set("count", $count);
+                    $form = $this->getConfirmOverwriteForm($key);
+                    Form::sendForm($player, $form, $this, "onConfirmOverwrite");
+                    return;
+                } elseif ($manager->exists($key) and !$session->get("overwrite")[$key]) {
                     continue;
                 }
 
@@ -138,14 +138,14 @@ class ImportForm {
             } elseif ($datas["type"] === Session::CHAIN) {
                 $manager = IFPlugin::getInstance()->getChainManager();
 
-				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])) {
-					$session->setData("file", $file);
-					$session->setData("if_key", $key);
-					$session->setData("count", $count);
-					$form = $this->getConfirmOverwriteForm($key);
-					Form::sendForm($player, $form, $this, "onConfirmOverwrite");
-					return;
-				} elseif($manager->isAdded($key) and !$session->getData("overwrite")[$key]) {
+                if ($manager->exists($key) and !isset($session->get("overwrite")[$key])) {
+                    $session->set("file", $file);
+                    $session->set("if_key", $key);
+                    $session->set("count", $count);
+                    $form = $this->getConfirmOverwriteForm($key);
+                    Form::sendForm($player, $form, $this, "onConfirmOverwrite");
+                    return;
+                } elseif ($manager->exists($key) and !$session->get("overwrite")[$key]) {
                     continue;
                 }
 
