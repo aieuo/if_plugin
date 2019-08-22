@@ -19,7 +19,7 @@ class CommandManager extends IFManager {
 
     public function set($key, $datas = [], $options = []) {
         $datas = $this->repairIF($datas);
-        if ($options["desc"] === "") $options["desc"] = "ifPluginで追加したコマンドです";
+        if ($options["desc"] === "") $options["desc"] = Language::get("form.command.description.default");
         if ($options["perm"] === "") $options["perm"] = "ifplugin.customcommand.op";
         $datas["description"] = $options["desc"];
         $datas["permission"] = $options["perm"];
@@ -67,7 +67,7 @@ class CommandManager extends IFManager {
 
     public function register($command, $permission = null, $description = null) {
         $permission = $permission ?? "ifplugin.customcommand.op";
-        $description = $description ?? "ifPluginで追加したコマンドです";
+        $description = $description ?? Language::get("form.command.description.default");
         if ($this->isSubcommand($command)) $command = $this->getOriginCommand($command);
         if (!$this->isRegisterd($command)) {
             $newCommand = new PluginCommand($command, $this->getOwner());

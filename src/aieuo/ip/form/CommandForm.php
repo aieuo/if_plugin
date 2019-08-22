@@ -102,28 +102,28 @@ class CommandForm {
             return;
         }
         if ($data[0] === "") {
-            $form = $this->getAddCommandForm("§c必要事項を入力してください§f");
+            $form = $this->getAddCommandForm(Language::get("form.insufficient"));
             Form::sendForm($player, $form, $this, "onAddCommand");
-            $player->sendMessage("必要事項を入力してください");
+            $player->sendMessage(Language::get("form.insufficient"));
             return;
         }
         if ($manager->isRegisterd($data[0])) {
             $form = $this->getAddCommandForm(Language::get("form.command.alreadyInUse"));
             Form::sendForm($player, $form, $this, "onAddCommand");
-            $player->sendMessage("§cそのコマンドは既に使用されています");
+            $player->sendMessage(Language::get("form.command.alreadyInUse"));
             return;
         }
-        if ($manager->isAdded($data[0])) {
-            $form = $this->getAddCommandForm("§eそのコマンドは既に追加しています§f");
+        if ($manager->exists($data[0])) {
+            $form = $this->getAddCommandForm(Language::get("form.command.alreadyExists"));
             Form::sendForm($player, $form, $this, "onAddCommand");
-            $player->sendMessage("§eそのコマンドは既に追加しています");
+            $player->sendMessage(Language::get("form.command.alreadyExists"));
             return;
         }
-        if ($data[1] === "") $data[1] = "ifPluginで追加したコマンドです";
+        if ($data[1] === "") $data[1] = Language::get("form.command.description.default");
         $manager->set($data[0], [], ["perm" => $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true", "desc" => $data[1], ]);
         $manager->register($data[0], $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true", $data[1]);
-        if ($session->getData("action") == "add_empty") {
-            $player->sendMessage("追加しました");
+        if ($session->get("action") == "add_empty") {
+            $player->sendMessage(Language::get("form.command.added"));
             $session->setValid(false);
             return;
         }
@@ -140,10 +140,10 @@ class CommandForm {
     public function getSelectCommandForm($mes = "") {
         $data = [
             "type" => "custom_form",
-            "title" => "command > コマンド選択",
+            "title" => Language::get("form.command.selectCommand.title"),
             "content" => [
-                Elements::getInput(($mes !== "" ? $mes."\n" : "")."コマンドの名前", "最初の/を外して"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(($mes !== "" ? $mes."\n" : "").Language::get("form.command.selectCommand.name"), Language::get("form.command.selectCommand.name.placeholder")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
@@ -162,16 +162,16 @@ class CommandForm {
             return;
         }
         if ($data[0] === "") {
-            $form = $this->getSelectCommandForm("§c必要事項を入力してください§f");
+            $form = $this->getSelectCommandForm(Language::get("form.insufficient"));
             Form::sendForm($player, $form, $this, "onSelectCommand");
-            $player->sendMessage("必要事項を入力してください");
+            $player->sendMessage(Language::get("form.insufficient"));
             return;
         }
-        $manager = ifPlugin::getInstance()->getCommandManager();
-        if (!$manager->isAdded($data[0])) {
-            $form = $this->getSelectCommandForm("§cそのコマンドはまだ追加されていません§f");
+        $manager = IFPlugin::getInstance()->getCommandManager();
+        if (!$manager->exists($data[0])) {
+            $form = $this->getSelectCommandForm(Language::get("form.command.notExists"));
             Form::sendForm($player, $form, $this, "onSelectCommand");
-            $player->sendMessage("そのコマンドはまだ追加されていません");
+            $player->sendMessage(Language::get("form.command.notExists"));
             return;
         }
 
@@ -191,13 +191,13 @@ class CommandForm {
     public function getCommandListForm() {
         $manager = IFPlugin::getInstance()->getCommandManager();
         $commands = $manager->getAll();
-        $buttons = [Elements::getButton("<1つ前のページに戻る>")];
+        $buttons = [Elements::getButton(Language::get("form.back"))];
         foreach ($commands as $command => $value) {
             $buttons[] = Elements::getButton($command);
         }
         $data = [
             "type" => "form",
-            "title" => "command > 操作選択",
+            "title" => Language::get("form.command.list.title"),
             "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
