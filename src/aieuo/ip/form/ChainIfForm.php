@@ -103,7 +103,7 @@ class ChainIfForm {
         $session->setData("if_key", $data[0]);
         $datas = $manager->repairIF([]);
         $manager->set($data[0], $datas);
-        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
@@ -190,7 +190,7 @@ class ChainIfForm {
         $key = key($ifs);
         $datas = current($ifs);
         $session->setData("if_key", $key);
-        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
