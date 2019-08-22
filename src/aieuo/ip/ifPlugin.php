@@ -148,21 +148,6 @@ class IFPlugin extends PluginBase implements Listener {
         }
     }
 
-    public function getManagerBySession($session) {
-        $type = $session->getIfType();
-        if($type === Session::BLOCK) {
-            $manager = $this->getBlockManager();
-        }elseif($type === Session::COMMAND) {
-            $manager = $this->getCommandManager();
-        }elseif($type === Session::EVENT) {
-            $manager = $this->getEventManager();
-        }elseif($type === Session::CHAIN) {
-            $manager = $this->getChainManager();
-        } elseif ($type === Session::FORM) {
-            $manager = $this->getFormIFManager();
-        }
-        return $manager;
-    }
     public function getOptionsBySession(Session $session) {
         $type = $session->get("if_type");
         if ($type === Session::BLOCK) {
