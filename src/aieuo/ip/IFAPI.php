@@ -2,14 +2,15 @@
 
 namespace aieuo\ip;
 
-use pocketmine\Server;
 use pocketmine\event\Event;
+use pocketmine\Server;
 
-use aieuo\ip\conditions\Condition;
-use aieuo\ip\processes\Process;
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
+use aieuo\ip\utils\Language;
+use aieuo\ip\processes\Process;
+use aieuo\ip\conditions\Condition;
 
 class IFAPI {
 
@@ -20,7 +21,7 @@ class IFAPI {
                         ->setPlayer($player)
                         ->setValues(
                             $co->parse(
-                                str_replace("\\n", "\n", ifPlugin::getInstance()
+                                str_replace("\\n", "\n", IFPlugin::getInstance()
                                   ->getVariableHelper()
                                   ->replaceVariables($data["content"], $this->getReplaceDatas($options)))
                             )
@@ -47,7 +48,7 @@ class IFAPI {
             $process->setPlayer($player)
                 ->setValues(
                     $process->parse(
-                        str_replace("\\n", "\n", ifPlugin::getInstance()
+                        str_replace("\\n", "\n", IFPlugin::getInstance()
                         ->getVariableHelper()
                         ->replaceVariables($data["content"], $replaceDatas))
                     )

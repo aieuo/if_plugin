@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use pocketmine\command\ConsoleCommandSender;
 use aieuo\ip\task\DelayedCommandTask;
 use aieuo\ip\utils\Language;
@@ -28,6 +28,6 @@ class DelayedCommandConsole extends DelayedCommand {
         }
         $time = $this->getTime();
         $command = $this->getCommand();
-        ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask(new ConsoleCommandSender(), $command), $time*20);
+        IFPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask(new ConsoleCommandSender(), $command), $time*20);
     }
 }

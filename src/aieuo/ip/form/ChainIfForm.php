@@ -2,14 +2,14 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifPlugin;
-
-use aieuo\ip\Session;
 use aieuo\ip\form\Form;
-use aieuo\ip\utils\Messages;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
+// FIXME 編集するとき存在してるものも存在しないと出る
 class ChainIfForm {
-    public function getSelectActionForm(){
+    public function getSelectActionForm() {
         $data = [
             "type" => "form",
             "title" => "chain > 操作選択",

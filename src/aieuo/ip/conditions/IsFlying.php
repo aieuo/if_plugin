@@ -9,8 +9,8 @@ class IsFlying extends Condition {
     protected $description = "@condition.isflying.description";
     protected $detail = "@condition.isflying.detali";
 
-	public function check() {
-		$player = $this->getPlayer();
-		return $player->isFlying() ? self::MATCHED : self::NOT_MATCHED;
-	}
+    public function check() {
+        $player = $this->getPlayer();
+        return $player->isFlying() ? self::MATCHED : self::NOT_MATCHED;
+    }
 }

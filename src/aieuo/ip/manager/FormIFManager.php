@@ -5,7 +5,7 @@ namespace aieuo\ip\manager;
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\form\Elements;
 
 class FormIFManager extends IFManager {
@@ -131,7 +131,7 @@ class FormIFManager extends IFManager {
 
     public function getForm($name, $replaces) {
         $form = json_decode($this->getIF($name)["form"], true);
-        $variableHelper = ifPlugin::getInstance()->getVariableHelper();
+        $variableHelper = IFPlugin::getInstance()->getVariableHelper();
         $form["title"] = $variableHelper->replaceVariables($form["title"], $replaces);
         switch ($form["type"]) {
             case "modal":

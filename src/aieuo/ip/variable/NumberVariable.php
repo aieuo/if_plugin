@@ -6,11 +6,11 @@ class NumberVariable extends Variable {
 
     public $type = Variable::NUMBER;
 
-    public function getString() {
+    public function getString(): string {
         return (string)$this->getValue();
     }
 
-    public function addition(Variable $var, string $resultname = "result") {
+    public function addition(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
             return new StringVariable("ERROR", "数字に文字列を足すことはできません");
         }
@@ -18,7 +18,7 @@ class NumberVariable extends Variable {
         return new NumberVariable($resultname, $result);
     }
 
-    public function subtraction(Variable $var, string $resultname = "result") {
+    public function subtraction(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
             return new StringVariable("ERROR", "数字から文字列を引くことはできません");
         }
@@ -26,7 +26,7 @@ class NumberVariable extends Variable {
         return new NumberVariable($resultname, $result);
     }
 
-    public function multiplication(Variable $var, string $resultname = "result") {
+    public function multiplication(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
             return new StringVariable("ERROR", "数字に文字列を掛けることはできません");
         }
@@ -34,7 +34,7 @@ class NumberVariable extends Variable {
         return new NumberVariable($resultname, $result);
     }
 
-    public function division(Variable $var, string $resultname = "result") {
+    public function division(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
             return new StringVariable("ERROR", "数字を文字列で割ることはできません");
         }
@@ -45,7 +45,7 @@ class NumberVariable extends Variable {
         return new NumberVariable($resultname, $result);
     }
 
-    public function modulo(Variable $var, string $resultname = "result") {
+    public function modulo(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
             return new StringVariable("ERROR", "数字を文字列で割ることはできません");
         }
@@ -56,7 +56,7 @@ class NumberVariable extends Variable {
         return new NumberVariable($resultname, $result);
     }
 
-    public function toStringVariable() {
+    public function toStringVariable(): Variable {
         $variable = new StringVariable($this->getName(), (string)$this->getValue());
         return $variable;
     }

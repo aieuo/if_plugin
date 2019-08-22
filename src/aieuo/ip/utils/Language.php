@@ -14,7 +14,7 @@ class Language {
         self::$messages = $messages;
     }
 
-    public static function get(string $key, array $replaces = []) {
+    public static function get(string $key, array $replaces = []): string {
         if(isset(self::$messages[$key])) {
             $message = self::$messages[$key];
             foreach($replaces as $cnt => $value) {

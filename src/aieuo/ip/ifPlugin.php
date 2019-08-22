@@ -1,41 +1,40 @@
 <?php
 namespace aieuo\ip;
 
+use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\utils\Config;
 
-use aieuo\ip\commands\IFCommand;
-use aieuo\ip\manager\BlockManager;
-use aieuo\ip\manager\CommandManager;
-use aieuo\ip\manager\EventManager;
-use aieuo\ip\manager\ChainIfManager;
+use aieuo\ip\variable\VariableHelper;
+use aieuo\ip\utils\Language;
+use aieuo\ip\task\SaveTask;
+use aieuo\ip\processes\ProcessFactory;
 use aieuo\ip\manager\FormIFManager;
+use aieuo\ip\manager\EventManager;
+use aieuo\ip\manager\CommandManager;
+use aieuo\ip\manager\ChainIfManager;
+use aieuo\ip\manager\BlockManager;
+use aieuo\ip\economy\PocketMoneyLoader;
+use aieuo\ip\economy\MoneySystemLoader;
 use aieuo\ip\economy\EconomyLoader;
 use aieuo\ip\economy\EconomyAPILoader;
-use aieuo\ip\economy\MoneySystemLoader;
-use aieuo\ip\economy\PocketMoneyLoader;
-use aieuo\ip\IFAPI;
-use aieuo\ip\task\SaveTask;
-use aieuo\ip\variable\VariableHelper;
 
 use aieuo\ip\conditions\ConditionFactory;
-use aieuo\ip\processes\ProcessFactory;
+use aieuo\ip\commands\IFCommand;
 
-use aieuo\ip\utils\Language;
+use aieuo\ip\Session;
+use aieuo\ip\IFAPI;
 
-class ifPlugin extends PluginBase implements Listener{
-    const VERSION = "3.3.0";
-
+class IFPlugin extends PluginBase implements Listener {
     private static $instance;
 
     private $loaded = false;
 
-    public function onEnable(){
-        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this),$this);
-        if(!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
-        if(!file_exists($this->getDataFolder()."exports")) @mkdir($this->getDataFolder()."exports", 0721, true);
-        if(!file_exists($this->getDataFolder()."imports")) @mkdir($this->getDataFolder()."imports", 0721, true);
+    public function onEnable() {
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0721, true);
+        if (!file_exists($this->getDataFolder()."exports")) @mkdir($this->getDataFolder()."exports", 0721, true);
+        if (!file_exists($this->getDataFolder()."imports")) @mkdir($this->getDataFolder()."imports", 0721, true);
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,
             "save_time" => 10*20*60,
@@ -45,14 +44,14 @@ class ifPlugin extends PluginBase implements Listener{
         $this->wait = $this->config->get("wait");
         $language = $this->config->get("language", "jpn");
         $languages = [];
-        foreach($this->getResources() as $resource) {
+        foreach ($this->getResources() as $resource) {
             $filename = $resource->getFilename();
             if (strrchr($filename, ".") == ".ini") $languages[] = basename($filename, ".ini");
             if ($filename === $language.".ini") {
                 $messages = parse_ini_file($resource->getPathname());
             }
         }
-        if(!isset($messages)) {
+        if (!isset($messages)) {
             $this->getLogger()->warning("言語ファイルの読み込みに失敗しました");
             $this->getLogger()->warning(implode(", ", $languages)." が使用できます");
             $this->getServer()->getPluginManager()->disablePlugin($this);
@@ -86,8 +85,8 @@ class ifPlugin extends PluginBase implements Listener{
         $this->loaded = true;
     }
 
-    public function onDisable(){
-        if(!$this->loaded) return;
+    public function onDisable() {
+        if (!$this->loaded) return;
         $this->command->save();
         $this->block->save();
         $this->event->save();
@@ -101,31 +100,31 @@ class ifPlugin extends PluginBase implements Listener{
         return self::$instance;
     }
 
-    public function getBlockManager() : BlockManager{
+    public function getBlockManager(): BlockManager {
         return $this->block;
     }
 
-    public function getCommandManager() : CommandManager{
+    public function getCommandManager(): CommandManager {
         return $this->command;
     }
 
-    public function getEventManager() : EventManager{
+    public function getEventManager(): EventManager {
         return $this->event;
     }
 
-    public function getChainManager() : ChainIfManager{
+    public function getChainManager(): ChainIfManager {
         return $this->chain;
     }
 
-    public function getFormIFManager() : FormIFManager{
+    public function getFormIFManager(): FormIFManager {
         return $this->formif;
     }
 
-    public function getAPI() : IFAPI{
+    public function getAPI(): IFAPI {
         return $this->api;
     }
 
-    public function getVariableHelper() : VariableHelper{
+    public function getVariableHelper(): VariableHelper {
         return $this->variables;
     }
 
@@ -133,17 +132,17 @@ class ifPlugin extends PluginBase implements Listener{
         return $this->economy;
     }
 
-    public function loadEconomySystemPlugin(){
-        if(($plugin = $this->getServer()->getPluginManager()->getPlugin("EconomyAPI")) !== null){
+    public function loadEconomySystemPlugin() {
+        if (($plugin = $this->getServer()->getPluginManager()->getPlugin("EconomyAPI")) !== null) {
             $this->economy = new EconomyAPILoader($plugin);
             $this->getLogger()->info(Language::get("economy.found", ["EconomyAPI"]));
-        }elseif(($plugin = $this->getServer()->getPluginManager()->getPlugin("MoneySystem")) !== null){
+        } elseif (($plugin = $this->getServer()->getPluginManager()->getPlugin("MoneySystem")) !== null) {
             $this->economy = new MoneySystemLoader($plugin);
             $this->getLogger()->info(Language::get("economy.found", ["MoneySystem"]));
-        }elseif(($plugin = $this->getServer()->getPluginManager()->getPlugin("PocketMoney")) !== null){
+        } elseif (($plugin = $this->getServer()->getPluginManager()->getPlugin("PocketMoney")) !== null) {
             $this->economy = new PocketMoneyLoader($plugin);
             $this->getLogger()->info(Language::get("economy.found", ["PocketMoney"]));
-        }else{
+        } else {
             $this->economy = null;
             $this->getLogger()->warning(Language::get("economy.notfound"));
         }
@@ -164,16 +163,15 @@ class ifPlugin extends PluginBase implements Listener{
         }
         return $manager;
     }
-
-    public function getOptionsBySession($session) {
-        $type = $session->getIfType();
-        if($type === Session::BLOCK) {
+    public function getOptionsBySession(Session $session) {
+        $type = $session->get("if_type");
+        if ($type === Session::BLOCK) {
             $options = [];
-        }elseif($type === Session::COMMAND) {
+        } elseif ($type === Session::COMMAND) {
             $options = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
-        }elseif($type === Session::EVENT) {
+        } elseif ($type === Session::EVENT) {
             $options = ["eventname" => $session->getData("eventname")];
-        }elseif($type === Session::CHAIN) {
+        } elseif ($type === Session::CHAIN) {
             $options = [];
         } elseif ($type === Session::FORM) {
             $options = ["place" => $session->getData("form_place")];

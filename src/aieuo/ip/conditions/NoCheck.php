@@ -9,7 +9,7 @@ class NoCheck extends Condition {
     protected $description = "@condition.nocheck.description";
     protected $detail = "@condition.nocheck.detali";
 
-	public function check() {
-		return self::MATCHED;
-	}
+    public function check() {
+        return self::MATCHED;
+    }
 }

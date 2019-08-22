@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
@@ -20,8 +20,9 @@ class SendForm extends Process {
         return Language::get("process.sendform.detail", [$name]);
     }
 
-    public function getFormName() {
-        return $this->getValues();
+    public function getFormName(): ?string {
+        $name = $this->getValues();
+        return is_string($name) ? $name : null;
     }
 
     public function setFormName(string $name) {

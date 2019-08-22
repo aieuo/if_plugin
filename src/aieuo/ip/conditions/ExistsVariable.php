@@ -2,38 +2,38 @@
 
 namespace aieuo\ip\conditions;
 
-use aieuo\ip\ifPlugin;
-
+use aieuo\ip\IFPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
 
 class ExistsVariable extends Condition {
 
-	protected $id = self::EXISTS_VARIABLE;
+    protected $id = self::EXISTS_VARIABLE;
     protected $name = "@condition.existsvariable.name";
-	protected $description = "@condition.existsvariable.description";
+    protected $description = "@condition.existsvariable.description";
 
     public function getDetail(): string {
         $name = $this->getVariableName();
         return Language::get("condition.existsvariable.detail", [$name]);
     }
 
-	public function getVariableName() {
-		return $this->getValues();
-	}
+    public function getVariableName(): ?string {
+        $name = $this->getValues();
+        return is_string($name) ? $name : null;
+    }
 
-	public function setVariableName(string $variable) {
-		$this->setValues($variable);
-	}
+    public function setVariableName(string $variable) {
+        $this->setValues($variable);
+    }
 
-	public function check() {
-		if(ifPlugin::getInstance()->getVariableHelper()->exists($this->getVariableName())) return self::MATCHED;
-		return self::NOT_MATCHED;
-	}
+    public function check() {
+        if (IFPlugin::getInstance()->getVariableHelper()->exists($this->getVariableName())) return self::MATCHED;
+        return self::NOT_MATCHED;
+    }
 
 
-	public function getEditForm(string $default = "", string $mes = "") {
+    public function getEditForm(string $default = "", string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
@@ -46,11 +46,11 @@ class ExistsVariable extends Condition {
         ];
         $json = Form::encodeJson($data);
         return $json;
-	}
+    }
 
     public function parseFormData(array $datas){
-    	$status = true;
-    	if($datas[1] === "") $status = null;
-    	return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+        $status = true;
+        if ($datas[1] === "") $status = null;
+        return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
     }
 }

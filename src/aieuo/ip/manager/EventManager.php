@@ -17,7 +17,7 @@ class EventManager extends IFManager {
         parent::__construct($owner, "events");
     }
 
-    public function get($key, $args = []) {
+    public function get(string $key, array $args = []): ?array {
         $datass = $this->getFromEvent($args["eventname"]);
         if (!isset($datass[$key]))return [];
         $datas = $datass[$key];
@@ -89,6 +89,7 @@ class EventManager extends IFManager {
         $this->set($options["eventname"], $datas);
         return true;
     }
+
     public function setName($key, $name, $options = []) {
         $datas = $this->getFromEvent($options["eventname"]);
         if (!isset($datas[$key])) return false;

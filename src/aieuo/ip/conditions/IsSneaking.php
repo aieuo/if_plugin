@@ -9,8 +9,8 @@ class IsSneaking extends Condition {
     protected $description = "@condition.issneaking.description";
     protected $detail = "@condition.issneaking.detali";
 
-	public function check() {
-		$player = $this->getPlayer();
-		return $player->isSneaking() ? self::MATCHED : self::NOT_MATCHED;
-	}
+    public function check() {
+        $player = $this->getPlayer();
+        return $player->isSneaking() ? self::MATCHED : self::NOT_MATCHED;
+    }
 }

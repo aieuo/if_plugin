@@ -2,16 +2,17 @@
 
 namespace aieuo\ip\commands;
 
-use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
-use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
+use pocketmine\command\CommandSender;
+use pocketmine\command\CommandExecutor;
+use pocketmine\command\Command;
 
-use aieuo\ip\Session;
-use aieuo\ip\form\Form;
-use aieuo\ip\utils\Messages;
 use aieuo\ip\utils\Language;
 use aieuo\ip\manager\IFManager;
+use aieuo\ip\form\Form;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class IFCommand extends PluginCommand implements CommandExecutor {
 
@@ -47,10 +48,10 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                     $filename = $resource->getFilename();
                     if (strrchr($filename, ".") == ".ini") $languages[] = basename($filename, ".ini");
                     if ($filename === $args[1].".ini") {
-		                $messages = parse_ini_file($resource->getPathname());
-		            }
-		        }
-		        if(!isset($messages)) {
+                        $messages = parse_ini_file($resource->getPathname());
+                    }
+                }
+                if (!isset($messages)) {
                     $available = implode(", ", $languages);
                     $sender->sendMessage(Language::get("command.language.notfound", [$args[1], $available]));
 		        	return true;

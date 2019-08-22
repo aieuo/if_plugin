@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\task\KickTask;
 
 use aieuo\ip\form\Form;
@@ -20,8 +20,9 @@ class Kick extends Process {
         return Language::get("process.kick.detail", [$reason]);
     }
 
-    public function getReason() {
-        return $this->getValues();
+    public function getReason(): ?string {
+        $reason = $this->getValues();
+        return is_string($reason) ? $reason : null;
     }
 
     public function setReason(string $reason) {
@@ -31,7 +32,7 @@ class Kick extends Process {
     public function execute() {
         $player = $this->getPlayer();
         $reason = $this->getReason();
-        ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new KickTask($player, $reason), 5);
+        IFPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new KickTask($player, $reason), 5);
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
