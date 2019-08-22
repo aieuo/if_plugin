@@ -2,10 +2,11 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifPlugin;
-use aieuo\ip\Session;
-use aieuo\ip\utils\Messages;
+use aieuo\ip\utils\Language;
 use aieuo\ip\form\Form;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class EventForm {
 
@@ -27,14 +28,14 @@ class EventForm {
     ];
 
     public function getEvents() {
-    	return $this->events;
+        return $this->events;
     }
 
     public function getSelectEventForm(){
     	$buttons = [Elements::getButton("1つ前のページに戻る")];
-    	foreach ($this->getEvents() as $key => $event) {
-    		$buttons[] = Elements::getButton($event);
-    	}
+        foreach ($this->getEvents() as $key => $event) {
+            $buttons[] = Elements::getButton(Language::get($event));
+        }
         $data = [
             "type" => "form",
             "title" => "event > イベント選択",
@@ -47,11 +48,11 @@ class EventForm {
 
     public function onSelectEvent($player, $data) {
         $session = Session::get($player);
-        if($data === null) {
+        if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        if($data === 0) {
+        if ($data === 0) {
             $form = (new Form())->getSelectIfTypeForm();
             Form::sendForm($player, $form, new Form(), "onSelectIfType");
             return;
@@ -65,12 +66,12 @@ class EventForm {
     }
 
     public function getIfListForm($event) {
-    	$manager = ifPlugin::getInstance()->getEventManager();
-    	$datas = $manager->getFromEvent($event);
     	$buttons = [Elements::getButton("<1つ前のページに戻る>"), Elements::getButton("<追加する>")];
-    	foreach ($datas as $n => $data) {
-    		$buttons[] = Elements::getButton(empty($data["name"]) ? $n : $data["name"]);
-    	}
+        $manager = IFPlugin::getInstance()->getEventManager();
+        $datas = $manager->getFromEvent($event);
+        foreach ($datas as $n => $data) {
+            $buttons[] = Elements::getButton(empty($data["name"]) ? $n : $data["name"]);
+        }
         $data = [
             "type" => "form",
             "title" => "event > $event > 選択",
@@ -83,28 +84,28 @@ class EventForm {
 
     public function onSelectIf($player, $data) {
         $session = Session::get($player);
-        if($data === null) {
+        if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        if($data === 0) {
-			$form = $this->getSelectEventForm();
-			Form::sendForm($player, $form, $this, "onSelectEvent");
-			return;
+        if ($data === 0) {
+            $form = $this->getSelectEventForm();
+            Form::sendForm($player, $form, $this, "onSelectEvent");
+            return;
         }
-        $manager = ifPlugin::getInstance()->getEventManager();
         $eventname = $session->getData("eventname");
-        if($data === 1) {
+        $manager = IFPlugin::getInstance()->getEventManager();
+        if ($data === 1) {
             $key = $manager->addEmpty($eventname);
         	$session->setData("if_key", $key);
-	        $datas = $manager->repairIF([]);
+            $datas = $manager->repairIF([]);
             $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
-	        Form::sendForm($player, $form, new Form(), "onEditIf");
-        	return;
+            Form::sendForm($player, $form, new Form(), "onEditIf");
+            return;
         }
         $session->setData("if_key", $data - 2);
-        $datas = $manager->get($data - 2, ["eventname" => $eventname]);
+        $datas = $manager->get(strval($data - 2), ["eventname" => $eventname]);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");

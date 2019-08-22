@@ -4,15 +4,15 @@ namespace aieuo\ip\form;
 
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 
-use aieuo\ip\ifPlugin;
-use aieuo\ip\Session;
-use aieuo\ip\utils\Messages;
-
-use aieuo\ip\conditions\Condition;
-use aieuo\ip\conditions\ConditionFactory;
-use aieuo\ip\processes\Process;
-use aieuo\ip\processes\ProcessFactory;
 use aieuo\ip\utils\Language;
+use aieuo\ip\processes\ProcessFactory;
+use aieuo\ip\processes\Process;
+use aieuo\ip\manager\IFManager;
+use aieuo\ip\conditions\ConditionFactory;
+use aieuo\ip\conditions\Condition;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class Form {
 
@@ -156,8 +156,8 @@ class Form {
             return;
         }
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $datas = $manager->get($key, $options);
         if ($data == 0) {
             $form = $this->getEditContentsForm($datas["if"], "", "if");
@@ -194,7 +194,10 @@ class Form {
             "content" => ($mes === "" ? "" : $mes."\n").Language::get("form.selectButton"),
             "buttons" => []
         ];
-        $data["buttons"] = [Elements::getButton(Language::get("form.back")), Elements::getButton(Language::get("form.form.editContents.add"))];
+        $data["buttons"] = [
+            Elements::getButton(Language::get("form.back")),
+            Elements::getButton(Language::get("form.form.editContents.add")),
+        ];
         foreach ($datas as $key => $value) {
             if ($value["id"] < 100) {
                 $content = Condition::get($value["id"]);
@@ -202,7 +205,7 @@ class Form {
                 $content = Process::get($value["id"]);
             }
             $content->setValues($content->parse($value["content"]));
-            $message = $content->getMessage();
+            $message = $content->getDetail();
             $data["buttons"][] = Elements::getButton($message === false ? $content->getDescription() : $message);
         }
         $data = self::encodeJson($data);
@@ -215,28 +218,25 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $datas = $manager->get($key, $options);
-        if ($data == 0) {
-            // ひとつ前のformに戻る
+        if ($data == 0) { // ひとつ前のformに戻る
             $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, $this, "onEditIf");
             return;
         }
-        if ($data == 1) {
-            // 新しく追加する
             $form = $this->getAddContentsForm($session->getData("type"));
+        if ($data == 1) { // 新しく追加する
             Form::sendForm($player, $form, $this, "onAddContent");
             return;
         }
 
         // 追加されているものを選択した
-        $ifData = $datas[$session->getData("type")][$data - 2];
         if ($session->getData("type") == "if") {
+        $data -= 2;
             $datas = Condition::get($ifData["id"]);
         } else {
             $datas = Process::get($ifData["id"]);
@@ -274,9 +274,8 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         if ($data == 0) {
             $key = $session->getData("if_key");
             $datas = $manager->get($key, $options);
@@ -309,8 +308,8 @@ class Form {
             return;
         }
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $content = $session->getData("contents");
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $datas = $content->parseFormData($data);
         if ($datas["cancel"]) {
             $form = $this->getAddContentsForm($session->getData("type"));
@@ -346,8 +345,8 @@ class Form {
         }
         $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $content = $session->getData("contents");
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $datas = $content->parseFormData($data);
         if ($datas["cancel"]) {
             $key = $session->getData("if_key");

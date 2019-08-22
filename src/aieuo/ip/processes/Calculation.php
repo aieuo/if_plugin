@@ -90,10 +90,10 @@ class Calculation extends Process {
         $value2 = $matches[3];
         $assign = $matches[4] === "" ? "result" : $matches[4];
         $type1 = $helper->getType($value1);
-        $value1 = $helper->changeType($value1);
+        $value1 = $helper->currentType($value1);
         $var1 = Variable::create("value1", $value1, $type1);
         $type2 = $helper->getType($value2);
-        $value2 = $helper->changeType($value2);
+        $value2 = $helper->currentType($value2);
         $var2 = Variable::create("value2", $value2, $type2);
         return [$var1, $var2, $operator, $assign];
     }

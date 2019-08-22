@@ -33,8 +33,8 @@ class AddVariable extends Process {
     public function parse(string $content) {
         $datas = explode(";", $content);
         if (!isset($datas[1]) or $datas[1] === "") return false;
-        $helper = ifPlugin::getInstance()->getVariableHelper();
-        $value = $helper->changeType($datas[1]);
+        $helper = IFPlugin::getInstance()->getVariableHelper();
+        $value = $helper->currentType($datas[1]);
         return Variable::create($datas[0], $value, $helper->getType($datas[1]));
     }
 

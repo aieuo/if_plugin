@@ -4,7 +4,7 @@ namespace aieuo\ip\processes;
 
 use pocketmine\Server;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
@@ -68,7 +68,7 @@ class ExecuteOtherPlayer extends Process {
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
-        $manager = ifPlugin::getInstance()->getChainManager();
+        $manager = IFPlugin::getInstance()->getChainManager();
         $names = $this->parse($default);
         $cname = $default;
         $pname = "";

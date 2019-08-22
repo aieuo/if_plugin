@@ -2,111 +2,111 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifPlugin;
 use aieuo\ip\Session;
-use aieuo\ip\utils\Messages;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class ImportForm {
-	public function getImportListForm($mes = "") {
-		$buttons = [Elements::getButton("<ひとつ前のページに戻る>")];
-		$files = glob(ifPlugin::getInstance()->getDataFolder()."imports/*.json");
-		foreach($files as $file){
-			if(is_dir($file)) continue;
-			$datas = json_decode(file_get_contents($file), true);
-			$buttons[] = Elements::getButton($datas["name"]." | ".$datas["author"]);
-		}
-		$data = [
-			"type" => "form",
-			"title" => "ファイル選択",
-			"content" => ($mes === "" ? "" : $mes."\n")."§7ボタンを押してください",
-			"buttons" => $buttons
-		];
-		$json = Form::encodeJson($data);
-		return $json;
-	}
+    public function getImportListForm($mes = "") {
+        $buttons = [Elements::getButton("<ひとつ前のページに戻る>")];
+        $files = glob(IFPlugin::getInstance()->getDataFolder()."imports/*.json");
+        foreach ($files as $file) {
+            if (is_dir($file)) continue;
+            $datas = json_decode(file_get_contents($file), true);
+            $buttons[] = Elements::getButton($datas["name"]." | ".$datas["author"]);
+        }
+        $data = [
+            "type" => "form",
+            "title" => "ファイル選択",
+            "content" => ($mes === "" ? "" : $mes."\n")."§7ボタンを押してください",
+            "buttons" => $buttons
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
+    }
 
 	public function onImportList($player, $data) {
         $session = Session::get($player);
-		if($data === null) {
-			$session->setValid(false, false);
-			return;
-		}
-		if($data == 0) {
-			$data = (new Form())->getSelectIfTypeForm();
-			Form::sendForm($player, $data, new Form(), "onSelectIfType");
-			return;
-		}
-		$files = glob(ifPlugin::getInstance()->getDataFolder()."imports/*.json");
-		if(!isset($files[$data - 1])) {
-			$form = $this->getImportListForm("エラーが発生しました、もう一度選択してください");
-			Form::sendForm($player, $form, $this, "onImportList");
-			return;
-		}
-		$path = $files[$data - 1];
 		$session->setData("path", $path);
-		$form = $this->getImportForm(json_decode(file_get_contents($path), true));
-		Form::sendForm($player, $form, $this, "onImport");
-	}
+        if ($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        if ($data == 0) {
+            $data = (new Form())->getSelectIfTypeForm();
+            Form::sendForm($player, $data, new Form(), "onSelectIfType");
+            return;
+        }
+        $files = glob(IFPlugin::getInstance()->getDataFolder()."imports/*.json");
+        if (!isset($files[$data - 1])) {
+            $form = $this->getImportListForm("エラーが発生しました、もう一度選択してください");
+            Form::sendForm($player, $form, $this, "onImportList");
+            return;
+        }
+        $path = $files[$data - 1];
+        $form = $this->getImportForm(json_decode(file_get_contents($path), true));
+        Form::sendForm($player, $form, $this, "onImport");
+    }
 
-	public function getImportForm($datas) {
-		$mes = $datas["name"]."\n作成者: ".$datas["author"]."\n".$datas["details"]."\n";
-		foreach ($datas["ifs"] as $key => $value) {
-			$mes .= "---------------------------\n";
-			$mes .= "§l".$key."§r§f\n".Messages::createMessage($value["if"], $value["match"], $value["else"])."\n";
-		}
-		$data = [
-			"type" => "custom_form",
-			"title" => "ファイルインポート > ".$datas["name"],
-			"content" => [
-				Elements::getLabel($mes),
-				Elements::getToggle("キャンセル")
-			]
-		];
-		$json = Form::encodeJson($data);
-		return $json;
-	}
+    public function getImportForm($datas) {
+        $mes = $datas["name"]."\n作成者: ".$datas["author"]."\n".$datas["details"]."\n";
+        foreach ($datas["ifs"] as $key => $value) {
+            $mes .= "---------------------------\n";
+            $mes .= "§l".$key."§r§f\n".IFAPI::createIFMessage($value["if"], $value["match"], $value["else"])."\n";
+        }
+        $data = [
+            "type" => "custom_form",
+            "title" => "ファイルインポート > ".$datas["name"],
+            "content" => [
+                Elements::getLabel($mes),
+                Elements::getToggle("キャンセル")
+            ]
+        ];
+        $json = Form::encodeJson($data);
+        return $json;
+    }
 
 	public function onImport($player, $data) {
         $session = Session::get($player);
-		if($data === null) {
-			$session->setValid(false, false);
-			return;
-		}
-		if($data[1]) {
-			$form = $this->getImportListForm("キャンセルしました");
-			Form::sendForm($player, $form, $this, "onImportList");
-			return;
-		}
-		$file = json_decode(file_get_contents($session->getData("path")), true);
-		$this->importDatas($player, $file);
-	}
+        if ($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        if ($data[1]) {
+            $form = $this->getImportListForm("キャンセルしました");
+            Form::sendForm($player, $form, $this, "onImportList");
+            return;
+        }
+        $file = json_decode(file_get_contents($session->get("path")), true);
+        $this->importDatas($player, $file);
+    }
 
 	public function importDatas($player, $file, $count = 0) {
         $session = Session::get($player);
-		foreach ($file["ifs"] as $key => $datas) {
-			if($datas["type"] === Session::BLOCK) {
-				$manager = ifPlugin::getInstance()->getBlockManager();
+        foreach ($file["ifs"] as $key => $datas) {
+            if ($datas["type"] === Session::BLOCK) {
+                $manager = IFPlugin::getInstance()->getBlockManager();
 
 				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])) {
 					$session->setData("file", $file);
 					$session->setData("if_key", $key);
 					$session->setData("count", $count);
-					$form = $this->getConfirmOverwriteForm($key);
-					Form::sendForm($player, $form, $this, "onConfirmOverwrite");
-					return;
-				} elseif($manager->isAdded($key) and !$session->getData("overwrite")[$key]) {
-					continue;
-				}
+                    $form = $this->getConfirmOverwriteForm($key);
+                    Form::sendForm($player, $form, $this, "onConfirmOverwrite");
+                    return;
+                } elseif ($manager->exists($key) and !$session->get("overwrite")[$key]) {
+                    continue;
+                }
 
-				$manager->set($key, [
-					"if" => $datas["if"],
-					"match" => $datas["match"],
-					"else" => $datas["else"],
-					"author" => $file["author"]
-				]);
-				$count ++;
-			} elseif($datas["type"] === Session::COMMAND) {
-				$manager = ifPlugin::getInstance()->getCommandManager();
+                $manager->set($key, [
+                    "if" => $datas["if"],
+                    "match" => $datas["match"],
+                    "else" => $datas["else"],
+                    "author" => $file["author"]
+                ]);
+                $count ++;
+            } elseif ($datas["type"] === Session::COMMAND) {
+                $manager = IFPlugin::getInstance()->getCommandManager();
 
 				if(!$manager->isAdded($key) and $manager->exists($key)) continue;
 				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])){
@@ -117,26 +117,26 @@ class ImportForm {
 					Form::sendForm($player, $form, $this, "onConfirmOverwrite");
 					return;
 				} elseif($manager->isAdded($key) and !$session->getData("overwrite")[$key]) {
-					continue;
-				}
+                    continue;
+                }
 
-				$manager->set($key, [
-					"if" => $datas["if"],
-					"match" => $datas["match"],
-					"else" => $datas["else"],
-					"author" => $file["author"]
-				], [
-					"desc" => $datas["description"],
-					"perm" => $datas["permission"]
-				]);
-				$manager->register($key, $datas["description"], $datas["permission"]);
-				$count ++;
-			} elseif($datas["type"] === Session::EVENT) {
-				$manager = ifPlugin::getInstance()->getEventManager();
-				$manager->addByEvent($datas["options"]["eventname"], $datas + ["author" => $file["author"]]);
-				$count ++;
-			} elseif($datas["type"] === Session::CHAIN) {
-				$manager = ifPlugin::getInstance()->getChainManager();
+                $manager->set($key, [
+                    "if" => $datas["if"],
+                    "match" => $datas["match"],
+                    "else" => $datas["else"],
+                    "author" => $file["author"]
+                ], [
+                    "desc" => $datas["description"],
+                    "perm" => $datas["permission"]
+                ]);
+                $manager->register($key, $datas["description"], $datas["permission"]);
+                $count ++;
+            } elseif ($datas["type"] === Session::EVENT) {
+                $manager = IFPlugin::getInstance()->getEventManager();
+                $manager->addByEvent($datas["options"]["eventname"], $datas + ["author" => $file["author"]]);
+                $count ++;
+            } elseif ($datas["type"] === Session::CHAIN) {
+                $manager = IFPlugin::getInstance()->getChainManager();
 
 				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])) {
 					$session->setData("file", $file);
@@ -146,34 +146,34 @@ class ImportForm {
 					Form::sendForm($player, $form, $this, "onConfirmOverwrite");
 					return;
 				} elseif($manager->isAdded($key) and !$session->getData("overwrite")[$key]) {
-					continue;
-				}
+                    continue;
+                }
 
-				$manager->set($key, [
-					"if" => $datas["if"],
-					"match" => $datas["match"],
-					"else" => $datas["else"],
-					"author" => $file["author"]
-				]);
-				$count ++;
-			}
-			unset($file["ifs"][$key]);
-		}
-		$player->sendMessage($count."個のIFを追加しました");
-		$session->setValid(false);
-	}
+                $manager->set($key, [
+                    "if" => $datas["if"],
+                    "match" => $datas["match"],
+                    "else" => $datas["else"],
+                    "author" => $file["author"]
+                ]);
+                $count ++;
+            }
+            unset($file["ifs"][$key]);
+        }
+        $player->sendMessage($count."個のIFを追加しました");
+        $session->setValid(false);
+    }
 
-	public function getConfirmOverwriteForm($name) {
-		$data = [
-			"type" => "modal",
-			"title" => "上書き",
-			"content" => $name."は既に存在します、上書きしますか?\n上書きすると以前の物は復元できません。",
-			"button1" => "はい",
-			"button2" => "いいえ"
-		];
-		$data = Form::encodeJson($data);
-		return $data;
-	}
+    public function getConfirmOverwriteForm($name) {
+        $data = [
+            "type" => "modal",
+            "title" => "上書き",
+            "content" => $name."は既に存在します、上書きしますか?\n上書きすると以前の物は復元できません。",
+            "button1" => "はい",
+            "button2" => "いいえ"
+        ];
+        $data = Form::encodeJson($data);
+        return $data;
+    }
 
 	public function onConfirmOverwrite($player, $data) {
         $session = Session::get($player);
@@ -197,6 +197,6 @@ class ImportForm {
 				$session->setData("overwrite", $overwrite);
 			}
 			$this->importDatas($player, $session->getData("file"), $session->getData("count"));
-		}
-	}
+        }
+    }
 }

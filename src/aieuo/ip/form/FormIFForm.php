@@ -2,14 +2,15 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifPlugin;
-use aieuo\ip\Session;
+use aieuo\ip\utils\Language;
+use aieuo\ip\manager\IFManager;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
-use aieuo\ip\utils\Messages;
 use aieuo\ip\conditions\Condition;
 use aieuo\ip\conditions\Comparison;
-use aieuo\ip\utils\Language;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class FormIFForm {
     public function getSelectActionForm(){
@@ -86,7 +87,7 @@ class FormIFForm {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $manager = IFPlugin::getInstance()->getFormIFManager();
         if ($data[3]) {
             $form = $this->getSelectActionForm();
             Form::sendForm($player, $form, $this, "onSelectAction");
@@ -376,9 +377,9 @@ class FormIFForm {
                     });
                     if (count($responses) === 0) {
                         $session->setData("form_place", count($datas["ifs"]));
-                        $options = ifPlugin::getInstance()->getOptionsBySession($session);
                         $manager->add($session->getData("if_key"), "if", Condition::COMPARISON, "{form_data}[ope:0]".($partsname === "button1" ? "true" : "false"), $options);
                         $ifdata = $manager->get($session->getData("if_key"), $options);
+                        $options = IFPlugin::getInstance()->getOptionsBySession($session);
                     } else {
                         $ifdata = array_shift($responses);
                         $session->setData("form_place", array_keys($datas["ifs"], $ifdata)[0]);
@@ -421,9 +422,9 @@ class FormIFForm {
                             });
                             if (count($responses) === 0) {
                                 $session->setData("form_place", count($datas["ifs"]));
-                                $options = ifPlugin::getInstance()->getOptionsBySession($session);
                                 $manager->add($session->getData("if_key"), "if", Condition::COMPARISON, "{form_data}[ope:0]$place", $options);
                                 $ifdata = $manager->get($session->getData("if_key"), $options);
+                                $options = IFPlugin::getInstance()->getOptionsBySession($session);
                             } else {
                                 $ifdata = array_shift($responses);
                                 $session->setData("form_place", array_keys($datas["ifs"], $ifdata)[0]);
@@ -554,7 +555,7 @@ class FormIFForm {
     }
 
     public function getIfListForm($name) {
-        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $manager = IFPlugin::getInstance()->getFormIFManager();
         $datas = $manager->getIF($name);
         $buttons = [Elements::getButton(Language::get("form.back")), Elements::getButton(Language::get("form.formif.iflist.add"))];
         foreach ($datas["ifs"] as $n => $data) {
@@ -581,8 +582,8 @@ class FormIFForm {
             Form::sendForm($player, $this->getEditIFformForm($form), $this, "onEditIFformForm");
             return;
         }
-        $manager = ifPlugin::getInstance()->getFormIFManager();
         $datas = $manager->getIF($session->getData("if_key"));
+        $manager = IFPlugin::getInstance()->getFormIFManager();
         if ($data === 1) {
             $session->setData("form_place", count($datas["ifs"]));
             $mes = IFAPI::createIFMessage([], [], []);
@@ -603,8 +604,7 @@ class FormIFForm {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
-        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $manager = IFPlugin::getInstance()->getFormIFManager();
 
         if ($data) {
             $manager->removeIF($session->getData("if_key"));
@@ -616,7 +616,7 @@ class FormIFForm {
     }
 
     public function getFormIFListForm() {
-        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $manager = IFPlugin::getInstance()->getFormIFManager();
         $forms = $manager->getAll();
         $buttons = [Elements::getButton(Language::get("form.back"))];
         foreach ($forms as $formName => $value) {
@@ -656,7 +656,7 @@ class FormIFForm {
             Form::sendForm($player, $form, $this, "onSelectAction");
             return;
         }
-        $manager = ifPlugin::getInstance()->getFormIFManager();
+        $manager = IFPlugin::getInstance()->getFormIFManager();
         $formName = key(array_slice($manager->getAll(), $data - 1, 1, true));
         $form = $manager->getIF($formName)["form"];
         $session->setData("if_key", $formName);
@@ -691,8 +691,8 @@ class FormIFForm {
             return;
         }
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $datas = $manager->get($key, $options);
         if ($data == 0) {
             $form = (new Form)->getEditContentsForm($datas["if"], "", "if");
