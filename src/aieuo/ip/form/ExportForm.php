@@ -24,14 +24,15 @@ class ExportForm {
     }
 
     public function onExport($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $key = $session->getData("if_key");
+        $type = $session->get("if_type");
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
+        $key = $session->get("if_key");
         $datas = $manager->get($key, $options);
         if ($data[3]) {
             $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);

@@ -30,19 +30,19 @@ class CommandForm {
 
     public function onSelectAction($player, $data) {
         if ($data === null) return;
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         switch ($data) {
             case 0:
-                $session->setData("action", "add");
+                $session->set("action", "add");
                 break;
             case 1:
-                $session->setData("action", "add_empty");
+                $session->set("action", "add_empty");
                 break;
             case 2:
-                $session->setData("action", "edit");
+                $session->set("action", "edit");
                 break;
             case 3:
-                $session->setData("action", "del");
+                $session->set("action", "del");
                 break;
             case 4:
                 $form = $this->getCommandListForm();
@@ -70,8 +70,7 @@ class CommandForm {
                 Form::sendForm($player, $form, $this, "onSelectCommand");
                 break;
         }
-        $session->setIfType(Session::COMMAND);
-        $session->setValid();
+        $session->setValid()->set("if_type", Session::COMMAND);
     }
 
 
@@ -91,12 +90,12 @@ class CommandForm {
     }
 
     public function onAddCommand($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getCommandManager();
+        $manager = IFPlugin::getInstance()->getCommandManager();
         if ($data[3]) {
             $form = $this->getSelectActionForm();
             Form::sendForm($player, $form, $this, "onSelectAction");
@@ -128,9 +127,9 @@ class CommandForm {
             $session->setValid(false);
             return;
         }
-        $session->setData("if_key", $data[0]);
-        $session->setData("description", $data[1]);
-        $session->setData("permission", $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true");
+        $session->set("if_key", $data[0]);
+        $session->set("description", $data[1]);
+        $session->set("permission", $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true");
         $datas = $manager->repairIF([]);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
@@ -152,7 +151,7 @@ class CommandForm {
     }
 
     public function onSelectCommand($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -176,8 +175,8 @@ class CommandForm {
             return;
         }
 
-        $session->setData("if_key", $data[0]);
-        $action = $session->getData("action");
+        $session->set("if_key", $data[0]);
+        $action = $session->get("action");
         if ($action == "edit") {
             $datas = $manager->get($data[0]);
             $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
@@ -190,7 +189,7 @@ class CommandForm {
     }
 
     public function getCommandListForm() {
-        $manager = ifPlugin::getInstance()->getCommandManager();
+        $manager = IFPlugin::getInstance()->getCommandManager();
         $commands = $manager->getAll();
         $buttons = [Elements::getButton("<1つ前のページに戻る>")];
         foreach ($commands as $command => $value) {
@@ -207,7 +206,7 @@ class CommandForm {
     }
 
     public function onCommandList($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -217,9 +216,9 @@ class CommandForm {
             Form::sendForm($player, $form, $this, "onSelectAction");
             return;
         }
-        $manager = ifPlugin::getInstance()->getCommandManager();
+        $manager = IFPlugin::getInstance()->getCommandManager();
         $command = key(array_slice($manager->getAll(), $data - 1, 1, true));
-        $session->setData("if_key", $command);
+        $session->set("if_key", $command);
         $datas = $manager->get($command);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);

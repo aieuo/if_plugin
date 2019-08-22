@@ -47,7 +47,7 @@ class EventForm {
     }
 
     public function onSelectEvent($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -58,11 +58,10 @@ class EventForm {
             return;
         }
         $eventname = key(array_slice($this->getEvents(), $data-1, 1, true));
-        $session->setData("eventname", $eventname);
+        $session->set("eventname", $eventname);
         $form = $this->getIfListForm($eventname);
         Form::sendForm($player, $form, $this, "onSelectIf");
-        $session->setIfType(Session::EVENT);
-        $session->setValid();
+        $session->setValid()->set("if_type", Session::EVENT);
     }
 
     public function getIfListForm($event) {
@@ -83,7 +82,7 @@ class EventForm {
     }
 
     public function onSelectIf($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -93,18 +92,18 @@ class EventForm {
             Form::sendForm($player, $form, $this, "onSelectEvent");
             return;
         }
-        $eventname = $session->getData("eventname");
         $manager = IFPlugin::getInstance()->getEventManager();
+        $eventname = $session->get("eventname");
         if ($data === 1) {
             $key = $manager->addEmpty($eventname);
-        	$session->setData("if_key", $key);
+            $session->set("if_key", $key);
             $datas = $manager->repairIF([]);
             $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
             return;
         }
-        $session->setData("if_key", $data - 2);
+        $session->set("if_key", $data - 2);
         $datas = $manager->get(strval($data - 2), ["eventname" => $eventname]);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);

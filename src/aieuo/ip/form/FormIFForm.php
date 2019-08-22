@@ -33,18 +33,18 @@ class FormIFForm {
 
     public function onSelectAction($player, $data) {
         if ($data === null) return;
-        $session = Session::get($player);
-        $session->setValid()->setIfType(Session::FORM);
+        $session = Session::getSession($player);
+        $session->setValid()->set("if_type", Session::FORM);
         switch ($data) {
             case 0:
-                $session->setData("action", "add");
+                $session->set("action", "add");
                 Form::sendForm($player, $this->getAddIFformForm(), $this, "onAddIFformForm");
                 return;
             case 1:
-                $session->setData("action", "edit");
+                $session->set("action", "edit");
                 break;
             case 2:
-                $session->setData("action", "del");
+                $session->set("action", "del");
                 break;
             case 3:
                 Form::sendForm($player, $this->getFormIFListForm(), $this, "onFormIFList");
@@ -82,7 +82,7 @@ class FormIFForm {
     }
 
     public function onAddIFformForm($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -124,7 +124,7 @@ class FormIFForm {
                 break;
         }
         $json = Form::encodeJson($form);
-        $session->setData("if_key", $data[0])->setData("form", $form);
+        $session->set("if_key", $data[0])->set("form", $form);
         $datas = $manager->repairIF([]);
         $datas["form"] = $json;
         $manager->set($data[0], $datas);
@@ -145,7 +145,7 @@ class FormIFForm {
     }
 
     public function onSelectIFformForm($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -169,11 +169,11 @@ class FormIFForm {
             return;
         }
 
-        $session->setData("if_key", $data[0]);
-        $action = $session->getData("action");
+        $session->set("if_key", $data[0]);
+        $action = $session->get("action");
         if ($action == "edit") {
             $form = $manager->getIF($data[0])["form"];
-            $session->setData("form", json_decode($form, true));
+            $session->set("form", json_decode($form, true));
             Form::sendForm($player, $this->getEditIFformForm(json_decode($form, true)), $this, "onEditIFformForm");
         } elseif ($action == "del") {
             $form = (new Form())->getConfirmDeleteForm();
@@ -219,27 +219,27 @@ class FormIFForm {
     }
 
     public function onEditIFformForm($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $form = $session->getData("form");
+        $form = $session->get("form");
         if ($data === 0) {
             Form::sendForm($player, str_replace("\\\\n", "\\n", Form::encodeJson($form)), $this, "onPreviewIFform");
             return;
         }
         if ($data === 1) {
-            Form::sendForm($player, $this->getIfListForm($session->getData("if_key")), $this, "onSelectIf");
+            Form::sendForm($player, $this->getIfListForm($session->get("if_key")), $this, "onSelectIf");
             return;
         }
-        $session->setData("form_select_place", $data-2);
+        $session->set("form_select_place", $data-2);
         Form::sendForm($player, $this->getSelectPartsForm($form, $data-2), $this, "onSelectParts");
     }
 
     public function onPreviewIFform($player, $data) {
-        $session = Session::get($player);
-        $form = $session->getData("form");
+        $session = Session::getSession($player);
+        $form = $session->get("form");
         Form::sendForm($player, $this->getEditIFformForm($form), $this, "onEditIFformForm");
     }
 

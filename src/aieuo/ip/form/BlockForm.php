@@ -27,22 +27,22 @@ class BlockForm {
 
     public function onSelectAction($player, $data) {
         if ($data === null) return;
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         switch ($data) {
             case 0:
-                $session->setData("action", "edit");
+                $session->set("action", "edit");
                 $player->sendMessage(Language::get("form.block.action.edit"));
                 break;
             case 1:
-                $session->setData("action", "check");
+                $session->set("action", "check");
                 $player->sendMessage(Language::get("form.block.action.check"));
                 break;
             case 2:
-                $session->setData("action", "del");
+                $session->set("action", "del");
                 $player->sendMessage(Language::get("form.block.action.delete"));
                 break;
             case 3:
-                $session->setData("action", "copy");
+                $session->set("action", "copy");
                 $player->sendMessage(Language::get("form.block.action.copy"));
                 break;
             case 4:
@@ -54,7 +54,6 @@ class BlockForm {
                 Form::sendForm($player, $form, new Form(), "onSelectIfType");
                 return;
         }
-        $session->setIfType(Session::BLOCK);
-        $session->setValid();
+        $session->setValid()->set("if_type", Session::BLOCK);
     }
 }

@@ -38,12 +38,12 @@ class SendForm extends Process {
             return;
         }
         $form = json_encode($manager->getForm($name, $this->replaceDatas));
-        Session::get($player)->setData("form_name", $name);
+        Session::getSession($player)->set("form_name", $name);
         Form::sendForm($player, $form, $this, "onRecive");
     }
 
     public function onRecive($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;

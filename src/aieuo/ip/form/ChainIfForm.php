@@ -28,21 +28,21 @@ class ChainIfForm {
     }
 
     public function onSelectAction($player, $data) {
-        if($data === null) return;
-        $session = Session::get($player);
+        if ($data === null) return;
+        $session = Session::getSession($player);
         switch ($data) {
             case 0:
-                $session->setData("action", "add");
+                $session->set("action", "add");
                 $form = $this->getAddChainIfForm();
                 Form::sendForm($player, $form, $this, "onAddChainIf");
                 break;
             case 1:
-                $session->setData("action", "edit");
+                $session->set("action", "edit");
                 $form = $this->getEditChainIfForm();
                 Form::sendForm($player, $form, $this, "onEditChainIf");
                 break;
             case 2:
-                $session->setData("action", "del");
+                $session->set("action", "del");
                 $form = $this->getEditChainIfForm();
                 Form::sendForm($player, $form, $this, "onEditChainIf");
                 break;
@@ -59,8 +59,7 @@ class ChainIfForm {
                 Form::sendForm($player, $form, new Form(), "onSelectIfType");
                 return;
         }
-        $session->setIfType(Session::CHAIN);
-        $session->setValid();
+        $session->setValid()->set("if_type", Session::CHAIN);
     }
 
     public function getAddChainIfForm($mes = "") {
@@ -77,17 +76,17 @@ class ChainIfForm {
     }
 
     public function onAddChainIf($player, $data) {
-        $session = Session::get($player);
-        if($data === null) {
+        $session = Session::getSession($player);
+        if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        if($data[1]) {
+        if ($data[1]) {
             $form = $this->getSelectActionForm();
             Form::sendForm($player, $form, $this, "onSelectAction");
             return;
         }
-        if($data[0] === ""){
+        if ($data[0] === "") {
             $form = $this->getAddChainIfForm("§c必要事項を入力してください§f");
             Form::sendForm($player, $form, $this, "onAddChainIf");
             $player->sendMessage("必要事項を入力してください");
@@ -100,7 +99,7 @@ class ChainIfForm {
             $player->sendMessage("その名前は既に使用されています");
             return;
         }
-        $session->setData("if_key", $data[0]);
+        $session->set("if_key", $data[0]);
         $datas = $manager->repairIF([]);
         $manager->set($data[0], $datas);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
@@ -122,17 +121,17 @@ class ChainIfForm {
     }
 
     public function onEditChainIf($player, $data) {
-        $session = Session::get($player);
-        if($data === null) {
+        $session = Session::getSession($player);
+        if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        if($data[1]) {
+        if ($data[1]) {
             $form = $this->getSelectActionForm();
             Form::sendForm($player, $form, $this, "onSelectAction");
             return;
         }
-        if($data[0] === ""){
+        if ($data[0] === "") {
             $form = $this->getAddChainIfForm("§c必要事項を入力してください§f");
             Form::sendForm($player, $form, $this, "onAddChainIf");
             $player->sendMessage("必要事項を入力してください");
@@ -145,21 +144,21 @@ class ChainIfForm {
             $player->sendMessage("その名前の物は存在しません");
             return;
         }
-        $session->setData("if_key", $data[0]);
-        $action = $session->getData("action");
-        if($action === "edit") {
+        $session->set("if_key", $data[0]);
+        $action = $session->get("action");
+        if ($action === "edit") {
             $datas = $manager->repairIF([]);
-            $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+            $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
-        } elseif($action === "del") {
+        } elseif ($action === "del") {
             $form = (new Form())->getConfirmDeleteForm();
             Form::sendForm($player, $form, new Form(), "onDeleteIf");
         }
     }
 
     public function getChainIfListForm() {
-        $datas = ifPlugin::getInstance()->getChainManager()->getAll();
+        $datas = IFPlugin::getInstance()->getChainManager()->getAll();
         $buttons = [Elements::getButton("<ひとつ前のページに戻る>")];
         foreach ($datas as $name => $data) {
             $buttons[] = Elements::getButton($name);
@@ -175,21 +174,21 @@ class ChainIfForm {
     }
 
     public function onChainIfList($player, $data) {
-        $session = Session::get($player);
-        if($data === null) {
+        $session = Session::getSession($player);
+        if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        if($data === 0) {
+        if ($data === 0) {
             $form = $this->getSelectActionForm();
             Form::sendForm($player, $form, $this, "onSelectAction");
             return;
         }
-        $manager = ifPlugin::getInstance()->getChainManager();
+        $manager = IFPlugin::getInstance()->getChainManager();
         $ifs = array_slice($manager->getAll(), $data-1, 1, true);
         $key = key($ifs);
         $datas = current($ifs);
-        $session->setData("if_key", $key);
+        $session->set("if_key", $key);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
