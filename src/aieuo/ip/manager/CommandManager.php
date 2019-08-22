@@ -59,7 +59,7 @@ class CommandManager extends IFManager {
                     break;
             }
             if ($this->isSubcommand($command)) $command = $this->getOriginCommand($command);
-            if (!$this->exists($command)) {
+            if (!$this->isRegisterd($command)) {
                 $this->register($command, $permission, $value["description"]);
             }
         }
@@ -69,7 +69,7 @@ class CommandManager extends IFManager {
         $permission = $permission ?? "ifplugin.customcommand.op";
         $description = $description ?? "ifPluginで追加したコマンドです";
         if ($this->isSubcommand($command)) $command = $this->getOriginCommand($command);
-        if (!$this->exists($command)) {
+        if (!$this->isRegisterd($command)) {
             $newCommand = new PluginCommand($command, $this->getOwner());
             $newCommand->setDescription($description);
             $newCommand->setPermission($permission);
@@ -89,7 +89,7 @@ class CommandManager extends IFManager {
         unset($this->command_list[$command]);
     }
 
-    public function exists($command) {
+    public function isRegisterd($command) {
         $exist = $this->getServer()->getPluginCommand($command);
         if ($exist === null)return false;
         return true;
