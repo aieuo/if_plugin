@@ -12,7 +12,7 @@ class SetNametag extends Process {
     protected $name = "@process.setnametag.name";
     protected $description = "@process.setnametag.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("process.setnametag.detail", [$this->getChangeName()]);
     }
 

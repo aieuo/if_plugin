@@ -12,7 +12,7 @@ class SetHealth extends Process {
     protected $name = "@process.sethealth.name";
     protected $description = "@process.sethealth.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $health = $this->getHealth();
         if ($health === false) return false;
         return Language::get("process.sethealth.detail", [$health]);

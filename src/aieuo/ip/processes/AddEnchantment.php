@@ -15,7 +15,7 @@ class AddEnchantment extends Process {
     protected $name = "@process.addenchant.name";
     protected $description = "@process.addenchant.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $enchant = $this->getEnchantment();
         if (!($enchant instanceof EnchantmentInstance)) return false;
         return Language::get("process.addenchant.detail", [$enchant->getId(), $enchant->getLevel()]);

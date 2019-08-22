@@ -3,7 +3,7 @@
 namespace aieuo\ip\processes;
 
 use aieuo\ip\utils\Language;
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 
 class SetMoney extends TypeMoney {
 
@@ -11,13 +11,13 @@ class SetMoney extends TypeMoney {
     protected $name = "@process.setmoney.name";
     protected $description = "@process.setmoney.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("process.setmoney.detail", [$this->getAmount()]);
     }
 
     public function execute() {
         $player = $this->getPlayer();
-        $economy = ifPlugin::getInstance()->getEconomy();
+        $economy = IFPlugin::getInstance()->getEconomy();
         if ($economy === null) {
             $player->sendMessage(Language::get("economy.notfound"));
             return;

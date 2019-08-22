@@ -15,7 +15,7 @@ class ExecuteOtherPlayer extends Process {
     protected $name = "@process.executeotherplayer.name";
     protected $description = "@process.executeotherplayer.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $cname = $this->getCooperationName();
         $pname = $this->getPlayerName();
         return Language::get("process.executeotherplayer.detail", [$cname, $pname]);

@@ -2,17 +2,12 @@
 
 namespace aieuo\ip\conditions;
 
-use aieuo\ip\utils\Language;
-
 class IsFlying extends Condition {
 
-	protected $id = self::IS_FLYING;
-	protected $name = "@condition.isflying.name";
-	protected $description = "@condition.isflying.description";
-
-	public function getMessage() {
-		return Language::get("condition.isflying.detail");
-	}
+    protected $id = self::IS_FLYING;
+    protected $name = "@condition.isflying.name";
+    protected $description = "@condition.isflying.description";
+    protected $detail = "@condition.isflying.detali";
 
 	public function check() {
 		$player = $this->getPlayer();

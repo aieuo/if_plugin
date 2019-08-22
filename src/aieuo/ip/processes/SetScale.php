@@ -12,7 +12,7 @@ class SetScale extends Process {
     protected $name = "@process.setscale.name";
     protected $description = "@process.setscale.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $scale = $this->getScale();
         if ($scale === false) return false;
         return Language::get("process.setscale.detail", [$this->getName()]);

@@ -8,7 +8,7 @@ use aieuo\ip\utils\Language;
 
 class TypeMessage extends Process {
 
-    public function getSendMessage(): ?string {
+    public function getMessage(): ?string {
         $message = $this->getValues();
         if (!is_string($message)) return null;
         return $message;

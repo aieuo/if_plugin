@@ -10,7 +10,7 @@ class SendMessage extends TypeMessage {
     protected $name = "@process.sendmessage.name";
     protected $description = "@process.sendmessage.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $message = $this->getSendMessage();
         return Language::get("process.sendmessage.detail", [$message]);
     }

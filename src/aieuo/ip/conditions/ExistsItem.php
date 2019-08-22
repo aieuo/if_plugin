@@ -12,7 +12,7 @@ class ExistsItem extends TypeItem {
     protected $name = "@condition.existsitem.name";
     protected $description = "@condition.existsitem.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
         return Language::get("condition.existsitem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);

@@ -14,7 +14,7 @@ class RemoveItem extends TypeItem {
     protected $name = "@condition.removeitem.name";
     protected $description = "@condition.removeitem.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
         return Language::get("condition.removeitem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);

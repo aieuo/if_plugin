@@ -37,7 +37,7 @@ class SetGamemode extends Process {
         return $gamemode;
     }
 
-    public function getMessage() {
+    public function getDetail(): string {
         $gamemode = $this->getGamemode();
         if ($gamemode === false) return false;
         return Language::get("process.gamemode.detail", [Language::get($this->gamemodes[$gamemode])]);

@@ -15,7 +15,7 @@ class Kick extends Process {
     protected $name = "@process.kick.name";
     protected $description = "@process.kick.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $reason = $this->getReason();
         return Language::get("process.kick.detail", [$reason]);
     }

@@ -12,7 +12,7 @@ class SetSleeping extends TypePosition {
     protected $name = "@process.setsleeping.name";
     protected $description = "@process.setsleeping.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $pos = $this->getPosition();
         if ($pos === false) return false;
         return Language::get("process.setsleeping.description", [$pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName()]);

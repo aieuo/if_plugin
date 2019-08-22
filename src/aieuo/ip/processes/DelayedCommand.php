@@ -15,7 +15,7 @@ class DelayedCommand extends Process {
     protected $name = "@process.delayedcommand.name";
     protected $description = "@process.delayedcommand.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         if ($this->getValues() === false) return false;
         $command = $this->getCommand();
         $time = $this->getTime();

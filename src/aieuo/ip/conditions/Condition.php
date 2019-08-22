@@ -57,8 +57,9 @@ class Condition implements ConditionIds {
 		return $this->description;
 	}
 
-    public function getDetail() {
-        if($this->detail[0] === "@") {
+    // TODO 失敗したときfalse返すかnull返すか統一する
+    public function getDetail(): string {
+        if ($this->detail[0] === "@") {
             return Language::get(substr($this->detail, 1));
         }
         return $this->detail;

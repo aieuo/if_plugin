@@ -15,7 +15,7 @@ class AddVariable extends Process {
     protected $name = "@process.addvariable.name";
     protected $description = "@process.addvariable.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $variable = $this->getVariable();
         if ($variable === false) return false;
         return Language::get("process.addvariable.detail", [$variable->getName(), $variable->getString()]);

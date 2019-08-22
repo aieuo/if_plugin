@@ -12,10 +12,10 @@ class RandomNumber extends Condition {
     protected $name = "@condition.randomnumber.name";
     protected $description = "@condition.randomnumber.description";
 
-	public function getMessage() {
-		if($this->getValues() === false) return false;
-		return Language::get("condition.randomnumber.detail", [$this->getMin(), $this->getMax(), $this->getCheck()]);
-	}
+    public function getDetail(): string {
+        if ($this->getValues() === false) return false;
+        return Language::get("condition.randomnumber.detail", [$this->getMin(), $this->getMax(), $this->getCheck()]);
+    }
 
 	public function getMin() {
 		return $this->getValues()[0];

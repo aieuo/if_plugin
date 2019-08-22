@@ -13,7 +13,7 @@ class CommandConsole extends TypeCommand {
     protected $name = "@process.commandconsole.name";
     protected $description = "@process.commandconsole.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $command = $this->getCommand();
         return Language::get("process.commandconsole.detail", [$command]);
     }

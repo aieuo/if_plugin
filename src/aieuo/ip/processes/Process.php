@@ -57,7 +57,8 @@ class Process implements ProcessIds {
         return $this->description;
     }
 
-    public function getDetail() {
+    // TODO 失敗したときfalse返すかnull返すか統一する
+    public function getDetail(): string {
         if ($this->detail[0] === "@") {
             return Language::get(substr($this->detail, 1));
         }

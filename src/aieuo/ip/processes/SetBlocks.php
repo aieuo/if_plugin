@@ -17,7 +17,7 @@ class SetBlocks extends TypePosition {
     protected $name = "@process.setblocks.name";
     protected $description = "@process.setblocks.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         if ($this->getValues() === false) return false;
         $spos = $this->getStartPosition();
         $epos = $this->getEndPosition();

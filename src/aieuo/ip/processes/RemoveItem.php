@@ -14,7 +14,7 @@ class RemoveItem extends TypeItem {
     protected $name = "@process.removeitem.name";
     protected $description = "@process.removeitem.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
         return Language::get("process.removeitem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);

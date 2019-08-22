@@ -12,7 +12,7 @@ class SendVoiceMessage extends TypeMessage {
     protected $name = "@process.sendvoicemessage.name";
     protected $description = "@process.sendvoicemessage.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $message = $this->getSendMessage();
         return Language::get("process.sendvoicemessage.detail", [$message]);
     }

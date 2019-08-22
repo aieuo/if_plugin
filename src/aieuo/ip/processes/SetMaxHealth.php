@@ -10,7 +10,7 @@ class SetMaxHealth extends SetHealth {
     protected $name = "@process.setmaxhealth.name";
     protected $description = "@process.setmaxhealth.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $health = $this->getHealth();
         if ($health === false) return false;
         return Language::get("process.setmaxhealth.detail", [$health]);

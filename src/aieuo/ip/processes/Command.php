@@ -12,7 +12,7 @@ class Command extends TypeCommand {
     protected $name = "@process.command.name";
     protected $description = "@process.command.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $command = $this->getCommand();
         return Language::get("process.command.detail", [$command]);
     }

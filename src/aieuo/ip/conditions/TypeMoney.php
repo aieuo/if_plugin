@@ -7,13 +7,10 @@ use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
 
 class TypeMoney extends Condition {
-    public function __construct($player = null, $amount = 0) {
-        parent::__construct($player);
-        $this->setValues($amount);
-    }
-
-    public function getAmount() {
-        return $this->getValues();
+    public function getAmount(): ?int {
+        $amount = $this->getValues();
+        if (!is_int($amount)) return null;
+        return (int)$amount;
     }
 
     public function setAmount(int $amount) {

@@ -13,7 +13,7 @@ class LessMoney extends TypeMoney {
     protected $name = "@condition.lessmoney.name";
     protected $description = "@condition.lessmoney.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("condition.lessmoney.detail", [$this->getAmount()]);
     }
 

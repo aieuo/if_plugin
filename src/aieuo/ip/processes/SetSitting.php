@@ -19,7 +19,7 @@ class SetSitting extends TypePosition {
 
     private static $entityIds = [];
 
-    public function getMessage() {
+    public function getDetail(): string {
         $pos = $this->getPosition();
         if ($pos === false) return false;
         return Language::get("process.setsitting.detail", [$pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName()]);

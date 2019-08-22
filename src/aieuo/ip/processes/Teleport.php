@@ -12,7 +12,7 @@ class Teleport extends TypePosition {
     protected $name = "@process.teleport.name";
     protected $description = "@process.teleport.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $pos = $this->getPosition();
         if ($pos === false) return false;
         return Language::get("process.teleport.detail", [$pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName()]);

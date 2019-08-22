@@ -14,7 +14,7 @@ class SetItem extends Process {
     protected $name = "@process.setitem.name";
     protected $description = "@process.setitem.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         if ($this->getValues()) return false;
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;

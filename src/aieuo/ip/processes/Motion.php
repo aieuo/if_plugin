@@ -14,7 +14,7 @@ class Motion extends TypePosition {
     protected $name = "@process.motion.name";
     protected $description = "@process.motion.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $pos = $this->getPosition();
         if ($pos === false) return false;
         return Language::get("process.motion.detail", [$pos->x, $pos->y, $pos->z]);
