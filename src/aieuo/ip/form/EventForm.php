@@ -10,21 +10,21 @@ use aieuo\ip\IFAPI;
 
 class EventForm {
 
-	private $events = [
-        "PlayerChatEvent" => "プレイヤーがチャットしたとき",
-        "PlayerCommandPreprocessEvent" => "プレイヤーがコマンドを実行したとき",
-        "PlayerInteractEvent" => "プレイヤーがブロックを触ったとき",
-        "PlayerJoinEvent" => "プレイヤーがサーバーに参加したとき",
-        "PlayerQuitEvent" => "プレイヤーがサーバーから退室したとき",
-        "BlockBreakEvent" => "プレイヤーがブロックを壊したとき",
-        "BlockPlaceEvent" => "プレイヤーがブロックを置いたとき",
-        "EntityDamageEvent" => "プレイヤーがダメージを受けたとき",
-        "EntityAttackEvent" => "プレイヤーが攻撃したとき",
-        "PlayerToggleFlightEvent" => "プレイヤーがフライ状態を切り替えたとき",
-        "PlayerDeathEvent" => "プレイヤーが死亡したとき",
-        "EntityLevelChangeEvent" => "プレイヤーがワールドを移動したとき",
-        "CraftItemEvent" => "プレイヤーがクラフトしたとき",
-        "PlayerDropItemEvent" => "プレイヤーがアイテムを捨てたとき",
+    private $events = [
+        "PlayerChatEvent" => "form.event.PlayerChatEvent",
+        "PlayerCommandPreprocessEvent" => "form.event.PlayerCommandPreprocessEvent",
+        "PlayerInteractEvent" => "form.event.PlayerInteractEvent",
+        "PlayerJoinEvent" => "form.event.PlayerJoinEvent",
+        "PlayerQuitEvent" => "form.event.PlayerQuitEvent",
+        "BlockBreakEvent" => "form.event.BlockBreakEvent",
+        "BlockPlaceEvent" => "form.event.BlockPlaceEvent",
+        "EntityDamageEvent" => "form.event.EntityDamageEvent",
+        "EntityAttackEvent" => "form.event.EntityAttackEvent",
+        "PlayerToggleFlightEvent" => "form.event.PlayerToggleFlightEvent",
+        "PlayerDeathEvent" => "form.event.PlayerDeathEvent",
+        "EntityLevelChangeEvent" => "form.event.EntityLevelChangeEvent",
+        "CraftItemEvent" => "form.event.CraftItemEvent",
+        "PlayerDropItemEvent" => "form.event.PlayerDropItemEvent",
     ];
 
     public function getEvents() {
@@ -32,14 +32,14 @@ class EventForm {
     }
 
     public function getSelectEventForm(){
-    	$buttons = [Elements::getButton("1つ前のページに戻る")];
+        $buttons = [Elements::getButton(Language::get("form.back"))];
         foreach ($this->getEvents() as $key => $event) {
             $buttons[] = Elements::getButton(Language::get($event));
         }
         $data = [
             "type" => "form",
-            "title" => "event > イベント選択",
-            "content" => "§7ボタンを押してください",
+            "title" => Language::get("form.event.selectEvent.title"),
+            "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
         $json = Form::encodeJson($data);
@@ -65,16 +65,16 @@ class EventForm {
     }
 
     public function getIfListForm($event) {
-    	$buttons = [Elements::getButton("<1つ前のページに戻る>"), Elements::getButton("<追加する>")];
         $manager = IFPlugin::getInstance()->getEventManager();
         $datas = $manager->getFromEvent($event);
+        $buttons = [Elements::getButton(Language::get("form.back")), Elements::getButton(Language::get("form.event.IFList.add"))];
         foreach ($datas as $n => $data) {
             $buttons[] = Elements::getButton(empty($data["name"]) ? $n : $data["name"]);
         }
         $data = [
             "type" => "form",
-            "title" => "event > $event > 選択",
-            "content" => "§7ボタンを押してください",
+            "title" => Language::get("form.event.IFList.title", [Language::get("form.event.".$event)]),
+            "content" => Language::get("form.insufficient"),
             "buttons" => $buttons
         ];
         $json = Form::encodeJson($data);
