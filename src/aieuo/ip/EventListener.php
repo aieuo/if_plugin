@@ -184,8 +184,8 @@ class EventListener implements Listener {
         $block = $event->getBlock();
         $pos = $manager->getPosition($block);
         if ($player->isOp()) {
-            if (($session = Session::get($player))->isValid()) {
-                $type = $session->getData("action");
+            if (($session = Session::getSession($player))->isValid()) {
+                $type = $session->get("action");
                 $manager = $this->getOwner()->getBlockManager();
                 switch ($type) {
                     case 'edit':
@@ -216,8 +216,8 @@ class EventListener implements Listener {
                             $player->sendMessage("そのブロックには追加されていません");
                             return;
                         }
-                        $session->setData("if_key", $pos);
-                        $session->setData("action", "paste");
+                        $session->set("if_key", $pos);
+                        $session->set("action", "paste");
                         $player->sendMessage("貼り付けるブロックを触ってください");
                         return;
                     case 'paste':
@@ -226,7 +226,7 @@ class EventListener implements Listener {
                             $player->sendMessage("そのブロックにはすでに追加されています");
                             return;
                         }
-                        $manager->set($pos, $manager->get($session->getData("if_key")));
+                        $manager->set($pos, $manager->get($session->get("if_key")));
                         $player->sendMessage("貼り付けました");
                         break;
                     case 'del':
@@ -235,7 +235,7 @@ class EventListener implements Listener {
                             $player->sendMessage("そのブロックには追加されていません");
                             return;
                         }
-                        $session->setData("if_key", $pos);
+                        $session->set("if_key", $pos);
                         $form = (new Form())->getConfirmDeleteForm();
                         Form::sendForm($player, $form, new Form(), "onDeleteIf");
                         return;

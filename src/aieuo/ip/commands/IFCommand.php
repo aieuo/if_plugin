@@ -16,35 +16,42 @@ use aieuo\ip\IFAPI;
 
 class IFCommand extends PluginCommand implements CommandExecutor {
 
-	public function __construct($owner) {
-		parent::__construct('if', $owner);
-		$this->setPermission('op');
-		$this->setDescription(Language::get("command.if.description"));
-		$this->setUsage("if <block | command | event | chain | import | language>");
-		$this->setExecutor($this);
-		$this->owner = $owner;
-		$this->form = new Form();
-	}
+    /** @var IFPlugin */
+    private $owner;
 
-	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
-		if(!$sender->isOp() or $sender->getName() === "CONSOLE") return true;
-		$name = $sender->getName();
+    public function __construct(IFPlugin $owner) {
+        parent::__construct('if', $owner);
+        $this->setPermission('op');
+        $this->setDescription(Language::get("command.if.description"));
+        $this->setUsage("if <block | command | event | chain | import | language>");
+        $this->setExecutor($this);
+        $this->owner = $owner;
+        $this->form = new Form();
+    }
 
-		if(!isset($args[0])){
-			$form = $this->form->getSelectIfTypeForm();
-			Form::sendForm($sender, $form, $this->form, "onSelectIfType");
-			return true;
-		}
+    private function getOwner(): IFPlugin {
+        return $this->owner;
+    }
 
-		$session = Session::get($sender);
-		switch ($args[0]) {
-			case "language":
-				if(!isset($args[1])) {
-					$sender->sendMessage(Language::get("command.language.usage"));
-					return true;
-				}
-				$languages = [];
-		        foreach($this->owner->getResources() as $resource) {
+    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
+        if (!$sender->isOp() or $sender->getName() === "CONSOLE") return true;
+        $name = $sender->getName();
+
+        if (!isset($args[0])) {
+            $form = $this->form->getSelectIfTypeForm();
+            Form::sendForm($sender, $form, $this->form, "onSelectIfType");
+            return true;
+        }
+
+        $session = Session::getSession($sender);
+        switch ($args[0]) {
+            case "language":
+                if (!isset($args[1])) {
+                    $sender->sendMessage(Language::get("command.language.usage"));
+                    return true;
+                }
+                $languages = [];
+                foreach ($this->getOwner()->getResources() as $resource) {
                     $filename = $resource->getFilename();
                     if (strrchr($filename, ".") == ".ini") $languages[] = basename($filename, ".ini");
                     if ($filename === $args[1].".ini") {
@@ -200,7 +207,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
 				return true;
             case "form":
-                $session->setValid(true)->setIfType(Session::FORM);
+                $session->setValid(true)->set("if_type", Session::FORM);
                 if (!isset($args[1])) {
                     $form = $this->form->getFormIFForm()->getSelectActionForm();
                     Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onSelectAction");
@@ -208,13 +215,13 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 }
                 switch ($args[1]) {
                     case "add":
-                        $session->setData("action", "add");
+                        $session->set("action", "add");
                         $form = $this->form->getFormIFForm()->getAddIFformForm();
                         Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onAddIFformForm");
                         break;
                     case "edit":
                     case "del":
-                        $session->setData("action", $args[1]);
+                        $session->set("action", $args[1]);
                         $form = $this->form->getFormIFForm()->getSelectIFformForm();
                         Form::sendForm($sender, $form, $this->form->getFormIFForm(), "onSelectIFformForm");
                         break;

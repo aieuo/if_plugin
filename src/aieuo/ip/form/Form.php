@@ -93,30 +93,30 @@ class Form {
 
     public function onSelectIfType($player, $data) {
         if ($data === null) return;
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         switch ($data) {
             case 0:
-                $session->setIfType(Session::BLOCK);
+                $session->set("if_type", Session::BLOCK);
                 $form = $this->getBlockForm()->getSelectActionForm();
                 Form::sendForm($player, $form, $this->getBlockForm(), "onSelectAction");
                 break;
             case 1:
-                $session->setIfType(Session::COMMAND);
+                $session->set("if_type", Session::COMMAND);
                 $form = $this->getCommandForm()->getSelectActionForm();
                 Form::sendForm($player, $form, $this->getCommandForm(), "onSelectAction");
                 break;
             case 2:
-                $session->setIfType(Session::EVENT);
+                $session->set("if_type", Session::EVENT);
                 $form = $this->getEventForm()->getSelectEventForm();
                 Form::sendForm($player, $form, $this->getEventForm(), "onSelectEvent");
                 break;
             case 3:
-                $session->setIfType(Session::FORM);
+                $session->set("if_type", Session::FORM);
                 $form = $this->getFormIFForm()->getSelectActionForm();
                 Form::sendForm($player, $form, $this->getFormIFForm(), "onSelectAction");
                 break;
             case 4:
-                $session->setIfType(Session::CHAIN);
+                $session->set("if_type", Session::CHAIN);
                 $form = $this->getChainForm()->getSelectActionForm();
                 Form::sendForm($player, $form, $this->getChainForm(), "onSelectAction");
                 break;
@@ -150,24 +150,24 @@ class Form {
     }
 
     public function onEditIf($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $key = $session->getData("if_key");
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
+        $key = $session->get("if_key");
         $datas = $manager->get($key, $options);
         if ($data == 0) {
             $form = $this->getEditContentsForm($datas["if"], "", "if");
-            $session->setData("type", "if");
+            $session->set("type", "if");
         } elseif ($data == 1) {
             $form = $this->getEditContentsForm($datas["match"], "", "match");
-            $session->setData("type", "match");
+            $session->set("type", "match");
         } elseif ($data == 2) {
             $form = $this->getEditContentsForm($datas["else"], "", "else");
-            $session->setData("type", "else");
+            $session->set("type", "else");
         } elseif ($data == 3) {
             $form = $this->getConfirmDeleteForm();
             Form::sendForm($player, $form, $this, "onDeleteIf");
@@ -213,14 +213,14 @@ class Form {
     }
 
     public function onEditIfContents($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $key = $session->getData("if_key");
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
+        $key = $session->get("if_key");
         $datas = $manager->get($key, $options);
         if ($data == 0) { // ひとつ前のformに戻る
             $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
@@ -228,21 +228,22 @@ class Form {
             Form::sendForm($player, $form, $this, "onEditIf");
             return;
         }
-            $form = $this->getAddContentsForm($session->getData("type"));
         if ($data == 1) { // 新しく追加する
+            $form = $this->getAddContentsForm($session->get("type"));
             Form::sendForm($player, $form, $this, "onAddContent");
             return;
         }
 
         // 追加されているものを選択した
-        if ($session->getData("type") == "if") {
         $data -= 2;
+        $ifData = $datas[$session->get("type")][$data];
+        if ($session->get("type") == "if") {
             $datas = Condition::get($ifData["id"]);
         } else {
             $datas = Process::get($ifData["id"]);
         }
-        $session->setData("contents", $datas);
-        $session->setData("num", $data - 2);
+        $session->set("contents", $datas);
+        $session->set("num", $data);
         $form = $datas->getEditForm((string)$ifData["content"]);
         Form::sendForm($player, $form, $this, "onUpdateContent");
     }
@@ -269,7 +270,7 @@ class Form {
     }
 
     public function onAddContent($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -277,9 +278,9 @@ class Form {
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         if ($data == 0) {
-            $key = $session->getData("if_key");
+            $key = $session->get("if_key");
             $datas = $manager->get($key, $options);
-            $form = $this->getEditContentsForm($datas[$session->getData("type")], "", $session->getData("type"));
+            $form = $this->getEditContentsForm($datas[$session->get("type")], "", $session->get("type"));
             Form::sendForm($player, $form, $this, "onEditIfContents");
             return;
         }
@@ -289,36 +290,36 @@ class Form {
             return;
         }
         $data -= 2;
-        if ($session->getData("type") == "if") {
+        if ($session->get("type") == "if") {
             $all = ConditionFactory::getAll();
             $datas = Condition::get(current(array_slice($all, $data, 1, true))->getId());
         } else {
             $all = ProcessFactory::getAll();
             $datas = Process::get(current(array_slice($all, $data, 1, true))->getId());
         }
-        $session->setData("contents", $datas);
+        $session->set("contents", $datas);
         $form = $datas->getEditForm();
         Form::sendForm($player, $form, $this, "onEdit");
     }
 
     public function onEdit($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $content = $session->getData("contents");
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
+        $content = $session->get("contents");
         $datas = $content->parseFormData($data);
         if ($datas["cancel"]) {
-            $form = $this->getAddContentsForm($session->getData("type"));
+            $form = $this->getAddContentsForm($session->get("type"));
             Form::sendForm($player, $form, $this, "onAddContent");
             return;
         }
         if ($datas["delete"]) {
             $player->sendMessage(Language::get("form.form.delete.notExist"));
-            $form = $this->getAddContentsForm($session->getData("type"), Language::get("form.form.delete.notExist"));
+            $form = $this->getAddContentsForm($session->get("type"), Language::get("form.form.delete.notExist"));
             Form::sendForm($player, $form, $this, "onAddContent");
             return;
         }
@@ -329,28 +330,28 @@ class Form {
         }
         $mes = Language::get("form.form.added");
         if ($datas["status"] === false) $mes = Language::get("form.form.added.suspicious");
-        $key = $session->getData("if_key");
-        $manager->add($key, $session->getData("type"), $content->getId(), $datas["contents"], $options);
+        $key = $session->get("if_key");
+        $manager->add($key, $session->get("type"), $content->getId(), $datas["contents"], $options);
         $contents = $manager->get($key, $options);
-        $form = $this->getEditContentsForm($contents[$session->getData("type")], $mes, $session->getData("type"));
+        $form = $this->getEditContentsForm($contents[$session->get("type")], $mes, $session->get("type"));
         Form::sendForm($player, $form, $this, "onEditIfContents");
         $player->sendMessage($mes);
     }
 
     public function onUpdateContent($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
         $type = $session->getIfType();
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
         $content = $session->getData("contents");
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
+        $content = $session->get("contents");
         $datas = $content->parseFormData($data);
         if ($datas["cancel"]) {
-            $key = $session->getData("if_key");
-            $form = $this->getEditContentsForm($manager->get($key, $options)[$session->getData("type")], "", $session->getData("type"));
+            $key = $session->get("if_key");
+            $form = $this->getEditContentsForm($manager->get($key, $options)[$session->get("type")], "", $session->get("type"));
             Form::sendForm($player, $form, $this, "onEditIfContents");
             return;
         }
@@ -367,10 +368,10 @@ class Form {
 
         $mes = Language::get("form.form.changed");
         if ($datas["status"] === false) $mes = Language::get("form.form.changed.suspicious");
-        $key = $session->getData("if_key");
-        $manager->updateContent($key, $session->getData("type"), $session->getData("num"), $datas["contents"], $options);
+        $key = $session->get("if_key");
+        $manager->updateContent($key, $session->get("type"), $session->get("num"), $datas["contents"], $options);
         $contents = $manager->get($key, $options);
-        $form = $this->getEditContentsForm($contents[$session->getData("type")], $mes, $session->getData("type"));
+        $form = $this->getEditContentsForm($contents[$session->get("type")], $mes, $session->get("type"));
         Form::sendForm($player, $form, $this, "onEditIfContents");
         $player->sendMessage($mes);
     }
@@ -388,24 +389,23 @@ class Form {
     }
 
     public function onDeleteContent($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
 
-        $key = $session->getData("if_key");
+        $key = $session->get("if_key");
         if ($data) {
-            $manager->del($key, $session->getData("type"), $session->getData("num"), $options);
-            $form = $this->getEditContentsForm($manager->get($key, $options)[$session->getData("type")], Language::get("form.form.delete.success"), $session->getData("type"));
+            $manager->del($key, $session->get("type"), $session->get("num"), $options);
+            $form = $this->getEditContentsForm($manager->get($key, $options)[$session->get("type")], Language::get("form.form.delete.success"), $session->get("type"));
             Form::sendForm($player, $form, $this, "onEditIfContents");
             $player->sendMessage(Language::get("form.form.delete.success"));
         } else {
             $contents = $manager->get($key, $options);
-            $ifData = $contents[$session->getData("type")][$session->getData("num")];
+            $ifData = $contents[$session->get("type")][$session->get("num")];
             $form = $manager->get($key, $options)->getEditForm($ifData["contents"], Language::get("form.cancelled"));
             Form::sendForm($player, $form, $this, "onEdit");
             $player->sendMessage(Language::get("form.cancelled"));
@@ -413,17 +413,16 @@ class Form {
     }
 
     public function onDeleteIf($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
 
         if ($data) {
-            $manager->remove($session->getData("if_key"), $options);
+            $manager->remove($session->get("if_key"), $options);
             $player->sendMessage(Language::get("form.form.delete.success"));
         } else {
             $player->sendMessage(Language::get("form.cancelled"));
@@ -445,7 +444,7 @@ class Form {
     }
 
     public function onSearch($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -455,7 +454,7 @@ class Form {
             Form::sendForm($player, $form, $this, "onSearch");
             return;
         }
-        if ($session->getData("type") == "if") {
+        if ($session->get("type") == "if") {
             $all = ConditionFactory::getAll();
         } else {
             $all = ProcessFactory::getAll();
@@ -468,7 +467,7 @@ class Form {
             }
             return($contains);
         });
-        $session->setData("searchResult", $result);
+        $session->set("searchResult", $result);
 
         $buttons[] = Elements::getButton(Language::get("form.back"));
         foreach ($result as $item) {
@@ -484,29 +483,28 @@ class Form {
     }
 
     public function onSearchResult($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
         if ($data == 0) {
-            $key = $session->getData("if_key");
+            $key = $session->get("if_key");
             $datas = $manager->get($key, $options);
-            $form = $this->getEditContentsForm($datas[$session->getData("type")], "", $session->getData("type"));
+            $form = $this->getEditContentsForm($datas[$session->get("type")], "", $session->get("type"));
             Form::sendForm($player, $form, $this, "onEditIfContents");
             return;
         }
         $data -= 1;
-        $all = $session->getData("searchResult");
-        if ($session->getData("type") == "if") {
+        $all = $session->get("searchResult");
+        if ($session->get("type") == "if") {
             $datas = Condition::get(current(array_slice($all, $data, 1, true))->getId());
         } else {
             $datas = Process::get(current(array_slice($all, $data, 1, true))->getId());
         }
-        $session->setData("contents", $datas);
+        $session->set("contents", $datas);
         $form = $datas->getEditForm();
         Form::sendForm($player, $form, $this, "onEdit");
     }
@@ -527,15 +525,14 @@ class Form {
     }
 
     public function onChangeName($player, $data) {
-        $session = Session::get($player);
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
         $manager = ifPlugin::getInstance()->getManagerBySession($session);
-        $options = ifPlugin::getInstance()->getOptionsBySession($session);
-        $key = $session->getData("if_key");
+        $options = IFPlugin::getInstance()->getOptionsBySession($session);
+        $key = $session->get("if_key");
         $datas = $manager->get($key, $options);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         if ($data[3]) {
@@ -555,4 +552,5 @@ class Form {
         $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, $this, "onEditIf");
     }
+
 }

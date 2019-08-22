@@ -25,9 +25,8 @@ class ImportForm {
         return $json;
     }
 
-	public function onImportList($player, $data) {
-        $session = Session::get($player);
-		$session->setData("path", $path);
+    public function onImportList($player, $data) {
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -44,6 +43,7 @@ class ImportForm {
             return;
         }
         $path = $files[$data - 1];
+        $session->set("path", $path);
         $form = $this->getImportForm(json_decode(file_get_contents($path), true));
         Form::sendForm($player, $form, $this, "onImport");
     }
@@ -66,8 +66,8 @@ class ImportForm {
         return $json;
     }
 
-	public function onImport($player, $data) {
-        $session = Session::get($player);
+    public function onImport($player, $data) {
+        $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
@@ -81,16 +81,16 @@ class ImportForm {
         $this->importDatas($player, $file);
     }
 
-	public function importDatas($player, $file, $count = 0) {
-        $session = Session::get($player);
+    public function importDatas($player, $file, $count = 0) {
+        $session = Session::getSession($player);
         foreach ($file["ifs"] as $key => $datas) {
             if ($datas["type"] === Session::BLOCK) {
                 $manager = IFPlugin::getInstance()->getBlockManager();
 
 				if($manager->isAdded($key) and !isset($session->getData("overwrite")[$key])) {
-					$session->setData("file", $file);
-					$session->setData("if_key", $key);
-					$session->setData("count", $count);
+                    $session->set("file", $file);
+                    $session->set("if_key", $key);
+                    $session->set("count", $count);
                     $form = $this->getConfirmOverwriteForm($key);
                     Form::sendForm($player, $form, $this, "onConfirmOverwrite");
                     return;
@@ -175,28 +175,28 @@ class ImportForm {
         return $data;
     }
 
-	public function onConfirmOverwrite($player, $data) {
-        $session = Session::get($player);
-		if($data === null) {
-			$session->setValid(false, false);
-			return;
-		}
-		if($data) {
-			if(($overwrite = $session->getData("overwrite")) === "") {
-				$session->setData("overwrite", [$session->getData("if_key") => true]);
-			} else {
-				$overwrite[$session->getData("if_key")] = true;
-				$session->setData("overwrite", $overwrite);
-			}
-			$this->importDatas($player, $session->getData("file"), $session->getData("count"));
-		} else {
-			if(($overwrite = $session->getData("overwrite")) === "") {
-				$session->setData("overwrite", [$session->getData("if_key") => false]);
-			} else {
-				$overwrite[$session->getData("if_key")] = false;
-				$session->setData("overwrite", $overwrite);
-			}
-			$this->importDatas($player, $session->getData("file"), $session->getData("count"));
+    public function onConfirmOverwrite($player, $data) {
+        $session = Session::getSession($player);
+        if ($data === null) {
+            $session->setValid(false, false);
+            return;
+        }
+        if ($data) {
+            if (($overwrite = $session->get("overwrite")) === "") {
+                $session->set("overwrite", [$session->get("if_key") => true]);
+            } else {
+                $overwrite[$session->get("if_key")] = true;
+                $session->set("overwrite", $overwrite);
+            }
+            $this->importDatas($player, $session->get("file"), $session->get("count"));
+        } else {
+            if (($overwrite = $session->get("overwrite")) === "") {
+                $session->set("overwrite", [$session->get("if_key") => false]);
+            } else {
+                $overwrite[$session->get("if_key")] = false;
+                $session->set("overwrite", $overwrite);
+            }
+            $this->importDatas($player, $session->get("file"), $session->get("count"));
         }
     }
 }
