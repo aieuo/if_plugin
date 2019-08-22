@@ -6,17 +6,17 @@ use pocketmine\Player;
 
 class Session {
 
-	const BLOCK = 0;
-	const COMMAND = 1;
-	const EVENT = 2;
-	const CHAIN = 3;
+    const BLOCK = 0;
+    const COMMAND = 1;
+    const EVENT = 2;
+    const CHAIN = 3;
     const FORM = 4;
 
     private static $sessions = [];
 
     /**
      * @param  Player $player
-     * @return Session | null
+     * @return Session|null
      */
     public static function get(Player $player): ?Session {
         if(!isset(self::$sessions[$player->getName()])) return null;
@@ -30,14 +30,14 @@ class Session {
 ////////////////////////////////////////////////////////////////////////
 
     /** @var bool */
-	private $valid = false;
-	private $if_type = self::BLOCK;
+    private $valid = false;
+    private $if_type = null;
     /** @var array */
-	private $datas = [];
+    private $datas = [];
 
-	public function isValid() {
-		return $this->valid;
-	}
+    public function isValid(): bool {
+        return $this->valid;
+    }
 
     public function setValid($valid = true, $deleteDatas = true): self {
 		$this->valid = $valid;

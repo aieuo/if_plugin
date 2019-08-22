@@ -3,7 +3,10 @@
 namespace aieuo\ip\manager;
 
 use pocketmine\utils\Config;
+use pocketmine\Server;
 
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
 
 class IFManager extends IFAPI {
@@ -12,8 +15,11 @@ class IFManager extends IFAPI {
     const COMMAND = 1;
     const EVENT = 2;
     const CHAIN = 3;
+    const FORM = 4;
 
+    /** @var IFPlugin */
     private $owner;
+    /** @var Config */
     private $config;
 
     public function __construct($owner, $type) {
@@ -21,16 +27,22 @@ class IFManager extends IFAPI {
         $this->config = new Config($owner->getDataFolder() . $type. ".yml", Config::YAML, []);
     }
 
-    public function getOwner() {
+    public function getOwner(): IFPlugin {
         return $this->owner;
     }
 
-    public function getServer() {
+    public function getServer(): Server {
         return $this->getOwner()->getServer();
     }
 
+    public function getConfig(): Config {
+        return $this->config;
+    }
+
     /**
-     * @return Config
+     * @param  string $key
+     * @param  array  $options
+     * @return array|null
      */
     public function getConfig() {
         return $this->config;
@@ -60,14 +72,14 @@ class IFManager extends IFAPI {
     /**
      * @return array
      */
-    public function getAll() {
+    public function getAll(): array {
         return $this->config->getAll();
     }
 
     /**
      * @param string $key
      * @param string $type
-     * @param int $id
+     * @param int    $id
      * @param string $content
      * @param array  $options
      */

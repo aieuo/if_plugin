@@ -8,8 +8,10 @@ use aieuo\ip\utils\Language;
 
 class TypeMoney extends Process {
 
-    public function getAmount() {
-        return $this->getValues();
+    public function getAmount(): ?int {
+        $amount = $this->getValues();
+        if (!is_int($amount)) return null;
+        return $amount;
     }
 
     public function setAmount(int $amount) {

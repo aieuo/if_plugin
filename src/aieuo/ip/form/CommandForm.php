@@ -2,11 +2,11 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\ifPlugin;
-use aieuo\ip\Session;
-use aieuo\ip\utils\Messages;
-use aieuo\ip\form\Form;
 use aieuo\ip\utils\Language;
+use aieuo\ip\form\Form;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class CommandForm {
     public function getSelectActionForm() {

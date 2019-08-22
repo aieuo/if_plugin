@@ -52,21 +52,21 @@ class ProcessFactory {
 
     /**
      * @param  int $id
-     * @return Process
+     * @return Process|null
      */
-    public static function get($id) {
+    public static function get($id): ?Process {
         if (isset(self::$list[$id])) {
             return clone self::$list[$id];
         }
-        return new Process();
+        return null;
     }
 
-    public static function getAll() {
+    public static function getAll(): array {
         return self::$list;
     }
 
     /**
-     * @param  Condition $process
+     * @param  Process $process
      */
     public static function register(Process $process) {
         self::$list[$process->getId()] = clone $process;

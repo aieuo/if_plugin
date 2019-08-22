@@ -2,9 +2,8 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\task\DelayedCommandTask;
-
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
@@ -47,7 +46,7 @@ class DelayedCommand extends Process {
         }
         $time = $this->getTime();
         $command = $this->getCommand();
-        ifPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask($player, $command), $time*20);
+        IFPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCommandTask($player, $command), $time*20);
     }
 
     public function getEditForm(string $default = "", string $mes = "") {

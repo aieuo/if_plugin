@@ -2,39 +2,44 @@
 
 namespace aieuo\ip;
 
-use pocketmine\Server;
-use pocketmine\event\Listener;
-use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\InteractPacket;
-use pocketmine\Player;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\inventory\CraftItemEvent;
+use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\entity\EntityLevelChangeEvent;
-use pocketmine\event\entity\EntityTeleportEvent;
-use pocketmine\event\inventory\CraftItemEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\Listener;
+use pocketmine\Server;
+use pocketmine\Player;
 
-use aieuo\ip\form\Form;
-use aieuo\ip\utils\Messages;
-use aieuo\ip\Session;
 use aieuo\ip\processes\SetSitting;
-use pocketmine\event\player\PlayerDropItemEvent;
+use aieuo\ip\form\Form;
+use aieuo\ip\Session;
+use aieuo\ip\IFPlugin;
+use aieuo\ip\IFAPI;
 
 class EventListener implements Listener {
+
+    /** @var IFPlugin */
+    private $owner;
+
     public function __construct($owner) {
         $this->owner = $owner;
     }
 
-    public function getOwner() {
+    private function getOwner(): IFPlugin {
         return $this->owner;
     }
 
@@ -66,41 +71,41 @@ class EventListener implements Listener {
         }
     }
 
-    public function chat(PlayerChatEvent $event){
+    public function chat(PlayerChatEvent $event) {
         $this->onEvent($event, "PlayerChatEvent");
     }
 
-    public function join(PlayerJoinEvent $event){
-        Session::register($event->getPlayer());
+    public function join(PlayerJoinEvent $event) {
+        Session::createSession($event->getPlayer());
 
         $this->onEvent($event, "PlayerJoinEvent");
     }
 
-    public function craft(CraftItemEvent $event){
+    public function craft(CraftItemEvent $event) {
         $this->onEvent($event, "CraftItemEvent");
     }
 
-    public function quit(PlayerQuitEvent $event){
+    public function quit(PlayerQuitEvent $event) {
         $this->onEvent($event, "PlayerQuitEvent");
     }
 
-    public function toggleFlight(PlayerToggleFlightEvent $event){
+    public function toggleFlight(PlayerToggleFlightEvent $event) {
         $this->onEvent($event, "PlayerToggleFlightEvent");
     }
 
-    public function blockBreak(BlockBreakEvent $event){
+    public function blockBreak(BlockBreakEvent $event) {
         $this->onEvent($event, "BlockBreakEvent");
     }
 
-    public function blockPlace(BlockPlaceEvent $event){
+    public function blockPlace(BlockPlaceEvent $event) {
         $this->onEvent($event, "BlockPlaceEvent");
     }
 
-    public function entityDamage(EntityDamageEvent $event){
+    public function entityDamage(EntityDamageEvent $event) {
         $this->onEvent($event, "EntityDamageEvent");
     }
 
-    public function entityDamageByEntity(EntityDamageByEntityEvent $event){
+    public function entityDamageByEntity(EntityDamageByEntityEvent $event) {
         $this->onEvent($event, "EntityAttackEvent");
     }
 
@@ -108,21 +113,21 @@ class EventListener implements Listener {
         $this->onEvent($event, "PlayerDropItemEvent");
     }
 
-    public function entityDeath(EntityDeathEvent $event){
+    public function entityDeath(EntityDeathEvent $event) {
         $this->onEvent($event, "EntityDeathEvent");
 
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
-    public function entityLevelChange(EntityLevelChangeEvent $event){
+    public function entityLevelChange(EntityLevelChangeEvent $event) {
         $this->onEvent($event, "EntityLevelChangeEvent");
 
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
-    public function onEvent($event, $eventname){
+    public function onEvent($event, $eventname) {
         switch ($eventname) {
             case 'CraftItemEvent':
             case 'PlayerInteractEvent':
@@ -165,7 +170,7 @@ class EventListener implements Listener {
         }
     }
 
-    public function interact(PlayerInteractEvent $event){
+    public function interact(PlayerInteractEvent $event) {
         $player = $event->getPlayer();
         if (!isset($this->touch[$player->getName()])) $this->touch[$player->getName()] = 0;
         $tick = Server::getInstance()->getTick();

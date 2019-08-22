@@ -9,8 +9,8 @@ class IsOp extends Condition {
     protected $description = "@condition.isop.description";
     protected $detail = "@condition.isop.detali";
 
-	public function check() {
-		$player = $this->getPlayer();
-		return $player->isOp() ? self::MATCHED : self::NOT_MATCHED;
-	}
+    public function check() {
+        $player = $this->getPlayer();
+        return $player->isOp() ? self::MATCHED : self::NOT_MATCHED;
+    }
 }

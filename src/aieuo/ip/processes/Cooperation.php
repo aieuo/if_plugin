@@ -4,7 +4,7 @@ namespace aieuo\ip\processes;
 
 use pocketmine\event\Event;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\utils\Language;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
@@ -20,8 +20,9 @@ class Cooperation extends Process {
         return Language::get("process.cooperation.detail", [$name]);
     }
 
-    public function getCooperationName() {
-        return $this->getValues();
+    public function getCooperationName(): ?string {
+        $name = $this->getValues();
+        return is_string($name) ? $name : null;
     }
 
     public function setCooperationName(string $name) {

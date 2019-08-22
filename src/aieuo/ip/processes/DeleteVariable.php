@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
@@ -18,8 +18,9 @@ class DeleteVariable extends Process {
         return Language::get("process.deletevariable.detail", [$this->getVariableName()]);
     }
 
-    public function getVariableName() {
-        return $this->getValues();
+    public function getVariableName(): ?string {
+        $name = $this->getValues();
+        return is_string($name) ? $name : null;
     }
 
     public function setVariableName(string $variable) {
@@ -27,7 +28,7 @@ class DeleteVariable extends Process {
     }
 
     public function execute() {
-        ifPlugin::getInstance()->getVariableHelper()->del($this->getVariableName());
+        IFPlugin::getInstance()->getVariableHelper()->del($this->getVariableName());
     }
 
 

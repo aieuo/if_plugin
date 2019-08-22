@@ -10,17 +10,17 @@ class StringVariable extends Variable {
         return $this->getValue();
     }
 
-    public function addition(Variable $var, string $name = "result") {
+    public function addition(Variable $var, string $name = "result"): Variable {
         $result = $this->getValue().$var->getValue();
         return new StringVariable($name, $result);
     }
 
-    public function subtraction(Variable $var, string $name = "result") {
+    public function subtraction(Variable $var, string $name = "result"): Variable {
         $result = str_replace((string)$var->getValue(), "", $this->getValue());
         return new StringVariable($name, $result);
     }
 
-    public function multiplication(Variable $var, string $name = "result") {
+    public function multiplication(Variable $var, string $name = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
             return new StringVariable("ERROR", "文字列と文字列を掛けることはできません");
         }
@@ -31,15 +31,17 @@ class StringVariable extends Variable {
         return new StringVariable($name, $result);
     }
 
-    public function division(Variable $var, string $name = "result") {
-        if ($var->getType() !== Variable::STRING and $var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "文字列を文字列以外で割ることはできません");
+    public function division(Variable $var, string $name = "result"): Variable {
+        if ($var->getType() !== Variable::STRING) {
+            return new StringVariable("ERROR", "文字列をリストで割ることはできません");
         }
-        $result = array_map(function ($value) { return trim(rtrim($value)); }, explode($var->getValue(), (string)$this->getValue()));
+        $result = array_map(function ($value) {
+            return trim(rtrim($value));
+        }, explode((string)$var->getValue(), (string)$this->getValue()));
         return new ListVariable($name, $result);
     }
 
-    public function modulo(Variable $var, string $name = "result") {
+    public function modulo(Variable $var, string $name = "result"): Variable {
         return new StringVariable("ERROR", "文字列は割り算できません");
     }
 }

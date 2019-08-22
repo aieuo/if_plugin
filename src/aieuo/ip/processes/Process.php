@@ -74,6 +74,7 @@ class Process implements ProcessIds {
         return $this;
     }
 
+    // TODO オンラインのチェック
     public function getPlayer() : Player {
         return $this->player;
     }

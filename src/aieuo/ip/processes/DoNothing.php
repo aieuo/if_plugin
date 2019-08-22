@@ -9,5 +9,6 @@ class DoNothing extends Process {
     protected $description = "@process.donothing.description";
     protected $detail = "@process.donothing.detail";
 
+    public function execute() {
     }
 }

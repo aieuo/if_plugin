@@ -2,7 +2,7 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 
 class SaveDatas extends Process {
 
@@ -12,11 +12,11 @@ class SaveDatas extends Process {
     protected $detail = "@process.savedatas.detail";
 
     public function execute() {
-        ifPlugin::getInstance()->getBlockManager()->save();
-        ifPlugin::getInstance()->getCommandManager()->save();
-        ifPlugin::getInstance()->getEventManager()->save();
-        ifPlugin::getInstance()->getChainManager()->save();
-        ifPlugin::getInstance()->getFormIFManager()->save();
-        ifPlugin::getInstance()->getVariableHelper()->save();
+        IFPlugin::getInstance()->getBlockManager()->save();
+        IFPlugin::getInstance()->getCommandManager()->save();
+        IFPlugin::getInstance()->getEventManager()->save();
+        IFPlugin::getInstance()->getChainManager()->save();
+        IFPlugin::getInstance()->getFormIFManager()->save();
+        IFPlugin::getInstance()->getVariableHelper()->save();
     }
 }

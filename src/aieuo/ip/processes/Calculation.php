@@ -2,12 +2,11 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\variable\Variable;
 use aieuo\ip\variable\StringVariable;
 use aieuo\ip\variable\NumberVariable;
 use aieuo\ip\variable\ListVariable;
-
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
@@ -85,7 +84,7 @@ class Calculation extends Process {
 
     public function parse(string $numbers) {
         if (!preg_match("/\s*(.+)\s*\[ope:([0-9])\]\s*(.+)\s*;\s*([^;]*)\s*$/", $numbers, $matches)) return false;
-        $helper = ifPlugin::getInstance()->getVariableHelper();
+        $helper = IFPlugin::getInstance()->getVariableHelper();
         $operator = (int)$matches[2];
         $value1 = $matches[1];
         $value2 = $matches[3];
@@ -133,7 +132,7 @@ class Calculation extends Process {
             $player->sendMessage(Language::get("process.calculation.error"), [$this->getName(), $result->getValue()]);
             return;
         }
-        ifPlugin::getInstance()->getVariableHelper()->add($result);
+        IFPlugin::getInstance()->getVariableHelper()->add($result);
     }
 
     public function getEditForm(string $default = "", string $mes = "") {

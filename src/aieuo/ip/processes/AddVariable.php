@@ -2,9 +2,8 @@
 
 namespace aieuo\ip\processes;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\variable\Variable;
-
 use aieuo\ip\utils\Language;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
@@ -21,8 +20,10 @@ class AddVariable extends Process {
         return Language::get("process.addvariable.detail", [$variable->getName(), $variable->getString()]);
     }
 
-    public function getVariable() {
-        return $this->getValues();
+    public function getVariable(): ?Variable {
+        $variable = $this->getValues();
+        if (!($variable instanceof Variable)) return null;
+        return $variable;
     }
 
     public function setVariable(Variable $variable) {
@@ -44,7 +45,7 @@ class AddVariable extends Process {
             $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
             return;
         }
-        ifPlugin::getInstance()->getVariableHelper()->add($variable);
+        IFPlugin::getInstance()->getVariableHelper()->add($variable);
     }
 
 

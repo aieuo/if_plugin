@@ -4,7 +4,7 @@ namespace aieuo\ip\processes;
 
 use pocketmine\event\Event;
 
-use aieuo\ip\ifPlugin;
+use aieuo\ip\IFPlugin;
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
@@ -67,7 +67,7 @@ class CooperationRepeat extends Process {
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
-        $manager = ifPlugin::getInstance()->getChainManager();
+        $manager = IFPlugin::getInstance()->getChainManager();
         $names = $this->parse($default);
         $name = $default;
         $count = "";
