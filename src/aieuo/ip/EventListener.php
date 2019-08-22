@@ -49,8 +49,8 @@ class EventListener implements Listener {
         if ($event->isCancelled()) return;
         $cmd = mb_substr($event->getMessage(), 1);
         $manager = $this->getOwner()->getCommandManager();
-        if ($manager->isAdded($cmd)) {
-            if ($manager->isSubCommand($cmd) and !$manager->isAdded($cmd)) {
+        if ($manager->exists($cmd)) {
+            if ($manager->isSubCommand($cmd) and !$manager->exists($cmd)) {
                 $subcommands = implode(" | ", $manager->getSubcommands($cmd));
                 $event->getPlayer()->sendMessage("Usage: /".$manager->getOriginCommand($cmd)." <".$subcommands.">");
                 return;
@@ -189,8 +189,8 @@ class EventListener implements Listener {
                 $manager = $this->getOwner()->getBlockManager();
                 switch ($type) {
                     case 'edit':
-                        $session->setData("if_key", $pos);
-                        if ($manager->isAdded($pos)) {
+                        $session->set("if_key", $pos);
+                        if ($manager->exists($pos)) {
                             $datas = $manager->get($pos);
                         } else {
                             $datas = $manager->repairIF([]);
@@ -202,7 +202,7 @@ class EventListener implements Listener {
                         return;
                     case 'check':
                         $pos = $manager->getPosition($block);
-                        if (!$manager->isAdded($pos)) {
+                        if (!$manager->exists($pos)) {
                             $player->sendMessage("そのブロックには追加されていません");
                             return;
                         }
@@ -212,7 +212,7 @@ class EventListener implements Listener {
                         break;
                     case 'copy':
                         $pos = $manager->getPosition($block);
-                        if (!$manager->isAdded($pos)) {
+                        if (!$manager->exists($pos)) {
                             $player->sendMessage("そのブロックには追加されていません");
                             return;
                         }
@@ -222,7 +222,7 @@ class EventListener implements Listener {
                         return;
                     case 'paste':
                         $pos = $manager->getPosition($block);
-                        if ($manager->isAdded($pos)) {
+                        if ($manager->exists($pos)) {
                             $player->sendMessage("そのブロックにはすでに追加されています");
                             return;
                         }
@@ -231,7 +231,7 @@ class EventListener implements Listener {
                         break;
                     case 'del':
                         $pos = $manager->getPosition($block);
-                        if (!$manager->isAdded($pos)) {
+                        if (!$manager->exists($pos)) {
                             $player->sendMessage("そのブロックには追加されていません");
                             return;
                         }
@@ -244,7 +244,7 @@ class EventListener implements Listener {
                 return;
             }
         }
-        if ($manager->isAdded($pos)) {
+        if ($manager->exists($pos)) {
             $datas = $manager->get($pos);
             $manager->executeIfMatchCondition(
                 $player,
