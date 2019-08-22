@@ -107,8 +107,8 @@ class CommandForm {
             $player->sendMessage("必要事項を入力してください");
             return;
         }
-        if ($manager->exists($data[0])) {
-            $form = $this->getAddCommandForm("§cそのコマンドは既に使用されています§f");
+        if ($manager->isRegisterd($data[0])) {
+            $form = $this->getAddCommandForm(Language::get("form.command.alreadyInUse"));
             Form::sendForm($player, $form, $this, "onAddCommand");
             $player->sendMessage("§cそのコマンドは既に使用されています");
             return;
