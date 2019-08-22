@@ -196,7 +196,7 @@ class EventListener implements Listener {
                             $datas = $manager->repairIF([]);
                             $manager->set($pos);
                         }
-                        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+                        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
                         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
                         Form::sendForm($player, $form, new Form(), "onEditIf");
                         return;
@@ -207,7 +207,7 @@ class EventListener implements Listener {
                             return;
                         }
                         $datas = $manager->get($pos);
-                        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+                        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
                         $player->sendMessage($mes);
                         break;
                     case 'copy':

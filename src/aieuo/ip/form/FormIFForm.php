@@ -383,7 +383,7 @@ class FormIFForm {
                         $ifdata = array_shift($responses);
                         $session->setData("form_place", array_keys($datas["ifs"], $ifdata)[0]);
                     }
-                    $mes = Messages::createMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
+                    $mes = IFAPI::createIFMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
                     $form = (new Form)->getEditIfForm($mes);
                     Form::sendForm($player, $form, new Form(), "onEditIf");
                     return;
@@ -428,7 +428,7 @@ class FormIFForm {
                                 $ifdata = array_shift($responses);
                                 $session->setData("form_place", array_keys($datas["ifs"], $ifdata)[0]);
                             }
-                            $mes = Messages::createMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
+                            $mes = IFAPI::createIFMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
                             $form = (new Form)->getEditIfForm($mes);
                             Form::sendForm($player, $form, new Form(), "onEditIf");
                             return;
@@ -585,14 +585,14 @@ class FormIFForm {
         $datas = $manager->getIF($session->getData("if_key"));
         if ($data === 1) {
             $session->setData("form_place", count($datas["ifs"]));
-            $mes = Messages::createMessage([], [], []);
+            $mes = IFAPI::createIFMessage([], [], []);
             $form = $this->getEditIfForm($mes);
             Form::sendForm($player, $form, $this, "onEditIf");
             return;
         }
         $session->setData("form_place", $data - 2);
         $datas = $datas["ifs"][$data-2];
-        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = $this->getEditIfForm($mes);
         Form::sendForm($player, $form, $this, "onEditIf");
     }

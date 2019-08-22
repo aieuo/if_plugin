@@ -222,7 +222,7 @@ class Form {
         $datas = $manager->get($key, $options);
         if ($data == 0) {
             // ひとつ前のformに戻る
-            $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+            $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, $this, "onEditIf");
             return;
@@ -538,7 +538,7 @@ class Form {
         $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
         $datas = $manager->get($key, $options);
-        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         if ($data[3]) {
             $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, $this, "onEditIf");

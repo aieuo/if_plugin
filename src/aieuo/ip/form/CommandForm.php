@@ -132,7 +132,7 @@ class CommandForm {
         $session->setData("description", $data[1]);
         $session->setData("permission", $data[2] == 0 ? "ifplugin.customcommand.op" : "ifplugin.customcommand.true");
         $datas = $manager->repairIF([]);
-        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
@@ -180,7 +180,7 @@ class CommandForm {
         $action = $session->getData("action");
         if ($action == "edit") {
             $datas = $manager->get($data[0]);
-            $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+            $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
         } elseif ($action == "del") {
@@ -221,7 +221,7 @@ class CommandForm {
         $command = key(array_slice($manager->getAll(), $data - 1, 1, true));
         $session->setData("if_key", $command);
         $datas = $manager->get($command);
-        $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }

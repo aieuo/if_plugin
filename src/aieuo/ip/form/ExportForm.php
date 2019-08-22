@@ -33,8 +33,8 @@ class ExportForm {
         $options = ifPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->getData("if_key");
         $datas = $manager->get($key, $options);
-        if($data[3]) {
-            $mes = Messages::createMessage($datas["if"], $datas["match"], $datas["else"]);
+        if ($data[3]) {
+            $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
             $form = (new Form())->getEditIfForm($mes, $datas["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
         	return;
