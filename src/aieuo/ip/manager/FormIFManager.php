@@ -19,8 +19,8 @@ class FormIFManager extends IFManager {
         parent::set($key, $datas);
     }
 
-    public function get($key, $options = []) {
-        if (!$this->isAdded($key)) return [];
+    public function get(string $key, array $options = []): ?array {
+        if (!$this->exists($key)) return [];
         $datas = parent::get($key);
         if (!isset($datas["ifs"][$options["place"]])) return $this->repairIF([]);
         $ifdata = $this->repairIF($datas["ifs"][$options["place"]]);
@@ -53,7 +53,7 @@ class FormIFManager extends IFManager {
     }
 
     public function updateContent($key, $type, $num, $new, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->getIF($key);
         $datas["ifs"][$options["place"]][$type][$num]["content"] = $new;
         $this->set($key, $datas);
@@ -61,7 +61,7 @@ class FormIFManager extends IFManager {
     }
 
     public function setName($key, $name, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->getIF($key);
         $datas["ifs"][$options["place"]]["name"] = $name;
         $this->set($key, $datas);
@@ -69,7 +69,7 @@ class FormIFManager extends IFManager {
     }
 
     public function del($key, $type, $num, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->getIF($key);
         unset($datas["ifs"][$options["place"]][$type][$num]);
         $datas["ifs"][$options["place"]][$type] = array_merge($datas["ifs"][$options["place"]][$type]);
@@ -78,7 +78,7 @@ class FormIFManager extends IFManager {
     }
 
     public function remove($key, $options = []) {
-        if (!$this->isAdded($key)) return false;
+        if (!$this->exists($key)) return false;
         $datas = $this->getIF($key);
         unset($datas["ifs"][$options["place"]]);
         $datas["ifs"] = array_merge($datas["ifs"]);

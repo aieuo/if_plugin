@@ -32,8 +32,8 @@ class SendForm extends Process {
     public function execute() {
         $player = $this->getPlayer();
         $name = $this->getFormName();
-        $manager = ifPlugin::getInstance()->getFormIFManager();
-        if (!$manager->isAdded($name)) {
+        $manager = IFPlugin::getInstance()->getFormIFManager();
+        if (!$manager->exists($name)) {
             $player->sendMessage(Language::get("process.sendform.notfound", [$this->getName()]));
             return;
         }
@@ -48,9 +48,9 @@ class SendForm extends Process {
             $session->setValid(false, false);
             return;
         }
-        $formName = $session->getData("form_name");
-        $manager = ifPlugin::getInstance()->getFormIFManager();
-        if (!$manager->isAdded($formName)) {
+        $formName = $session->get("form_name");
+        $manager = IFPlugin::getInstance()->getFormIFManager();
+        if (!$manager->exists($formName)) {
             $player->sendMessage(Language::get("process.sendform.notfound", [$this->getName()]));
             return;
         }

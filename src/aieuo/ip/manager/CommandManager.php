@@ -28,7 +28,7 @@ class CommandManager extends IFManager {
 
     public function add($key, $type, $id, $content, $args = []) {
         $datas = [];
-        if ($this->isAdded($key))$datas = $this->get($key);
+        if ($this->exists($key))$datas = $this->get($key);
         $datas[$type][] = [
             "id" => $id,
             "content" => $content
@@ -82,7 +82,7 @@ class CommandManager extends IFManager {
 
     public function unregister($command) {
         $count = count($this->getSubcommands($command));
-        if (!$this->isSubcommand($command) and $this->isAdded($command)) $count ++;
+        if (!$this->isSubcommand($command) and $this->exists($command)) $count ++;
         if ($count <= 1) {
             $this->getServer()->getCommandMap()->unregister($this->command_list[$command]);
         }
