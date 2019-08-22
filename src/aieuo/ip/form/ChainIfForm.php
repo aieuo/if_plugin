@@ -92,8 +92,8 @@ class ChainIfForm {
             $player->sendMessage("必要事項を入力してください");
             return;
         }
-        $manager = ifPlugin::getInstance()->getChainManager();
-        if($manager->isAdded($data[0])) {
+        $manager = IFPlugin::getInstance()->getChainManager();
+        if ($manager->exists($data[0])) {
             $form = $this->getAddChainIfForm("§cその名前は既に使用されています§f");
             Form::sendForm($player, $form, $this, "onAddChainIf");
             $player->sendMessage("その名前は既に使用されています");
