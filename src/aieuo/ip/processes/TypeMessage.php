@@ -14,7 +14,7 @@ class TypeMessage extends Process {
         return $message;
     }
 
-    public function setSendMessage(string $message) {
+    public function setMessage(string $message) {
         $this->setValues($message);
     }
 

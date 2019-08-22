@@ -13,7 +13,7 @@ class SendMessageToOp extends TypeMessage {
     protected $description = "@process.sendmessagetoop.description";
 
     public function getDetail(): string {
-        $message = $this->getSendMessage();
+        $message = $this->getMessage();
         return Language::get("process.sendmessagetoop.detail", [$message]);
     }
 
@@ -21,7 +21,7 @@ class SendMessageToOp extends TypeMessage {
         $players = Server::getInstance()->getOnlinePlayers();
         foreach ($players as $player) {
             if ($player->isOp()) {
-                $player->sendMessage($this->getSendMessage());
+                $player->sendMessage($this->getMessage());
             }
         }
     }
