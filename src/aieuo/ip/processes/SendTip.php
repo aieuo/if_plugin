@@ -10,13 +10,12 @@ class SendTip extends TypeMessage {
     protected $name = "@process.sendtip.name";
     protected $description = "@process.sendtip.description";
 
-    public function getMessage() {
-        $message = $this->getSendMessage();
-        return Language::get("process.sendtip.detail");
+    public function getDetail(): string {
+        return Language::get("process.sendtip.detail", [$this->getMessage()]);
     }
 
     public function execute() {
         $player = $this->getPlayer();
-        $player->sendTip($this->getSendMessage());
+        $player->sendTip($this->getMessage());
     }
 }

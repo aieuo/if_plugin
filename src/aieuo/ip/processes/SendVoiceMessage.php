@@ -13,13 +13,13 @@ class SendVoiceMessage extends TypeMessage {
     protected $description = "@process.sendvoicemessage.description";
 
     public function getDetail(): string {
-        $message = $this->getSendMessage();
+        $message = $this->getMessage();
         return Language::get("process.sendvoicemessage.detail", [$message]);
     }
 
     public function execute() {
         $player = $this->getPlayer();
-        $text = new TranslationContainer($this->getSendMessage());
+        $text = new TranslationContainer($this->getMessage());
         $player->sendMessage($text);
     }
 }
