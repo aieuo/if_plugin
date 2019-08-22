@@ -690,7 +690,7 @@ class FormIFForm {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->get("if_key");
         $datas = $manager->get($key, $options);

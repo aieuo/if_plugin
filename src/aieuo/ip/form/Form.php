@@ -155,7 +155,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->get("if_key");
         $datas = $manager->get($key, $options);
@@ -218,7 +218,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->get("if_key");
         $datas = $manager->get($key, $options);
@@ -275,7 +275,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         if ($data == 0) {
             $key = $session->get("if_key");
@@ -308,7 +308,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $content = $session->get("contents");
         $datas = $content->parseFormData($data);
@@ -344,8 +344,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $type = $session->getIfType();
-        $content = $session->getData("contents");
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $content = $session->get("contents");
         $datas = $content->parseFormData($data);
@@ -394,7 +393,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
 
         $key = $session->get("if_key");
@@ -418,7 +417,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
 
         if ($data) {
@@ -488,7 +487,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         if ($data == 0) {
             $key = $session->get("if_key");
@@ -530,7 +529,7 @@ class Form {
             $session->setValid(false, false);
             return;
         }
-        $manager = ifPlugin::getInstance()->getManagerBySession($session);
+        $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->get("if_key");
         $datas = $manager->get($key, $options);

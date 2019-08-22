@@ -22,7 +22,36 @@ class IFManager extends IFAPI {
     /** @var Config */
     private $config;
 
-    public function __construct($owner, $type) {
+    /**
+     * @param Session $session
+     * @return IFManager|null
+     */
+    public static function getBySession(Session $session): ?IFManager {
+        $type = $session->get("if_type");
+        if ($type === null) return null;
+        switch ($type) {
+            case IFManager::BLOCK:
+                $manager = IFPlugin::getInstance()->getBlockManager();
+                break;
+            case IFManager::COMMAND:
+                $manager = IFPlugin::getInstance()->getCommandManager();
+                break;
+            case IFManager::EVENT:
+                $manager = IFPlugin::getInstance()->getEventManager();
+                break;
+            case IFManager::CHAIN:
+                $manager = IFPlugin::getInstance()->getChainManager();
+                break;
+            case IFManager::FORM:
+                $manager = IFPlugin::getInstance()->getFormIFManager();
+                break;
+            default:
+                $manager = null;
+        }
+        return $manager;
+    }
+
+    public function __construct(IFPlugin $owner, string $type) {
         $this->owner = $owner;
         $this->config = new Config($owner->getDataFolder() . $type. ".yml", Config::YAML, []);
     }
