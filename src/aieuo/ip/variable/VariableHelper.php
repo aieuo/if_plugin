@@ -44,7 +44,7 @@ class VariableHelper {
         if (isset($this->variables[$name]) and !$save) return $this->variables[$name];
         if (!$this->exists($name, true)) return "";
         $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
-        return Variable::create($datas["name"], $this->changeType($datas["value"]), $datas["type"]);
+        return Variable::create($datas["name"], $this->currentType($datas["value"]), $datas["type"]);
     }
 
     /**
@@ -201,7 +201,7 @@ class VariableHelper {
      * @param  string $string
      * @return string | float | value
      */
-    public function changeType(string $value) {
+    public function currentType(string $value) {
         if (mb_substr($value, 0, 5) === "(str)") {
             $value = mb_substr($value, 5);
         } elseif (mb_substr($value, 0, 5) === "(num)") {

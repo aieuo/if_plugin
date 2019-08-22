@@ -11,16 +11,16 @@ use aieuo\ip\variable\ListVariable;
 
 class BlockManager extends IFManager {
 
-	public function __construct($owner) {
-		parent::__construct($owner ,"blocks");
-	}
+    public function __construct($owner){
+        parent::__construct($owner, "blocks");
+    }
 
-    public function set($key, $datas = [], $options = []) {
+    public function set(string $key, array $datas = [], array $options = []) {
         $datas = $this->repairIF($datas);
         parent::set($key, $datas);
     }
 
-    public function getPosition($block) {
+    public function getPosition($block){
         return $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
     }
 
@@ -41,9 +41,9 @@ class BlockManager extends IFManager {
             "block_level" => new StringVariable("block_level", $block->level->getFolderName()),
             "touch_face" => new NumberVariable("touch_face", $event->getFace())
         ];
-        if($block instanceof SignPost) {
+        if ($block instanceof SignPost) {
             $sign = $block->level->getTile($block);
-            if($sign instanceof Sign) {
+            if ($sign instanceof Sign) {
                 $variables["sign_lines"] = new ListVariable("sign_lines", $sign->getText());
             }
         }

@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\manager;
 
+use aieuo\ip\utils\Language;
 use pocketmine\command\PluginCommand;
 
 use aieuo\ip\variable\StringVariable;

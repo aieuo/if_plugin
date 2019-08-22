@@ -14,7 +14,7 @@ class FormIFManager extends IFManager {
         parent::__construct($owner, "forms");
     }
 
-    public function set($key, $datas = [], $options = []) {
+    public function set(string $key, array $datas = [], array $options = []) {
         if (!isset($datas["ifs"])) $datas["ifs"] = [];
         parent::set($key, $datas);
     }
