@@ -13,7 +13,7 @@ class OverMoney extends TypeMoney {
     protected $name = "@condition.overmoney.name";
     protected $description = "@condition.overmoney.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("condition.overmoney.detail", [$this->getAmount()]);
     }
 

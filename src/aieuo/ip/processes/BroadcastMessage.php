@@ -12,7 +12,7 @@ class BroadcastMessage extends TypeMessage {
     protected $name = "@process.broadcastmessage.name";
     protected $description = "@process.broadcastmessage.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $message = $this->getSendMessage();
         return Language::get("process.broadcastmessage.detail", [$message]);
     }

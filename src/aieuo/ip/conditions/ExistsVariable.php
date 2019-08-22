@@ -14,10 +14,10 @@ class ExistsVariable extends Condition {
     protected $name = "@condition.existsvariable.name";
 	protected $description = "@condition.existsvariable.description";
 
-	public function getMessage() {
-		$name = $this->getVariableName();
-		return Language::get("condition.existsvariable.detail", [$name]);
-	}
+    public function getDetail(): string {
+        $name = $this->getVariableName();
+        return Language::get("condition.existsvariable.detail", [$name]);
+    }
 
 	public function getVariableName() {
 		return $this->getValues();

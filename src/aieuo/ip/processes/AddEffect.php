@@ -15,7 +15,7 @@ class AddEffect extends Process {
     protected $name = "@process.addeffect.name";
     protected $description = "@process.addeffect.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $effect = $this->getEffect();
         if (!($effect instanceof EffectInstance)) return false;
         return Language::get("process.addeffect.detail", [$effect->getId(), $effect->getAmplifier(), $effect->getDuration() / 20]);

@@ -22,7 +22,7 @@ class Comparison extends Condition {
     const CONTAINS = 6;
     const NOT_CONTAINS = 7;
 
-    public function getMessage() {
+    public function getDetail(): string {
         if ($this->getValues() === false) return false;
         $value1 = $this->getValue1();
         $value2 = $this->getValue2();

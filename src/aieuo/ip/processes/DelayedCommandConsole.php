@@ -13,7 +13,7 @@ class DelayedCommandConsole extends DelayedCommand {
     protected $name = "@process.delayedcommandconsole.name";
     protected $description = "@process.delayedcommandconsole.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         if ($this->getValues() === false) return false;
         $command = $this->getCommand();
         $time = $this->getTime();

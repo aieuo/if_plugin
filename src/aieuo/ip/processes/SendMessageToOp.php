@@ -12,7 +12,7 @@ class SendMessageToOp extends TypeMessage {
     protected $name = "@process.sendmessagetoop.name";
     protected $description = "@process.sendmessagetoop.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $message = $this->getSendMessage();
         return Language::get("process.sendmessagetoop.detail", [$message]);
     }

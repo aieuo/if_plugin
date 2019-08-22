@@ -12,7 +12,7 @@ class InHand extends TypeItem {
     protected $name = "@condition.inhand.name";
     protected $description = "@condition.inhand.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
         return Language::get("condition.inhand.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);

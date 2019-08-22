@@ -11,7 +11,7 @@ class AddMoney extends TypeMoney {
     protected $name = "@process.addmoney.name";
     protected $description = "@process.addmoney.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("process.addmoney.detail", [$this->getAmount()]);
     }
 

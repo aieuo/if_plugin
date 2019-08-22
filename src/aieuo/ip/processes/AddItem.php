@@ -12,7 +12,7 @@ class AddItem extends TypeItem {
     protected $name = "@process.additem.name";
     protected $description = "@process.additem.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
         return Language::get("process.additem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);

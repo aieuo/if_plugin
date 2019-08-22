@@ -15,7 +15,7 @@ class Cooperation extends Process {
     protected $name = "@process.cooperation.name";
     protected $description = "@process.cooperation.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $name = $this->getCooperationName();
         return Language::get("process.cooperation.detail", [$name]);
     }

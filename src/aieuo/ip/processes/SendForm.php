@@ -15,7 +15,7 @@ class SendForm extends Process {
     protected $name = "@process.sendform.name";
     protected $description = "@process.sendform.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $name = $this->getFormName();
         return Language::get("process.sendform.detail", [$name]);
     }

@@ -17,7 +17,7 @@ class InArea extends Condition {
         $this->setValues($area);
     }
 
-    public function getMessage() {
+    public function getDetail(): string {
         $areas = $this->getArea();
         if ($areas === false) return false;
         $message = Language::get("condition.inarean.detail1");

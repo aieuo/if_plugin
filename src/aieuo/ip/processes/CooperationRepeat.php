@@ -15,7 +15,7 @@ class CooperationRepeat extends Process {
     protected $name = "@process.cooperationrepeat.name";
     protected $description = "@process.cooperationrepeat.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $name = $this->getCooperationName();
         $count = $this->getCount();
         return Language::get("process.cooperationrepeat.detail", [$name, $count]);

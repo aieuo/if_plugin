@@ -14,7 +14,7 @@ class DeleteVariable extends Process {
     protected $name = "@process.deletevariable.name";
     protected $description = "@process.deletevariable.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("process.deletevariable.detail", [$this->getVariableName()]);
     }
 

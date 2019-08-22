@@ -25,7 +25,7 @@ class Calculation extends Process {
     const DIVISION = 3;
     const MODULO = 4;
 
-    public function getMessage() {
+    public function getDetail(): string {
         if ($this->getValues() === false) return false;
         $variable1 = $this->getValue1();
         $variable2 = $this->getValue2();

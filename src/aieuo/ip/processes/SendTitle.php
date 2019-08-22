@@ -12,7 +12,7 @@ class SendTitle extends Process {
     protected $name = "@process.sendtitle.name";
     protected $description = "@process.sendtitle.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         return Language::get("process.sendtitle.detail", [$this->getTitle(), $this->getSubTitle()]);
     }
 

@@ -14,7 +14,7 @@ class Attack extends Process {
     protected $name = "@process.attack.name";
     protected $description = "@process.attack.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $damage = $this->getDamage();
         if ($damage === false) return false;
         return Language::get("process.attack.detail", [$damage]);

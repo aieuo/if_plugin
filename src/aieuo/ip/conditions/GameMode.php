@@ -21,7 +21,7 @@ class GameMode extends Condition {
         "condition.gamemode.spectator"
     ];
 
-    public function getMessage() {
+    public function getDetail(): string {
         $gamemode = $this->getGamemode();
         if ($gamemode === false) return false;
         return Language::get("condition.gamemode.detail", [Language::get($this->gamemodes[$gamemode])]);

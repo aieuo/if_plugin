@@ -12,7 +12,7 @@ class CanAddItem extends TypeItem {
     protected $name = "@condition.canadditem.name";
     protected $description = "@condition.canadditem.description";
 
-    public function getMessage() {
+    public function getDetail(): string {
         $item = $this->getItem();
         if (!($item instanceof Item)) return false;
         return Language::get("condition.canadditem.detail", [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);
