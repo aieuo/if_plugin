@@ -41,7 +41,7 @@ class Session {
 
     public function setValid($valid = true, $deleteDatas = true): self {
         $this->valid = $valid;
-        if (!$valid and $deleteDatas) $this->removeAllData();
+        if (!$valid and $deleteDatas) $this->removeAll();
         return $this;
     }
 
