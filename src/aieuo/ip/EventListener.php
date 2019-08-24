@@ -264,8 +264,6 @@ class EventListener implements Listener {
     public function receive(DataPacketReceiveEvent $event) {
         $pk = $event->getPacket();
         $player = $event->getPlayer();
-        $name = $player->getName();
-        if (!$player->isOp())return;
         if ($pk instanceof ModalFormResponsePacket) {
             $json = str_replace([",]",",,"], [",\"\"]",",\"\","], $pk->formData);
             $data = json_decode($json);
