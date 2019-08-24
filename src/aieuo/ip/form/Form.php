@@ -18,12 +18,12 @@ class Form {
 
     private static $forms = [];
 
-    public static function sendForm($player, $form, $class, $func) {
+    public static function sendForm($player, $form, $class, $func, $opOnly = true) {
         while (true) {
             $id = mt_rand(0, 999999999);
             if (!isset(self::$forms[$id])) break;
         }
-        self::$forms[$id] = [$class, $func];
+        self::$forms[$id] = [[$class, $func], $opOnly];
         $pk = new ModalFormRequestPacket();
         $pk->formId = $id;
         $pk->formData = $form;
@@ -32,7 +32,9 @@ class Form {
 
     public static function onRecive($id, $player, $datas) {
         if (isset(self::$forms[$id])) {
-            call_user_func_array(self::$forms[$id], [$player, $datas]);
+            if ($player->isOp() or !self::$forms[$id][1]) {
+                call_user_func_array(self::$forms[$id][0], [$player, $datas]);
+            }
             unset(self::$forms[$id]);
         }
     }
