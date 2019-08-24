@@ -5,10 +5,11 @@ namespace aieuo\ip\form;
 use aieuo\ip\Session;
 use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
+use aieuo\ip\utils\Language;
 
 class ImportForm {
     public function getImportListForm($mes = "") {
-        $buttons = [Elements::getButton("<ひとつ前のページに戻る>")];
+        $buttons = [Elements::getButton(Language::get("form.back"))];
         $files = glob(IFPlugin::getInstance()->getDataFolder()."imports/*.json");
         foreach ($files as $file) {
             if (is_dir($file)) continue;
@@ -17,8 +18,8 @@ class ImportForm {
         }
         $data = [
             "type" => "form",
-            "title" => "ファイル選択",
-            "content" => ($mes === "" ? "" : $mes."\n")."§7ボタンを押してください",
+            "title" => Language::get("form.import.selectFile.title"),
+            "content" => ($mes === "" ? "" : $mes."\n").Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
         $json = Form::encodeJson($data);
@@ -38,7 +39,7 @@ class ImportForm {
         }
         $files = glob(IFPlugin::getInstance()->getDataFolder()."imports/*.json");
         if (!isset($files[$data - 1])) {
-            $form = $this->getImportListForm("エラーが発生しました、もう一度選択してください");
+            $form = $this->getImportListForm(Language::get("form.import.error"));
             Form::sendForm($player, $form, $this, "onImportList");
             return;
         }
@@ -49,17 +50,17 @@ class ImportForm {
     }
 
     public function getImportForm($datas) {
-        $mes = $datas["name"]."\n作成者: ".$datas["author"]."\n".$datas["details"]."\n";
+        $mes = Language::get("form.import.import.content", [$datas["name"], $datas["author"], $datas["details"]]);
         foreach ($datas["ifs"] as $key => $value) {
             $mes .= "---------------------------\n";
             $mes .= "§l".$key."§r§f\n".IFAPI::createIFMessage($value["if"], $value["match"], $value["else"])."\n";
         }
         $data = [
             "type" => "custom_form",
-            "title" => "ファイルインポート > ".$datas["name"],
+            "title" => Language::get("form.import.import.title", $datas["name"]),
             "content" => [
                 Elements::getLabel($mes),
-                Elements::getToggle("キャンセル")
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
@@ -73,7 +74,7 @@ class ImportForm {
             return;
         }
         if ($data[1]) {
-            $form = $this->getImportListForm("キャンセルしました");
+            $form = $this->getImportListForm(Language::get("form.cancelled"));
             Form::sendForm($player, $form, $this, "onImportList");
             return;
         }
@@ -159,17 +160,17 @@ class ImportForm {
             }
             unset($file["ifs"][$key]);
         }
-        $player->sendMessage($count."個のIFを追加しました");
+        $player->sendMessage(Language::get("form.import.success", [$count]));
         $session->setValid(false);
     }
 
     public function getConfirmOverwriteForm($name) {
         $data = [
             "type" => "modal",
-            "title" => "上書き",
-            "content" => $name."は既に存在します、上書きしますか?\n上書きすると以前の物は復元できません。",
-            "button1" => "はい",
-            "button2" => "いいえ"
+            "title" => Language::get("form.import.overwriting.title"),
+            "content" => Language::get("form.import.overwriting.content", [$name]),
+            "button1" => Language::get("form.yes"),
+            "button2" => Language::get("form.no")
         ];
         $data = Form::encodeJson($data);
         return $data;

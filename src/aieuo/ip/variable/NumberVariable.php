@@ -2,6 +2,8 @@
 
 namespace aieuo\ip\variable;
 
+use aieuo\ip\utils\Language;
+
 class NumberVariable extends Variable {
 
     public $type = Variable::NUMBER;
@@ -12,7 +14,7 @@ class NumberVariable extends Variable {
 
     public function addition(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "数字に文字列を足すことはできません");
+            return new StringVariable("ERROR", Language::get("variable.number.add.error"));
         }
         $result = $this->getValue() + $var->getValue();
         return new NumberVariable($resultname, $result);
@@ -20,7 +22,7 @@ class NumberVariable extends Variable {
 
     public function subtraction(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "数字から文字列を引くことはできません");
+            return new StringVariable("ERROR", Language::get("variable.number.sub.error"));
         }
         $result = $this->getValue() - $var->getValue();
         return new NumberVariable($resultname, $result);
@@ -28,7 +30,7 @@ class NumberVariable extends Variable {
 
     public function multiplication(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "数字に文字列を掛けることはできません");
+            return new StringVariable("ERROR", Language::get("variable.number.mul.error"));
         }
         $result = $this->getValue() * $var->getValue();
         return new NumberVariable($resultname, $result);
@@ -36,10 +38,10 @@ class NumberVariable extends Variable {
 
     public function division(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "数字を文字列で割ることはできません");
+            return new StringVariable("ERROR", Language::get("variable.number.div.error"));
         }
         if ($var->getValue() === 0) {
-            return new StringVariable("ERROR", "0で割れません");
+            return new StringVariable("ERROR", Language::get("variable.number.div.0"));
         }
         $result = $this->getValue() / $var->getValue();
         return new NumberVariable($resultname, $result);
@@ -47,10 +49,10 @@ class NumberVariable extends Variable {
 
     public function modulo(Variable $var, string $resultname = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "数字を文字列で割ることはできません");
+            return new StringVariable("ERROR", Language::get("variable.number.mod.error"));
         }
         if ($var->getValue() === 0) {
-            return new StringVariable("ERROR", "0で割れません");
+            return new StringVariable("ERROR", Language::get("variable.number.div.0"));
         }
         $result = $this->getValue() % $var->getValue();
         return new NumberVariable($resultname, $result);

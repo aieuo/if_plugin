@@ -6,17 +6,18 @@ use aieuo\ip\manager\IFManager;
 use aieuo\ip\Session;
 use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
+use aieuo\ip\utils\Language;
 
 class ExportForm {
     public function getExportForm($mes = "") {
         $data = [
             "type" => "custom_form",
-            "title" => "共有用ファイル作成",
+            "title" => Language::get("if.export.title"),
             "content" => [
-                Elements::getInput(($mes === "" ? "" : $mes."\n")."タイトル"),
-                Elements::getInput("作成者"),
-                Elements::getInput("説明"),
-                Elements::getToggle("キャンセル")
+                Elements::getInput(($mes === "" ? "" : $mes."\n").Language::get("if.export.form.content0")),
+                Elements::getInput(Language::get("if.export.form.content1")),
+                Elements::getInput(Language::get("if.export.form.content2")),
+                Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
         $json = Form::encodeJson($data);
@@ -41,9 +42,9 @@ class ExportForm {
             return;
         }
         if ($data[0] == "" or $data[1] == "" or $data[2] == "") {
-            $form = $this->getExportForm("§c必要事項を記入してください§f");
+            $form = $this->getExportForm(Language::get("form.insufficient"));
             Form::sendForm($player, $form, $this, "onExport");
-            $player->sendMessage("必要事項を入力してください");
+            $player->sendMessage(Language::get("form.insufficient"));
             return;
         }
         $datas["type"] = $type;
@@ -60,7 +61,7 @@ class ExportForm {
         $filename = $data[0]."_".$data[1]."_".$type."_".$key.".json";
         $path = IFPlugin::getInstance()->getDataFolder()."exports/".$filename;
         file_put_contents($path, json_encode($export, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        $player->sendMessage($filename."として保存しました");
+        $player->sendMessage(Language::get("if.export.success", [$filename]));
         $session->setValid(false);
     }
 }

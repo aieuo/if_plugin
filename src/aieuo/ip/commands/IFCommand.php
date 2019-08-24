@@ -23,7 +23,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
         parent::__construct('if', $owner);
         $this->setPermission('op');
         $this->setDescription(Language::get("command.if.description"));
-        $this->setUsage("if <block | command | event | chain | import | language>");
+        $this->setUsage(Language::get("command.if.usage"));
         $this->setExecutor($this);
         $this->owner = $owner;
         $this->form = new Form();
