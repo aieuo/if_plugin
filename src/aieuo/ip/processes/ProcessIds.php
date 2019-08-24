@@ -47,4 +47,5 @@ interface ProcessIds {
     const SEND_FORM = 141;
     const SETMONEY = 142;
     const CLEAR_INVENTORY = 143;
+    const EQUIP_ARMOR = 144;
 }
