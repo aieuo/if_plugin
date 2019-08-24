@@ -74,7 +74,7 @@ class EventForm {
         $data = [
             "type" => "form",
             "title" => Language::get("form.event.IFList.title", [Language::get("form.event.".$event)]),
-            "content" => Language::get("form.insufficient"),
+            "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
         $json = Form::encodeJson($data);

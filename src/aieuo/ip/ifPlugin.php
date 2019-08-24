@@ -153,13 +153,13 @@ class IFPlugin extends PluginBase implements Listener {
         if ($type === Session::BLOCK) {
             $options = [];
         } elseif ($type === Session::COMMAND) {
-            $options = ["desc" => $session->getData("description"), "perm" => $session->getData("permission")];
+            $options = ["desc" => $session->get("description"), "perm" => $session->get("permission")];
         } elseif ($type === Session::EVENT) {
-            $options = ["eventname" => $session->getData("eventname")];
+            $options = ["eventname" => $session->get("eventname")];
         } elseif ($type === Session::CHAIN) {
             $options = [];
         } elseif ($type === Session::FORM) {
-            $options = ["place" => $session->getData("form_place")];
+            $options = ["place" => $session->get("form_place")];
         }
         return $options;
     }
