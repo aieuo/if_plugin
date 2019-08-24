@@ -2,6 +2,8 @@
 
 namespace aieuo\ip\variable;
 
+use aieuo\ip\utils\Language;
+
 class StringVariable extends Variable {
 
     public $type = Variable::STRING;
@@ -22,10 +24,10 @@ class StringVariable extends Variable {
 
     public function multiplication(Variable $var, string $name = "result"): Variable {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "文字列と文字列を掛けることはできません");
+            return new StringVariable("ERROR", Language::get("variable.string.mul.error"));
         }
         if ($var->getValue() <= 0) {
-            return new StringVariable("ERROR", "掛ける数は1以上にしてください");
+            return new StringVariable("ERROR", Language::get("variable.string.mul.0"));
         }
         $result = str_repeat($this->getValue(), (int)$var->getValue());
         return new StringVariable($name, $result);
@@ -33,7 +35,7 @@ class StringVariable extends Variable {
 
     public function division(Variable $var, string $name = "result"): Variable {
         if ($var->getType() !== Variable::STRING) {
-            return new StringVariable("ERROR", "文字列をリストで割ることはできません");
+            return new StringVariable("ERROR", Language::get("variable.string.div.error"));
         }
         $result = array_map(function ($value) {
             return trim(rtrim($value));
@@ -42,6 +44,6 @@ class StringVariable extends Variable {
     }
 
     public function modulo(Variable $var, string $name = "result"): Variable {
-        return new StringVariable("ERROR", "文字列は割り算できません");
+        return new StringVariable("ERROR", Language::get("variable.string.mod.error"));
     }
 }

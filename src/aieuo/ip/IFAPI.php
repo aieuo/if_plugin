@@ -66,7 +66,7 @@ class IFAPI {
                 $datas = $datas3;
                 break;
             case Condition::NOT_FOUND:
-                $player->sendMessage("§cエラーが発生しました(id: ".$datas["id"]."が見つかりません)");
+                $player->sendMessage(Language::get("if.contents.notFound", [$datas["id"]]));
             case Condition::ERROR:
             default:
                 return false;
@@ -114,7 +114,6 @@ class IFAPI {
         return $variables;
     }
 
-    // FIXME false? null?
     public static function createIFMessage(array $ifs, array $matchs, array $others): string {
         $mes = Language::get("message.if")."\n";
         foreach ($ifs as $if) {
@@ -124,7 +123,7 @@ class IFAPI {
                         $content->getDescription()."§f,\n":
                         $content->getDetail()."§f,\n";
         }
-        $mes .= "\nなら\n";
+        $mes .= "\n".Language::get("message.match")."\n";
         foreach ($matchs as $match) {
             $process1 = Process::get($match["id"]);
             $process1->setValues($process1->parse($match["content"]));
@@ -132,7 +131,7 @@ class IFAPI {
                         $process1->getDescription()."§f,\n":
                         $process1->getDetail()."§f,\n";
         }
-        $mes .= "\n条件に合わなかったら\n";
+        $mes .= "\n".Language::get("message.other")."\n";
         foreach ($others as $other) {
             $process2 = Process::get($other["id"]);
             $process2->setValues($process2->parse($other["content"]));

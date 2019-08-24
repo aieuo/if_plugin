@@ -2,6 +2,8 @@
 
 namespace aieuo\ip\variable;
 
+use aieuo\ip\utils\Language;
+
 class ListVariable extends Variable {
 
     public $type = Variable::LIST;
@@ -12,7 +14,7 @@ class ListVariable extends Variable {
 
     public function addition(Variable $var, string $name = "result") {
         if ($var->getType() !== Variable::LIST) {
-            return new StringVariable("ERROR", "リストにリスト以外を足すことはできません");
+            return new StringVariable("ERROR", Language::get("variable.list.add.error"));
         }
         $result = array_merge($this->getValue(), $var->getValue());
         return new ListVariable($name, $result);
@@ -20,7 +22,7 @@ class ListVariable extends Variable {
 
     public function subtraction(Variable $var, string $name = "result") {
         if ($var->getType() !== Variable::LIST) {
-            return new StringVariable("ERROR", "リストからリスト以外を引くことはできません");
+            return new StringVariable("ERROR", Language::get("variable.list.sub.error"));
         }
         $result = array_diff($this->getValue(), $var->getValue());
         $result = array_values($result);
@@ -29,7 +31,7 @@ class ListVariable extends Variable {
 
     public function multiplication(Variable $var, string $name = "result") {
         if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", "リスト数字以外をかける事はできません");
+            return new StringVariable("ERROR", Language::get("variable.list.mul.error"));
         }
         $result = [];
         $max = (int)$var->getValue();
@@ -40,11 +42,11 @@ class ListVariable extends Variable {
     }
 
     public function division(Variable $var, string $name = "result") {
-        return new StringVariable("ERROR", "リストは割り算できません");
+        return new StringVariable("ERROR", Language::get("variable.list.div.error"));
     }
 
     public function modulo(Variable $var, string $name = "result") {
-        return new StringVariable("ERROR", "リストは割り算できません");
+        return new StringVariable("ERROR", Language::get("variable.list.mod.error"));
     }
 
     public function getValueFromIndex($index) {

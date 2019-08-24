@@ -29,6 +29,7 @@ use aieuo\ip\form\Form;
 use aieuo\ip\Session;
 use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
+use aieuo\ip\utils\Language;
 
 class EventListener implements Listener {
 
@@ -52,7 +53,7 @@ class EventListener implements Listener {
         if ($manager->exists($cmd)) {
             if ($manager->isSubCommand($cmd) and !$manager->exists($cmd)) {
                 $subcommands = implode(" | ", $manager->getSubcommands($cmd));
-                $event->getPlayer()->sendMessage("Usage: /".$manager->getOriginCommand($cmd)." <".$subcommands.">");
+                $event->getPlayer()->sendMessage(Language::get("if.command.subCommandNotFound", [$manager->getOriginCommand($cmd), $subcommands]));
                 return;
             }
             $datas = $manager->get($cmd);
@@ -203,7 +204,7 @@ class EventListener implements Listener {
                     case 'check':
                         $pos = $manager->getPosition($block);
                         if (!$manager->exists($pos)) {
-                            $player->sendMessage("そのブロックには追加されていません");
+                            $player->sendMessage(Language::get("if.block.notFound"));
                             return;
                         }
                         $datas = $manager->get($pos);
@@ -213,26 +214,26 @@ class EventListener implements Listener {
                     case 'copy':
                         $pos = $manager->getPosition($block);
                         if (!$manager->exists($pos)) {
-                            $player->sendMessage("そのブロックには追加されていません");
+                            $player->sendMessage(Language::get("if.block.notFound"));
                             return;
                         }
                         $session->set("if_key", $pos);
                         $session->set("action", "paste");
-                        $player->sendMessage("貼り付けるブロックを触ってください");
+                        $player->sendMessage(Language::get("if.block.paste"));
                         return;
                     case 'paste':
                         $pos = $manager->getPosition($block);
                         if ($manager->exists($pos)) {
-                            $player->sendMessage("そのブロックにはすでに追加されています");
+                            $player->sendMessage(Language::get("if.block.alreadyExists"));
                             return;
                         }
                         $manager->set($pos, $manager->get($session->get("if_key")));
-                        $player->sendMessage("貼り付けました");
+                        $player->sendMessage(Language::get("if.block.paste.success"));
                         break;
                     case 'del':
                         $pos = $manager->getPosition($block);
                         if (!$manager->exists($pos)) {
-                            $player->sendMessage("そのブロックには追加されていません");
+                            $player->sendMessage(Language::get("if.block.notFound"));
                             return;
                         }
                         $session->set("if_key", $pos);
