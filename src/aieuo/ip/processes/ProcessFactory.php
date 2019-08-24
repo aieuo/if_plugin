@@ -33,6 +33,7 @@ class ProcessFactory {
         self::register(new ClearInventory());
         self::register(new SetImmobile());
         self::register(new UnSetImmobile());
+        self::register(new EquipArmor());
         self::register(new AddEnchantment());
         self::register(new AddEffect());
         self::register(new SetNametag());
