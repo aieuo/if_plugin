@@ -52,8 +52,17 @@ class IFPlugin extends PluginBase implements Listener {
             }
         }
         if (!isset($messages)) {
-            $this->getLogger()->warning("言語ファイルの読み込みに失敗しました");
-            $this->getLogger()->warning(implode(", ", $languages)." が使用できます");
+            $languageList = implode(", ", $languages);
+            switch ($this->getServer()->getLanguage()->getLang()) {
+                case "eng":
+                    $errors = ["Failed to load language file", "available languages are: [".$languageList."]"];
+                    break;
+                default:
+                    $errors = ["言語ファイルの読み込みに失敗しました", $languageList." が使用できます"];
+            }
+            foreach ($errors as $error) {
+                $this->getLogger()->warning($error);
+            }
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }

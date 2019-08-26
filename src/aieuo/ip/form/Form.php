@@ -553,5 +553,4 @@ class Form {
         $form = $this->getEditIfForm($mes, $datas["name"] ?? null);
         Form::sendForm($player, $form, $this, "onEditIf");
     }
-
 }
