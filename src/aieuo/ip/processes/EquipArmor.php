@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\processes;
 
+use pocketmine\item\ItemBlock;
 use pocketmine\item\Item;
 use pocketmine\item\Armor;
 use aieuo\ip\utils\Language;
@@ -51,7 +52,7 @@ class EquipArmor extends Process {
         if (!($armor instanceof Item)) {
             $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
             return;
-        } elseif (!($armor instanceof Armor)) {
+        } elseif (!($armor instanceof Armor) and !($armor instanceof ItemBlock)) {
             $player->sendMessage(Language::get("process.equipArmor.notArmor", [$this->getName(), $armor->getName()]));
             return;
         }
@@ -63,7 +64,7 @@ class EquipArmor extends Process {
         $datas = $this->parse($default);
         $place = 0;
         $armor = explode("[item]", $default)[1] ?? $default;
-        if ($armor instanceof Armor) {
+        if ($armor instanceof Armor or $armor instanceof ItemBlock) {
             $place = $datas[0];
             $armor = $datas->getId().":".$datas->getDamage();
         } elseif ($default !== "" and $armor instanceof Item) {
