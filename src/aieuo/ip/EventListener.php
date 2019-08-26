@@ -175,7 +175,7 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         if (!isset($this->touch[$player->getName()])) $this->touch[$player->getName()] = 0;
         $tick = Server::getInstance()->getTick();
-        if ($tick - $this->touch[$player->getName()] <= 3) {
+        if ($tick - $this->touch[$player->getName()] < 3) {
             return;
         }
         $this->touch[$player->getName()] = $tick;

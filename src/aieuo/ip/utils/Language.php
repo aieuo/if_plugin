@@ -15,9 +15,9 @@ class Language {
     }
 
     public static function get(string $key, array $replaces = []): string {
-        if(isset(self::$messages[$key])) {
+        if (isset(self::$messages[$key])) {
             $message = self::$messages[$key];
-            foreach($replaces as $cnt => $value) {
+            foreach ($replaces as $cnt => $value) {
                 $message = str_replace("{%".$cnt."}", $value, $message);
             }
             $message = str_replace(["\\n", "\\q", "\\dq"], ["\n", "\'", "\""], $message);
