@@ -43,6 +43,7 @@ class ProcessFactory {
         self::register(new SetGamemode());
         self::register(new Cooperation());
         self::register(new CooperationRepeat());
+        self::register(new DelayedCooperation());
         self::register(new ExecuteOtherPlayer());
         self::register(new SetBlocks());
         self::register(new SaveDatas());

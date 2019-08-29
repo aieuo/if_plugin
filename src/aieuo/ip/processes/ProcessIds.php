@@ -48,4 +48,5 @@ interface ProcessIds {
     const SETMONEY = 142;
     const CLEAR_INVENTORY = 143;
     const EQUIP_ARMOR = 144;
+    const DELAYED_COOPERATION = 144;
 }
