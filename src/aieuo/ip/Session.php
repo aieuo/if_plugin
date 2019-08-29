@@ -50,6 +50,19 @@ class Session {
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @return boolean
+     */
+    public function exists(string $key): bool {
+        return isset($this->datas[$key]);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
     public function get(string $key, $default = null) {
         if (!isset($this->datas[$key])) return $default;
         return $this->datas[$key];

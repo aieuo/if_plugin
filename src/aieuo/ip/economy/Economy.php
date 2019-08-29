@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\economy;
+namespace aieuo\ip\economy;
 
 use aieuo\ip\utils\Language;
 use aieuo\ip\Main;
