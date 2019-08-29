@@ -1,11 +1,14 @@
 ---
 name: if
-main: aieuo\ip\ifPlugin
-version: 3.4.4
+main: aieuo\ip\Main
+version: 4.0.0
 api: 3.0.0
 load: POSTWORLD
 author: aieuo
 permissions:
+  ifplugin.command.if:
+    default: op
+    description: "permission that allows player to use /if"
   ifplugin.customcommand.op:
     default: op
     description: "ifplugin.customcommand.op"
