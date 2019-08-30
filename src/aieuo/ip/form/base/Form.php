@@ -65,6 +65,18 @@ abstract class Form implements PMForm {
     }
 
     /**
+     * @param string[] $messages
+     * @return self
+     */
+    public function addMessages(array $messages): self {
+        foreach ($messages as $message) {
+            $message = $this->checkTranslate($message);
+            $this->errors[$message] = true;
+        }
+        return $this;
+    }
+
+    /**
      * @param string $text
      * @return string
      */
