@@ -6,10 +6,12 @@ use pocketmine\Player;
 use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\condition\Conditionable;
 use aieuo\ip\condition\Condition;
+use aieuo\ip\utils\Categories;
 
 class AndScript extends Script implements Conditionable {
-    /** @var string */
     protected $id = self::SCRIPT_AND;
+    protected $name = "@script.and.name";
+    protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
 
     /** @var Conditionable[] */
     protected $conditions = [];

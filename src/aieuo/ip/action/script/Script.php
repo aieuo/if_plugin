@@ -9,10 +9,22 @@ abstract class Script implements ScriptNames {
     /** @var string */
     protected $id;
     /** @var string */
+    protected $name;
+    /** @var string */
     protected $detail;
+    /** @var int */
+    protected $category;
 
     public function getId(): string {
         return $this->id;
+    }
+
+    public function getName(): string {
+        $name = $this->name;
+        if (($name[0] ?? "") === "@") {
+            $name = Language::get(substr($name, 1));
+        }
+        return $name;
     }
 
     public function getDetail(): string {
@@ -21,6 +33,10 @@ abstract class Script implements ScriptNames {
             $detail = Language::get(substr($detail, 1));
         }
         return $detail;
+    }
+
+    public function getCategory(): int {
+        return $this->category;
     }
 
     abstract public function serializeContents(): array;

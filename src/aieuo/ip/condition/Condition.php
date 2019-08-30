@@ -10,6 +10,8 @@ abstract class Condition implements Conditionable, ConditionNames {
     protected $id;
     /** @var string */
     protected $detail;
+    /** @var int */
+    protected $category;
 
     /**
      * @return string
@@ -24,6 +26,10 @@ abstract class Condition implements Conditionable, ConditionNames {
             $detail = Language::get(substr($detail, 1));
         }
         return $detail;
+    }
+
+    public function getCategory(): int {
+        return $this->category;
     }
 
     /**

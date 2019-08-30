@@ -5,8 +5,8 @@ namespace aieuo\ip\action\script;
 use pocketmine\Player;
 
 class ORScript extends AndScript {
-    /** @var string */
     protected $id = self::SCRIPT_OR;
+    protected $name = "@script.or.name";
 
     public function getDetail(): string {
         $details = ["-----------or-----------"];

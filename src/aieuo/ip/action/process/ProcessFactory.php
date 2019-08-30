@@ -20,6 +20,20 @@ class ProcessFactory {
         return null;
     }
 
+    /**
+     * @return Process[]
+     */
+    public static function getByCategory(int $category): array {
+        $processes = [];
+        foreach (self::$list as $process) {
+            if ($process->getCategory() === $category) $processes[] = $process;
+        }
+        return $processes;
+    }
+
+    /**
+     * @return array
+     */
     public static function getAll(): array {
         return self::$list;
     }

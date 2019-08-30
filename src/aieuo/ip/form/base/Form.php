@@ -77,6 +77,21 @@ abstract class Form implements PMForm {
     }
 
     /**
+     * @param array $errors
+     * @return self
+     */
+    public function addErrors(array $errors): self {
+        foreach ($errors as $error) {
+            if (!is_array($error) or !isset($error[1])) {
+                $this->addMessages([$error]);
+            } else {
+                $this->addError($error[0], $error[1]);
+            }
+        }
+        return $this;
+    }
+
+    /**
      * @param string $text
      * @return string
      */

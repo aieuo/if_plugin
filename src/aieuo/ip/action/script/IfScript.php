@@ -3,14 +3,16 @@
 namespace aieuo\ip\action\script;
 
 use pocketmine\Player;
+use aieuo\ip\utils\Categories;
 use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\condition\Conditionable;
 use aieuo\ip\condition\Condition;
 use aieuo\ip\action\Action;
 
 class IfScript extends Script implements Action {
-    /** @var string */
     protected $id = self::SCRIPT_IF;
+    protected $name = "@script.if.name";
+    protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
     /** @var Conditionable[] */
     private $conditions = [];

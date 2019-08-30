@@ -2,6 +2,9 @@
 
 namespace aieuo\ip\form;
 
+use aieuo\ip\action\Action;
+use aieuo\ip\action\process\ProcessFactory;
+use aieuo\ip\action\script\ScriptFactory;
 use pocketmine\Player;
 use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\manager\IFManager;
@@ -12,6 +15,7 @@ use aieuo\ip\form\elements\Label;
 use aieuo\ip\form\elements\Toggle;
 use aieuo\ip\recipe\IFBlock;
 use aieuo\ip\Session;
+use aieuo\ip\utils\Categories;
 use aieuo\ip\utils\Language;
 
 class IFForm {
@@ -20,7 +24,7 @@ class IFForm {
     }
 
     public function sendSelectIFTypeForm(Player $player) {
-        FormAPI::createListForm("@form.selectAction.title")
+        FormAPI::createListForm("@form.IFType.title")
             ->setContent("@form.selectButton")
             ->addButton(
                 new Button("@form.block"),
@@ -52,7 +56,7 @@ class IFForm {
             })->show($player);
     }
 
-    public function sendListIFForm(Player $player, IFBlock $ifData) {
+    public function sendListIFForm(Player $player, IFBlock $ifData, array $messages = []) {
         $form = FormAPI::createListForm("@form.listIF.title")->setContent("@form.selectButton");
         $form->addButton(new Button("@form.back"), new Button("@form.action.add"));
         foreach ($ifData->getAllRecipe() as $key => $recipe) {
@@ -79,7 +83,7 @@ class IFForm {
             if (!($recipe instanceof IFRecipe)) return; // TODO: error message
             $session->set("if_selected_place", $data);
             $this->sendEditIFForm($player, $recipe);
-        })->addArgs($ifData)->show($player);
+        })->addArgs($ifData)->addMessages($messages)->show($player);
     }
 
     public function sendEditIFForm(Player $player, IFRecipe $recipe, array $messages = []) {
@@ -101,6 +105,7 @@ class IFForm {
                 $manager = IFManager::getBySession($session);
                 switch ($data) {
                     case 0:
+                        $this->sendEditContentsForm($player, $recipe);
                         break;
                     case 1:
                         $this->getConfirmDeleteForm()
@@ -111,6 +116,7 @@ class IFForm {
                         $this->sendChangeRecipeNameForm($player, $recipe);
                         break;
                     case 3:
+                        // TODO: export form
                         break;
                     case 4:
                         $key = $session->get("if_key");
@@ -123,6 +129,92 @@ class IFForm {
                         break;
                 }
             })->addArgs($recipe)->addMessages($messages)->show($player);
+    }
+
+    public function sendEditContentsForm(Player $player, IFRecipe $recipe, array $messages = []) {
+        $form = FormAPI::createListForm(Language::get("form.editContents.title", [$recipe->getName() ?? "recipe"]))
+            ->setContent("@form.selectButton")
+            ->addButton(new Button("@form.back"), new Button("@form.editContents.add"));
+        foreach ($recipe->getActions() as $action) {
+            $form->addButton(new Button($action->getDetail()));
+        }
+        $form->onRecive(function (Player $player, ?int $data, IFRecipe $recipe) {
+            $session = Session::getSession($player);
+            if ($data === null) {
+                $session->setValid(false);
+                return;
+            }
+            if ($data === 0) {
+                $this->sendEditIFForm($player, $recipe);
+                return;
+            }
+            if ($data === 1) {
+                $this->sendSelectActionCategoryForm($player, $recipe);
+                return;
+            }
+            $data -= 2;
+            $session->set("contents_select_place", $data);
+            $action = $recipe->getAction($data);
+            if (!($action instanceof Action)) return; // TODO error message
+            $action = clone $action;
+            $action->sendEditForm($player, $recipe, false);
+        })->addArgs($recipe)->addMessages($messages)->show($player);
+    }
+
+    public function sendSelectActionCategoryForm(Player $player, IFRecipe $recipe) {
+        $form = FormAPI::createListForm("@form.selectCategory.title")->setContent("@form.selectButton");
+        $form->addButton(new Button("@form.back"), new Button("@form.selectCategory.all"));
+        $categories = [];
+        foreach (Categories::getActionCategories() as $category => $categoryName) {
+            $form->addButton(new Button($categoryName));
+            $categories[] = $category;
+        }
+        $form->onRecive(function (Player $player, ?int $data, array $categories, IFRecipe $recipe) {
+            $session = Session::getSession($player);
+            if ($data === null) {
+                $session->setValid(false);
+                return;
+            }
+            if ($data === 0) {
+                $this->sendEditContentsForm($player, $recipe);
+                return;
+            }
+            if ($data === 1) {
+                $actions = array_merge(ScriptFactory::getAll(), ProcessFactory::getAll());
+                $categoryName = Language::get("form.selectCategory.all");
+            } else {
+                $data -= 2;
+                $category = $categories[$data];
+                $categoryName = Categories::getActionCategories()[$category];
+                $actions = array_merge(ScriptFactory::getByCategory($category), ProcessFactory::getByCategory($category));
+            }
+            $session->set("category_name", $categoryName)->set("actions", $actions);
+            $this->sendSelectActionForm($player, $recipe, $actions, $categoryName);
+        })->addArgs($categories, $recipe)->show($player);
+    }
+
+    public function sendSelectActionForm(Player $player, IFRecipe $recipe, array $actions, string $categoryName) {
+        $form = FormAPI::createListForm(Language::get("form.selectAction.title", [$categoryName]))
+            ->setContent("@form.selectButton")->addButton(new Button("@form.back"));
+        foreach ($actions as $action) {
+            $form->addButton(new Button($action->getName()));
+        }
+        $form->onRecive(function (Player $player, ?int $data, IFRecipe $recipe, array $actions) {
+            $session = Session::getSession($player);
+            if ($data === null) {
+                $session->setValid(false);
+                return;
+            }
+            if ($data === 0) {
+                $this->sendSelectActionCategoryForm($player, $recipe);
+                return;
+            }
+            $data -= 1;
+            $action = $actions[$data];
+            if (!($action instanceof Action)) return; // TODO: error message
+            $action = clone $action;
+            $action->sendEditForm($player, $recipe);
+        })->addArgs($recipe, $actions)->show($player);
     }
 
     public function sendChangeRecipeNameForm(Player $player, IFRecipe $recipe) {
@@ -169,17 +261,30 @@ class IFForm {
         $session = Session::getSession($player);
         $manager = IFManager::getBySession($session);
 
+        $key = $session->get("if_key");
+        $place = $session->get("if_selected_place");
+        if ($key === null or $place === null) return; //TODO: error message
+        $ifData = $manager->get($key);
+        if ($ifData === null) return; //TODO: error message
         if ($data) {
-            $key = $session->get("if_key");
-            $place = $session->get("if_selected_place");
-            if ($key === null or $place === null) return; //TODO: error message
-            $ifData = $manager->get($key);
-            if ($ifData === null) return; //TODO: error message
             $ifData->removeRecipe($place);
             $player->sendMessage(Language::get("form.delete.success"));
+            $this->sendListIFForm($player, $ifData, ["@form.delete.success"]);
         } else {
             $player->sendMessage(Language::get("form.cancelled"));
+            $this->sendEditIFForm($player, $ifData->getRecipe($key), ["@form.cancelled"]);
         }
-        $session->setValid(false);
+    }
+
+    public function onDeleteContent(Player $player, bool $data, IFRecipe $recipe) {
+        $session = Session::getSession($player);
+        if ($data) {
+            $recipe->removeAction($session->get("contents_select_place"));
+            $player->sendMessage(Language::get("form.delete.success"));
+            $this->sendEditContentsForm($player, $recipe, ["@form.delete.success"]);
+        } else {
+            $player->sendMessage(Language::get("form.cancelled"));
+            $this->sendEditContentsForm($player, $recipe, ["@form.cancelled"]);
+        }
     }
 }

@@ -12,7 +12,11 @@ abstract class Process implements Action, ProcessNames {
     /** @var string */
     protected $name;
     /** @var string */
+    protected $description;
+    /** @var string */
     protected $detail;
+    /** @var int */
+    protected $category;
 
     /**
      * @return string
@@ -29,12 +33,24 @@ abstract class Process implements Action, ProcessNames {
         return $name;
     }
 
+    public function getDescription(): string {
+        $description = $this->description;
+        if (($description[0] ?? "") === "@") {
+            $description = Language::get(substr($description, 1));
+        }
+        return $description;
+    }
+
     public function getDetail(): string {
         $detail = $this->detail;
         if (($detail[0] ?? "") === "@") {
             $detail = Language::get(substr($detail, 1));
         }
         return $detail;
+    }
+
+    public function getCategory(): int {
+        return $this->category;
     }
 
     /**

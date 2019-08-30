@@ -46,6 +46,10 @@ class IFRecipe implements \JsonSerializable {
         return $this->actions[$index] ?? null;
     }
 
+    public function removeAction(int $index) {
+        unset($this->actions[$index]);
+    }
+
     public function getActions(): array {
         return $this->actions;
     }

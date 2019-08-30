@@ -57,6 +57,7 @@ abstract class IFBlock implements \JsonSerializable {
      */
     public function removeRecipe(int $index) {
         unset($this->recipes[$index]);
+        $this->recipes = array_merge($this->recipes);
     }
 
     /**
