@@ -52,7 +52,7 @@ class AndScript extends Script implements Conditionable {
         return $this->conditions;
     }
 
-    public function parseFromScriptSaveData(array $contents): ?self {
+    public function parseFromActionSaveData(array $contents): ?self {
         foreach ($contents as $content) {
             switch ($content["type"]) {
                 case IFRecipe::CONTENT_TYPE_CONDITION:

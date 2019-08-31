@@ -10,6 +10,7 @@ use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\manager\IFManager;
 use aieuo\ip\form\elements\Button;
 use aieuo\ip\form\base\ModalForm;
+use aieuo\ip\form\elements\Dropdown;
 use aieuo\ip\form\elements\Input;
 use aieuo\ip\form\elements\Label;
 use aieuo\ip\form\elements\Toggle;
@@ -75,6 +76,7 @@ class IFForm {
             if ($data === 1) {
                 $recipe = new IFRecipe();
                 $ifData->addRecipe($recipe);
+                $session->set("if_selected_place", count($ifData->getAllRecipe()));
                 $this->sendEditIFForm($player, $recipe);
                 return;
             }
@@ -94,6 +96,7 @@ class IFForm {
                 new Button("@form.editIF.edit"),
                 new Button("@form.action.delete"),
                 new Button("@form.editIF.changeName"),
+                new Button("@form.editIF.target"),
                 new Button("@form.editIF.export"),
                 new Button("@form.back")
             )->onRecive(function (Player $player, ?int $data, IFRecipe $recipe) {
@@ -116,9 +119,12 @@ class IFForm {
                         $this->sendChangeRecipeNameForm($player, $recipe);
                         break;
                     case 3:
-                        // TODO: export form
+                        $this->sendSelectTargetForm($player, $recipe);
                         break;
                     case 4:
+                        // TODO: export form
+                        break;
+                    case 5:
                         $key = $session->get("if_key");
                         if ($key === null) break; // TODO: error message
                         if (!$manager->exists($key)) {
@@ -156,7 +162,7 @@ class IFForm {
             $session->set("contents_select_place", $data);
             $action = $recipe->getAction($data);
             if (!($action instanceof Action)) return; // TODO error message
-            $action = clone $action;
+            $action = $action;
             $action->sendEditForm($player, $recipe, false);
         })->addArgs($recipe)->addMessages($messages)->show($player);
     }
@@ -215,6 +221,72 @@ class IFForm {
             $action = clone $action;
             $action->sendEditForm($player, $recipe);
         })->addArgs($recipe, $actions)->show($player);
+    }
+
+    public function onAddActionForm(Player $player, array $data, IFRecipe $recipe, Action $action) {
+        $session = Session::getSession($player);
+        if ($data === null) {
+            $session->setValid(false);
+            return;
+        }
+        $datas = $action->parseFromFormData($data);
+        if ($datas["cancel"]) {
+            $this->sendSelectActionForm($player, $recipe, $session->get("actions"), $session->get("category_name"));
+            return;
+        }
+        if ($datas["status"] === null) {
+            $action->sendEditForm($player, $recipe, true, $datas["errors"]);
+            return;
+        }
+        $action->parseFromActionSaveData($datas["contents"]);
+        $recipe->addAction($action);
+        $this->sendEditContentsForm($player, $recipe, ["@form.changed"]);
+    }
+
+    public function onUpdateActionForm(Player $player, array $data, IFRecipe $recipe, Action $action) {
+        $session = Session::getSession($player);
+        if ($data === null) {
+            $session->setValid(false);
+            return;
+        }
+        $datas = $action->parseFromFormData($data);
+        if ($datas["cancel"]) {
+            $this->sendEditIFForm($player, $recipe, ["@form.cancelled"]);
+            return;
+        }
+        if ($datas["delete"]) {
+            $form = $this->getConfirmDeleteForm();
+            $form->addArgs($recipe)->onRecive([$this, "onDeleteContent"])->show($player);
+            return;
+        }
+        if ($datas["status"] === null) {
+            $action->sendEditForm($player, $recipe, false, $datas["errors"]);
+            return;
+        }
+        $action->parseFromActionSaveData($datas["contents"]);
+        $this->sendEditContentsForm($player, $recipe, ["@form.changed"]);
+    }
+
+    public function sendSelectTargetForm(Player $player, IFRecipe $recipe) {
+        $target = $recipe->getTargetSetting();
+        FormAPI::createCustomForm("@form.selectTarget.title")
+            ->addContent(
+                new Dropdown("@form.selectTarget.content0", [
+                    Language::get("form.selectTarget.content0.item0"),
+                    Language::get("form.selectTarget.content0.item1"),
+                    Language::get("form.selectTarget.content0.item2")
+                ], $target["type"]),
+                new Input("@form.selectTarget.content1", "@form.selectTarget.content1.placeholder", $target["target"])
+            )->onRecive(function (Player $player, ?array $data) use ($recipe) {
+                $session = Session::getSession($player);
+                if ($data === null) {
+                    $session->setValid(false);
+                    return;
+                }
+                $recipe->setTarget($data[0], $data[1]);
+                $player->sendMessage(Language::get("form.changed"));
+                $this->sendEditIFForm($player, $recipe, ["@form.changed"]);
+            })->show($player);
     }
 
     public function sendChangeRecipeNameForm(Player $player, IFRecipe $recipe) {

@@ -6,7 +6,13 @@ class ProcessFactory {
     private static $list = [];
 
     public static function init() {
+        self::register(new DoNothing());
         self::register(new SendMessage());
+        self::register(new SendTip());
+        self::register(new SendPopup());
+        self::register(new SendTitle());
+        self::register(new SendBroadcastMessage());
+        self::register(new SendMessageToOp());
     }
 
     /**

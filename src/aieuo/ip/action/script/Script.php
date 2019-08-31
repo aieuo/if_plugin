@@ -11,6 +11,8 @@ abstract class Script implements ScriptNames {
     /** @var string */
     protected $name;
     /** @var string */
+    protected $description;
+    /** @var string */
     protected $detail;
     /** @var int */
     protected $category;
@@ -25,6 +27,14 @@ abstract class Script implements ScriptNames {
             $name = Language::get(substr($name, 1));
         }
         return $name;
+    }
+
+    public function getDescription(): string {
+        $description = $this->description;
+        if (($description[0] ?? "") === "@") {
+            $description = Language::get(substr($description, 1));
+        }
+        return $description;
     }
 
     public function getDetail(): string {
@@ -52,6 +62,6 @@ abstract class Script implements ScriptNames {
     public static function parseFromSaveData(array $content): ?self {
         $script = ScriptFactory::get($content["id"]);
         if ($script === null) return null;
-        return $script->parseFromScriptSaveData($content["contents"]);
+        return $script->parseFromActionSaveData($content["contents"]);
     }
 }

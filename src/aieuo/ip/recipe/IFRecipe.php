@@ -2,15 +2,21 @@
 
 namespace aieuo\ip\recipe;
 
+use pocketmine\Server;
 use pocketmine\Player;
-use aieuo\ip\action\Action;
-use aieuo\ip\action\process\Process;
 use aieuo\ip\action\script\Script;
+use aieuo\ip\action\process\Process;
+use aieuo\ip\action\Action;
 
 class IFRecipe implements \JsonSerializable {
     const CONTENT_TYPE_PROCESS = "action";
     const CONTENT_TYPE_CONDITION = "condition";
     const CONTENT_TYPE_SCRIPT = "script";
+
+    const TARGET_DEFAULT = 0;
+    const TARGET_SPECIFIED = 1;
+    const TARGET_BROADCAST = 2;
+
 
     /** @var string|null */
     private $name;
@@ -18,8 +24,14 @@ class IFRecipe implements \JsonSerializable {
     /** @var Actions[] */
     private $actions = [];
 
-    public function __construct(string $name = null) {
+    /**
+     * @var array
+     */
+    protected $target;
+
+    public function __construct(string $name = null, array $target = null) {
         $this->name = $name;
+        $this->target = $target ?? ["type" => self::TARGET_DEFAULT, "target" => ""];
     }
 
     public function setName(string $name) {
@@ -48,21 +60,52 @@ class IFRecipe implements \JsonSerializable {
 
     public function removeAction(int $index) {
         unset($this->actions[$index]);
+        $this->actions = array_merge($this->actions);
     }
 
     public function getActions(): array {
         return $this->actions;
     }
 
+    public function setTarget(int $type, string $target = "") {
+        $this->target = ["type" => $type, "target" => $target];
+    }
+
+    public function getTargetSetting(): array {
+        return $this->target;
+    }
+
+    public function getTargets(Player $player): array {
+        switch ($this->target["type"]) {
+            case self::TARGET_DEFAULT:
+                $targets = [$player];
+                break;
+            case self::TARGET_SPECIFIED:
+                $targets = [Server::getInstance()->getPlayer($this->target["target"])];
+                break;
+            case self::TARGET_BROADCAST:
+                $targets = Server::getInstance()->getOnlinePlayers();
+                break;
+        }
+        return $targets;
+    }
+
     public function execute(Player $player): ?bool {
-        foreach ($this->actions as $action) {
-            $action->execute($player);
+        $targets = $this->getTargets($player);
+        foreach ($targets as $target) {
+            if (!($target instanceof Player)) continue; // TODO error message
+            foreach ($this->actions as $action) {
+                $action->execute($target);
+            }
         }
         return true;
     }
 
     public function jsonSerialize(): array {
-        return $this->actions;
+        return [
+            "actions" => $this->actions,
+            "target" => $this->target,
+        ];
     }
 
     public function parseFromSaveData(array $datas): ?self {

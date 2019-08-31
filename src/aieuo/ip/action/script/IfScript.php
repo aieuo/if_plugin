@@ -5,9 +5,11 @@ namespace aieuo\ip\action\script;
 use pocketmine\Player;
 use aieuo\ip\utils\Categories;
 use aieuo\ip\recipe\IFRecipe;
+use aieuo\ip\form\FormAPI;
 use aieuo\ip\condition\Conditionable;
 use aieuo\ip\condition\Condition;
 use aieuo\ip\action\Action;
+use aieuo\ip\form\elements\Button;
 
 class IfScript extends Script implements Action {
     protected $id = self::SCRIPT_IF;
@@ -24,6 +26,14 @@ class IfScript extends Script implements Action {
         $this->actionTrue = new IFRecipe("onTrue");
     }
 
+    public function addCondition(Conditionable $condition) {
+        $this->conditions[] = $condition;
+    }
+
+    public function addAction(Action $action) {
+        $this->actionTrue->addAction($action);
+    }
+
     public function getDetail(): string {
         $details = ["==========if=========="];
         foreach ($this->conditions as $condition) {
@@ -33,14 +43,6 @@ class IfScript extends Script implements Action {
         $details[] = $this->actionTrue->getDetail();
         $details[] = "========================";
         return implode("\n", $details);
-    }
-
-    public function addCondition(Conditionable $condition) {
-        $this->conditions[] = $condition;
-    }
-
-    public function addAction(Action $action) {
-        $this->actionTrue->addAction($action);
     }
 
     public function execute(Player $player): ?bool {
@@ -63,7 +65,7 @@ class IfScript extends Script implements Action {
         ];
     }
 
-    public function parseFromScriptSaveData(array $contents): ?self {
+    public function parseFromActionSaveData(array $contents): ?self {
         if (!isset($contents[1])) return null;
         foreach ($contents[0] as $content) {
             switch ($content["type"]) {

@@ -86,19 +86,11 @@ class EventListener implements Listener {
                 return;
             }
         }
-        // if ($manager->exists($pos)) {
-        //     $datas = $manager->get($pos);
-        //     $manager->executeIfMatchCondition(
-        //         $player,
-        //         $datas["if"],
-        //         $datas["match"],
-        //         $datas["else"],
-        //         [
-        //             "player" => $player,
-        //             "block" => $block,
-        //             "event" => $event
-        //         ]
-        //     );
-        // }
+        if ($manager->exists($pos)) {
+            $idData = $manager->get($pos);
+            foreach ($idData->getAllRecipe() as $recipe) {
+                $recipe->execute($player);
+            }
+        }
     }
 }

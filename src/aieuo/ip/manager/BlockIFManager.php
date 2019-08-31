@@ -22,7 +22,8 @@ class BlockIFManager extends IFManager {
             $key = $data["key"];
             $recipes = [];
             foreach ($data["recipes"] as $recipeName => $ifData) {
-                $recipe = (new IFRecipe($recipeName))->parseFromSaveData($ifData);
+                $target = $ifData["target"] ?? null;
+                $recipe = (new IFRecipe($recipeName, $target))->parseFromSaveData($ifData["actions"]);
                 var_dump($recipe, $recipe->getDetail());
                 $recipes[] = $recipe;
             }

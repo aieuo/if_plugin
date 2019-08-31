@@ -2,8 +2,10 @@
 
 namespace aieuo\ip\recipe;
 
+use pocketmine\Player;
 use aieuo\ip\manager\IFManager;
 use aieuo\ip\Session;
+use pocketmine\Server;
 
 abstract class IFBlock implements \JsonSerializable {
     /** @var IFRecipe[] */
@@ -60,6 +62,12 @@ abstract class IFBlock implements \JsonSerializable {
         $this->recipes = array_merge($this->recipes);
     }
 
+    public function executeAll(Player $player) {
+        foreach ($this->getAllRecipe() as $recipe) {
+            $recipe->execute($target);
+        }
+    }
+
     /**
      * @param string $dir
      * @return void
@@ -70,7 +78,6 @@ abstract class IFBlock implements \JsonSerializable {
     }
 
     abstract public function jsonSerialize(): array;
-
 
     /**
      * @param Session $session

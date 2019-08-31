@@ -11,7 +11,6 @@ use aieuo\ip\form\elements\Label;
 use aieuo\ip\form\elements\Input;
 use aieuo\ip\form\IFForm;
 use aieuo\ip\form\FormAPI;
-use aieuo\ip\Session;
 
 abstract class TypeMessage extends Process {
     protected $category = Categories::CATEGRY_ACTION_MESSAGE;
@@ -28,12 +27,12 @@ abstract class TypeMessage extends Process {
         return $this;
     }
 
-    public function getMessage(): ?string {
+    public function getMessage(): string {
         return $this->message;
     }
 
     public function isDataValid(): bool {
-        return is_string($this->getMessage()) and $this->getMessage() !== "";
+        return $this->getMessage() !== "";
     }
 
     public function getDetail(): string {
@@ -42,42 +41,31 @@ abstract class TypeMessage extends Process {
     }
 
     public function sendEditForm(Player $player, IFRecipe $recipe, bool $newAction = true, array $messages = []) {
-        $form = FormAPI::createCustomForm($this->getName())
+        $form = FormAPI::createCustomForm($this->getName())->addErrors($messages)->addArgs($recipe, $this)
             ->addContent(
                 new Label($this->getDescription()),
                 new Input(Language::get("process.message.form.message"), Language::get("input.example", ["aieuo"]), $this->getMessage() ?? ""),
                 new Toggle(Language::get("form.cancel"))
             );
-        if (!$newAction) $form->addContent(new Toggle(Language::get("form.action.delete")));
-        $form->onRecive(function (Player $player, ?array $data, IFRecipe $recipe) use ($newAction) {
-            $session = Session::getSession($player);
-            if ($data === null) {
-                $session->setValid(false);
-                return;
-            }
-            if ($newAction and $data[2]) {
-                (new IFForm)->sendSelectActionForm($player, $recipe, $session->get("actions"), $session->get("category_name"));
-                return;
-            } elseif ($data[2]) {
-                (new IFForm)->sendEditIFForm($player, $recipe, ["@form.cancelled"]);
-                return;
-            }
-            if (!$newAction and $data[3]) {
-                $form = (new IFForm)->getConfirmDeleteForm();
-                $form->addArgs($recipe)->onRecive([new IFForm, "onDeleteContent"])->show($player);
-                return;
-            }
-            if ($data[1] === "") {
-                $this->sendEditForm($player, $recipe, $newAction, [["@form.insufficient", 1]]);
-                return;
-            }
-            $this->setMessage($data[1]);
-            $recipe->addAction($this);
-            (new IFForm)->sendEditContentsForm($player, $recipe, ["@form.changed"]);
-        })->addArgs($recipe)->addErrors($messages)->show($player);
+        if ($newAction) {
+            $form->onRecive([new IFForm, "onAddActionForm"])->show($player);
+            return;
+        }
+        $form->addContent(new Toggle(Language::get("form.action.delete")))
+            ->onRecive([new IFForm, "onUpdateActionForm"])->show($player);
     }
 
-    public function parseFromProcessSaveData(array $content): ?self {
+    public function parseFromFormData(array $data): array {
+        $status = true;
+        $errors = [];
+        if ($data[1] === "") {
+            $status = null;
+            $errors = [["@form.insufficient", 1]];
+        }
+        return ["status" => $status, "contents" => [$data[1]], "cancel" => $data[2], "delete" => $data[3] ?? false, "errors" => $errors];
+    }
+
+    public function parseFromActionSaveData(array $content): ?self {
         if (empty($content[0]) or !is_string($content[0])) return null;
         $this->setMessage($content[0]);
         return $this;
