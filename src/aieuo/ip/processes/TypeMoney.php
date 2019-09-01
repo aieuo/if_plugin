@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\ip\Processes;
+namespace aieuo\ip\processes;
 
 use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
