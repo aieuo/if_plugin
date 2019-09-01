@@ -57,7 +57,7 @@ class ImportForm {
         }
         $data = [
             "type" => "custom_form",
-            "title" => Language::get("form.import.import.title", $datas["name"]),
+            "title" => Language::get("form.import.import.title", [$datas["name"]]),
             "content" => [
                 Elements::getLabel($mes),
                 Elements::getToggle(Language::get("form.cancel"))

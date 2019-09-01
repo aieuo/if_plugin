@@ -7,7 +7,7 @@ class IsSneaking extends Condition {
     protected $id = self::IS_SNEAKING;
     protected $name = "@condition.issneaking.name";
     protected $description = "@condition.issneaking.description";
-    protected $detail = "@condition.issneaking.detali";
+    protected $detail = "@condition.issneaking.detail";
 
     public function check() {
         $player = $this->getPlayer();

@@ -20,12 +20,12 @@ class InArea extends Condition {
     public function getDetail(): string {
         $areas = $this->getArea();
         if ($areas === false) return false;
-        $message = Language::get("condition.inarean.detail1");
+        $message = Language::get("condition.inarea.detail1");
         $mes = [];
         foreach ($areas as $axis => $area) {
             $mes[] = Language::get("condition.inarea.detail2", [$axis, $area[0], $area[1]]);
         }
-        return $message.Language::get("condition.inarean.detail3", [implode(",", $mes)]);
+        return $message.Language::get("condition.inarea.detail3", [implode(",", $mes)]);
     }
 
     public function getArea() {
@@ -37,10 +37,9 @@ class InArea extends Condition {
     }
 
     public function parse(string $areas) {
-        if (!preg_match("/([xyz]\(-?[0-9]+\.?[0-9]*,-?[0-9]+\.?[0-9]*\))+/", $areas, $matches)) return false;
-        array_shift($matches);
+        if (!preg_match_all("/([xyz]\(-?[0-9]+\.?[0-9]*,-?[0-9]+\.?[0-9]*\))/", $areas, $matches)) return false;
         $areas = [];
-        foreach ($matches as $match) {
+        foreach ($matches[1] as $match) {
             if (!preg_match("/([xyz])\((-?[0-9]+\.?[0-9]*),(-?[0-9]+\.?[0-9]*)\)/", $match, $matches1)) continue;
             $min = min((float)$matches1[2], (float)$matches1[3]);
             $max = max((float)$matches1[2], (float)$matches1[3]);
@@ -68,13 +67,14 @@ class InArea extends Condition {
             $areas = ["x" => $default, "y" => "", "z" => ""];
             if ($default !== "") $mes .= Language::get("form.error");
         }
+        var_dump($default);
 
         $content = [Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes))];
         foreach (["x", "y", "z"] as $axis) {
             if (!isset($areas[$axis])) $areas[$axis] = "";
             if (is_array(($areas[$axis]))) $areas[$axis] = $areas[$axis][0].",".$areas[$axis][1];
             $content[] = Elements::getInput(
-                Language::get("condition.inarea.form.area"),
+                Language::get("condition.inarea.form.area", [$axis]),
                 Language::get("input.example", ["0,100"]),
                 $areas[$axis]
             );
