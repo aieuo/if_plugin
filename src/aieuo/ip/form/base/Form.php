@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\form\base;
 
+use aieuo\ip\Session;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
 use aieuo\ip\utils\Language;
@@ -106,8 +107,14 @@ abstract class Form implements PMForm {
      * @param Player $player
      * @return self
      */
-    public function show(Player $player): self {
+    public function show(Player $player, bool $addPrev = false): self {
         $player->sendForm($this);
+        if ($addPrev) {
+            $session = Session::getSession($player);
+            $forms = $session->get("form_history", []);
+            $forms[] = $this;
+            $session->set("form_history", $forms);
+        }
         return $this;
     }
 

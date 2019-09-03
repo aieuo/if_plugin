@@ -2,12 +2,10 @@
 
 namespace aieuo\ip\action\process;
 
-use pocketmine\Player;
 use aieuo\ip\utils\Language;
 use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\form\elements\Toggle;
 use aieuo\ip\form\elements\Label;
-use aieuo\ip\form\IFForm;
 use aieuo\ip\form\FormAPI;
 use aieuo\ip\action\Action;
 
@@ -62,18 +60,12 @@ abstract class Process implements Action, ProcessNames {
         return true;
     }
 
-    public function sendEditForm(Player $player, IFRecipe $recipe, bool $newAction = true, array $messages = []) {
-        $form = FormAPI::createCustomForm($this->getName())->addMessages($messages)->addArgs($recipe, $this)
+    public function getEditForm(array $messages = []) {
+        return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),
                 new Toggle(Language::get("form.cancel"))
             );
-        if ($newAction) {
-            $form->onRecive([new IFForm, "onAddActionForm"])->show($player);
-            return;
-        }
-        $form->addContent(new Toggle(Language::get("form.action.delete")))
-            ->onRecive([new IFForm, "onUpdateActionForm"])->show($player);
     }
 
     public function parseFromFormData(array $data): array {

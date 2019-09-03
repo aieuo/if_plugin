@@ -17,6 +17,9 @@ abstract class Script implements ScriptNames {
     /** @var int */
     protected $category;
 
+    /** @var string */
+    private $customName;
+
     public function getId(): string {
         return $this->id;
     }
@@ -43,6 +46,14 @@ abstract class Script implements ScriptNames {
             $detail = Language::get(substr($detail, 1));
         }
         return $detail;
+    }
+
+    public function setCustomName(?string $name = null) {
+        $this->customName = $name;
+    }
+
+    public function getCustomName(): string {
+        return $this->customName ?? $this->getName();
     }
 
     public function getCategory(): int {

@@ -16,8 +16,9 @@ class AndScript extends Script implements Conditionable {
     /** @var Conditionable[] */
     protected $conditions = [];
 
-    public function __construct(Conditionable ...$conditions) {
+    public function __construct(array $conditions = [], ?string $customName = null) {
         $this->conditions = $conditions;
+        $this->setCustomName($customName);
     }
 
     public function getDetail(): string {

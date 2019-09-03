@@ -64,7 +64,7 @@ abstract class IFBlock implements \JsonSerializable {
 
     public function executeAll(Player $player) {
         foreach ($this->getAllRecipe() as $recipe) {
-            $recipe->execute($target);
+            $recipe->execute($player);
         }
     }
 

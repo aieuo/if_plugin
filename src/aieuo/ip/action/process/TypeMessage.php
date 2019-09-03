@@ -40,19 +40,13 @@ abstract class TypeMessage extends Process {
         return Language::get($this->detail, [$this->getMessage()]);
     }
 
-    public function sendEditForm(Player $player, IFRecipe $recipe, bool $newAction = true, array $messages = []) {
-        $form = FormAPI::createCustomForm($this->getName())->addErrors($messages)->addArgs($recipe, $this)
+    public function getEditForm(array $messages = []) {
+        return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),
                 new Input(Language::get("process.message.form.message"), Language::get("input.example", ["aieuo"]), $this->getMessage() ?? ""),
                 new Toggle(Language::get("form.cancel"))
             );
-        if ($newAction) {
-            $form->onRecive([new IFForm, "onAddActionForm"])->show($player);
-            return;
-        }
-        $form->addContent(new Toggle(Language::get("form.action.delete")))
-            ->onRecive([new IFForm, "onUpdateActionForm"])->show($player);
     }
 
     public function parseFromFormData(array $data): array {

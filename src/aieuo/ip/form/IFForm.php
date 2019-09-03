@@ -3,7 +3,9 @@
 namespace aieuo\ip\form;
 
 use aieuo\ip\action\Action;
+use aieuo\ip\action\process\Process;
 use aieuo\ip\action\process\ProcessFactory;
+use aieuo\ip\action\script\Script;
 use aieuo\ip\action\script\ScriptFactory;
 use pocketmine\Player;
 use aieuo\ip\recipe\IFRecipe;
@@ -142,7 +144,7 @@ class IFForm {
             ->setContent("@form.selectButton")
             ->addButton(new Button("@form.back"), new Button("@form.editContents.add"));
         foreach ($recipe->getActions() as $action) {
-            $form->addButton(new Button($action->getDetail()));
+            $form->addButton(new Button(trim($action->getDetail())));
         }
         $form->onRecive(function (Player $player, ?int $data, IFRecipe $recipe) {
             $session = Session::getSession($player);
@@ -162,9 +164,18 @@ class IFForm {
             $session->set("contents_select_place", $data);
             $action = $recipe->getAction($data);
             if (!($action instanceof Action)) return; // TODO error message
-            $action = $action;
-            $action->sendEditForm($player, $recipe, false);
-        })->addArgs($recipe)->addMessages($messages)->show($player);
+
+            if ($action instanceof Script) {
+                $session->set("parent_recipe", $recipe);
+                $action->sendEditForm($player, false);
+                return;
+            }
+            $action->getEditForm()
+                ->addContent(new Toggle("@form.action.delete"))
+                ->addArgs($recipe, $action)
+                ->onRecive([$this, "onUpdateActionForm"])
+                ->show($player);
+        })->addArgs($recipe)->addMessages($messages)->show($player, true);
     }
 
     public function sendSelectActionCategoryForm(Player $player, IFRecipe $recipe) {
@@ -219,11 +230,20 @@ class IFForm {
             $action = $actions[$data];
             if (!($action instanceof Action)) return; // TODO: error message
             $action = clone $action;
-            $action->sendEditForm($player, $recipe);
+
+            if ($action instanceof Script) {
+                $session->set("parent_recipe", $recipe);
+                $action->sendEditForm($player, true);
+                return;
+            }
+            $action->getEditForm()
+                ->addArgs($recipe, $action)
+                ->onRecive([$this, "onAddActionForm"])
+                ->show($player);
         })->addArgs($recipe, $actions)->show($player);
     }
 
-    public function onAddActionForm(Player $player, array $data, IFRecipe $recipe, Action $action) {
+    public function onAddActionForm(Player $player, ?array $data, IFRecipe $recipe, Action $action) {
         $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false);
@@ -235,7 +255,10 @@ class IFForm {
             return;
         }
         if ($datas["status"] === null) {
-            $action->sendEditForm($player, $recipe, true, $datas["errors"]);
+            $action->getEditForm($datas["errors"])
+                ->addArgs($recipe, $action)
+                ->onRecive([$this, "onAddActionForm"])
+                ->show($player);
             return;
         }
         $action->parseFromActionSaveData($datas["contents"]);
@@ -243,7 +266,7 @@ class IFForm {
         $this->sendEditContentsForm($player, $recipe, ["@form.changed"]);
     }
 
-    public function onUpdateActionForm(Player $player, array $data, IFRecipe $recipe, Action $action) {
+    public function onUpdateActionForm(Player $player, ?array $data, IFRecipe $recipe, Action $action) {
         $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false);
@@ -251,7 +274,7 @@ class IFForm {
         }
         $datas = $action->parseFromFormData($data);
         if ($datas["cancel"]) {
-            $this->sendEditIFForm($player, $recipe, ["@form.cancelled"]);
+            $this->sendEditContentsForm($player, $recipe, ["@form.cancelled"]);
             return;
         }
         if ($datas["delete"]) {
@@ -260,7 +283,11 @@ class IFForm {
             return;
         }
         if ($datas["status"] === null) {
-            $action->sendEditForm($player, $recipe, false, $datas["errors"]);
+            $action->getEditForm($datas["errors"])
+                ->addContent(new Toggle("@form.action.delete"))
+                ->addArgs($recipe, $action)
+                ->onRecive([$this, "onUpdateActionForm"])
+                ->show($player);
             return;
         }
         $action->parseFromActionSaveData($datas["contents"]);

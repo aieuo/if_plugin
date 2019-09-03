@@ -40,11 +40,10 @@ class CustomForm extends Form {
         if (!empty($this->errors) and !empty($this->contents)) {
             $form["content"][0]->setText(implode("\n", array_keys($this->errors))."\n".$form["content"][0]->getText());
         }
-        if (!empty($this->highlights)) {
-            for ($i=0; $i<count($form["content"]); $i++) {
-                $content = $form["content"][$i];
-                $content->setText(($this->highlights[$i] ?? "").$content->getText());
-            }
+        for ($i=0; $i<count($form["content"]); $i++) {
+            if (empty($this->highlights[$i])) continue;
+            $content = $form["content"][$i];
+            $content->setText("§e".preg_replace("/§[a-f0-9]/", "", $content->getText()));
         }
         return $form;
     }

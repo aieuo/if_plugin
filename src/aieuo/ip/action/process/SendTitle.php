@@ -5,11 +5,9 @@ namespace aieuo\ip\action\process;
 use pocketmine\Player;
 use aieuo\ip\utils\Language;
 use aieuo\ip\utils\Categories;
-use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\form\elements\Toggle;
 use aieuo\ip\form\elements\Label;
 use aieuo\ip\form\elements\Input;
-use aieuo\ip\form\IFForm;
 use aieuo\ip\form\FormAPI;
 
 class SendTitle extends Process {
@@ -64,7 +62,7 @@ class SendTitle extends Process {
     }
 
     public function isDataValid(): bool {
-        return $this->getTitle() !== "" and $this->getSubTitle() !== "";
+        return $this->getTitle() !== "";
     }
 
     public function getDetail(): string {
@@ -81,20 +79,14 @@ class SendTitle extends Process {
         return true;
     }
 
-    public function sendEditForm(Player $player, IFRecipe $recipe, bool $newAction = true, array $messages = []) {
-        $form = FormAPI::createCustomForm($this->getName())->addErrors($messages)->addArgs($recipe, $this)
+    public function getEditForm(array $messages = []) {
+        return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),
                 new Input(Language::get("process.sendtitle.form.title"), Language::get("input.example", ["aieuo"]), $this->getTitle()),
                 new Input(Language::get("process.sendtitle.form.subtitle"), Language::get("input.example", ["aieuo"]), $this->getSubTitle()),
                 new Toggle(Language::get("form.cancel"))
             );
-        if ($newAction) {
-            $form->onRecive([new IFForm, "onAddActionForm"])->show($player);
-            return;
-        }
-        $form->addContent(new Toggle(Language::get("form.action.delete")))
-            ->onRecive([new IFForm, "onUpdateActionForm"])->show($player);
     }
 
     public function parseFromFormData(array $data): array {
@@ -108,8 +100,11 @@ class SendTitle extends Process {
     }
 
     public function parseFromActionSaveData(array $content): ?self {
-        if (empty($content[1]) or !is_string($content[0]) or !is_string($content[1])) return null;
+        if (!isset($content[1]) or !is_string($content[0]) or !is_string($content[1])) return null;
         $this->setTitle($content[0], $content[1]);
+        if (isset($content[4])) {
+            $this->setTime((int)$content[2], (int)$content[3], (int)$content[4]);
+        }
         return $this;
     }
 
