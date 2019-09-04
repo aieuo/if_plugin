@@ -25,7 +25,6 @@ class BlockIFManager extends IFManager {
                 $target = $ifData["target"] ?? null;
                 $recipe = (new IFRecipe($recipeName, $target))->parseFromSaveData($ifData["actions"]);
                 if ($recipe === null) continue 2;
-                var_dump($recipe, $recipe->getDetail());
                 $recipes[] = $recipe;
             }
             $this->set($key, new BlockIFBlock($key, $recipes));

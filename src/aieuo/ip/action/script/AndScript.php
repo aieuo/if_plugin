@@ -73,7 +73,6 @@ class AndScript extends Script implements Conditionable {
                 new Button("@form.action.delete")
             )->onRecive(function (Player $player, ?int $data) use ($parentScripts, $newAction) {
                 $session = Session::getSession($player);
-                var_dump($parentScripts);
                 $parentScript = end($parentScripts);
                 if ($data === null or $parentScript === false) {
                     $session->setValid(false);

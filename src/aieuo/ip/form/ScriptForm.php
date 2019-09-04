@@ -307,7 +307,6 @@ class ScriptForm {
             }
             $data -= 1;
             $condition = $conditions[$data];
-            var_dump($condition);
             if (!($condition instanceof Conditionable)) return; // TODO: error message
             $condition = clone $condition;
 
