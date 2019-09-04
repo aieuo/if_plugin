@@ -35,6 +35,19 @@ class IfScript extends Script implements Action {
         $this->conditions[] = $condition;
     }
 
+    public function getCondition(int $index): ?Conditionable {
+        return $this->conditions[$index] ?? null;
+    }
+
+    public function getConditions(): array {
+        return $this->conditions;
+    }
+
+    public function removeCondition(int $index) {
+        unset($this->conditions[$index]);
+        $this->conditions = array_merge($this->conditions);
+    }
+
     public function addAction(Action $action) {
         $this->actions[0][] = $action;
     }
@@ -112,6 +125,7 @@ class IfScript extends Script implements Action {
                         $parentScript[0]->sendEditForm($player, false, $parentScripts);
                         break;
                     case 1:
+                        (new ScriptForm)->sendEditConditionForm($player, $this, $parentScripts);
                         break;
                     case 2:
                         $session->set("scriptIfActionType", 0);

@@ -2,24 +2,23 @@
 
 namespace aieuo\ip\form;
 
-use aieuo\ip\action\Action;
-use aieuo\ip\action\process\ProcessFactory;
-use aieuo\ip\action\script\ActionBlockScript;
-use aieuo\ip\action\script\IfScript;
-use aieuo\ip\action\script\Script;
-use aieuo\ip\action\script\ScriptFactory;
 use pocketmine\Player;
+use aieuo\ip\utils\Language;
+use aieuo\ip\utils\Categories;
 use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\manager\IFManager;
+use aieuo\ip\form\elements\Toggle;
 use aieuo\ip\form\elements\Button;
 use aieuo\ip\form\base\ModalForm;
-use aieuo\ip\form\elements\Dropdown;
-use aieuo\ip\form\elements\Input;
-use aieuo\ip\form\elements\Label;
-use aieuo\ip\form\elements\Toggle;
+use aieuo\ip\condition\ConditionFactory;
+use aieuo\ip\condition\Condition;
+use aieuo\ip\action\script\ScriptFactory;
+use aieuo\ip\action\script\Script;
+use aieuo\ip\action\script\IfScript;
+use aieuo\ip\action\process\ProcessFactory;
+use aieuo\ip\action\Action;
+use aieuo\ip\condition\Conditionable;
 use aieuo\ip\Session;
-use aieuo\ip\utils\Categories;
-use aieuo\ip\utils\Language;
 
 class ScriptForm {
     public function sendEditIfScriptActionForm(Player $player, IfScript $script, array $parentScripts = [], array $messages = []) {
@@ -41,7 +40,7 @@ class ScriptForm {
                 return;
             }
             if ($data === 1) {
-                $this->sendSelectIFScriptActionCategoryForm($player, $script, $parentScripts);
+                $this->sendSelectIfScriptActionCategoryForm($player, $script, $parentScripts);
                 return;
             }
             $data -= 2;
@@ -62,7 +61,7 @@ class ScriptForm {
         })->addMessages($messages)->show($player, true);
     }
 
-    public function sendSelectIFScriptActionCategoryForm(Player $player, IfScript $script, array $parentScripts) {
+    public function sendSelectIfScriptActionCategoryForm(Player $player, IfScript $script, array $parentScripts) {
         $form = FormAPI::createListForm("@form.selectCategory.title")->setContent("@form.selectButton");
         $form->addButton(new Button("@form.back"), new Button("@form.selectCategory.all"));
         $categories = [];
@@ -111,7 +110,7 @@ class ScriptForm {
                 return;
             }
             if ($data === 0) {
-                $this->sendSelectIfScriptActionForm($player, $script, $parentScripts);
+                $this->sendSelectIfScriptActionCategoryForm($player, $script, $parentScripts);
                 return;
             }
             $data -= 1;
@@ -203,8 +202,6 @@ class ScriptForm {
     }
 
     public function onDeleteScript(Player $player, bool $data, IfScript $script, array $parentScripts, int $place) {
-        $session = Session::getSession($player);
-        var_dump($script, $parentScripts, $session->get("contents_select_place"), $place);
         if ($data) {
             $script->removeAction($place);
             $player->sendMessage(Language::get("form.delete.success"));
@@ -215,65 +212,177 @@ class ScriptForm {
             $this->sendEditIfScriptActionForm($player, $script, $parentScripts, ["@form.cancelled"]);
         }
     }
-/*
 
-    public function onDeleteScript(Player $player, bool $data) {
-        $session = Session::getSession($player);
-        $manager = IFManager::getBySession($session);
-
-        $key = $session->get("if_key");
-        $place = $session->get("if_selected_place");
-        if ($key === null or $place === null) return; //TODO: error message
-        $ifData = $manager->get($key);
-        if ($ifData === null) return; //TODO: error message
-        if ($data) {
-            $ifData->removeRecipe($place);
-            $player->sendMessage(Language::get("form.delete.success"));
-            $this->sendListIFForm($player, $ifData, ["@form.delete.success"]);
-        } else {
-            $player->sendMessage(Language::get("form.cancelled"));
-            $this->sendEditIFForm($player, $ifData->getRecipe($key), ["@form.cancelled"]);
-        }
-    }
-    public function sendEditContentsForm(Player $player, IFRecipe $recipe, Script $script, array $messages = []) {
-        $form = FormAPI::createListForm(Language::get("form.editContents.title", [$recipe->getName() ?? "recipe"]))
+    public function sendEditConditionForm(Player $player, Script $script, array $parentScripts = [], array $messages = []) {
+        $form = FormAPI::createListForm(Language::get("form.script.editConditions.title", [$script->getCustomName()]))
             ->setContent("@form.selectButton")
             ->addButton(new Button("@form.back"), new Button("@form.editContents.add"));
-        foreach ($recipe->getActions() as $action) {
-            $form->addButton(new Button($action->getDetail()));
+        foreach ($script->getConditions() as $condition) {
+            $form->addButton(new Button(trim($condition->getDetail())));
         }
-        $form->onRecive(function (Player $player, ?int $data, IFRecipe $recipe) {
+
+        $form->onRecive(function (Player $player, ?int $data) use ($script, $parentScripts) {
             $session = Session::getSession($player);
             if ($data === null) {
                 $session->setValid(false);
                 return;
             }
             if ($data === 0) {
-                $this->sendEditIFForm($player, $recipe);
+                $script->sendEditForm($player, false, $parentScripts);
                 return;
             }
             if ($data === 1) {
-                $this->sendSelectActionCategoryForm($player, $recipe);
+                $this->sendSelectConditionCategoryForm($player, $script, $parentScripts);
                 return;
             }
             $data -= 2;
             $session->set("contents_select_place", $data);
-            $action = $recipe->getAction($data);
-            if (!($action instanceof Action)) return; // TODO error message
-            $action->sendEditForm($player, $recipe, false);
-        })->addArgs($recipe)->addMessages($messages)->show($player, true);
+            $condition = $script->getCondition($data);
+            if (!($condition instanceof Conditionable)) return; // TODO error message
+
+            if ($condition instanceof Script) {
+                $parentScripts[] = [$script];
+                $condition->sendEditForm($player, false, $parentScripts);
+                return;
+            }
+            $condition->getEditForm()
+                ->addContent(new Toggle("@form.action.delete"))
+                ->addArgs($script, $condition, $parentScripts)
+                ->onRecive([$this, "onUpdateConditionForm"])
+                ->show($player);
+        })->addMessages($messages)->show($player, true);
     }
 
-    public function onDeleteIF(Player $player, bool $data) {
-        $session = Session::getSession($player);
-        $manager = IFManager::getBySession($session);
+    public function sendSelectConditionCategoryForm(Player $player, Script $script, array $parentScripts) {
+        $form = FormAPI::createListForm("@form.selectCategory.title")->setContent("@form.selectButton");
+        $form->addButton(new Button("@form.back"), new Button("@form.selectCategory.all"));
+        $categories = [];
+        foreach (Categories::getConditionCategories() as $category => $categoryName) {
+            $form->addButton(new Button($categoryName));
+            $categories[] = $category;
+        }
 
+        $form->onRecive(function (Player $player, ?int $data) use ($categories, $script, $parentScripts) {
+            $session = Session::getSession($player);
+            if ($data === null) {
+                $session->setValid(false);
+                return;
+            }
+            if ($data === 0) {
+                $this->sendEditConditionForm($player, $script, $parentScripts);
+                return;
+            }
+            if ($data === 1) {
+                $conditions = array_merge(ScriptFactory::getAll(), ConditionFactory::getAll());
+                $categoryName = Language::get("form.selectCategory.all");
+            } else {
+                $category = $categories[$data - 2];
+                $conditions = array_merge(ScriptFactory::getByCategory($category), ConditionFactory::getByCategory($category));
+                $categoryName = Categories::getConditionCategories()[$category];
+            }
+            $session->set("category_name", $categoryName)->set("conditions", $conditions);
+            $this->sendSelectConditionForm($player, $script, $parentScripts);
+        })->show($player);
+    }
+
+    public function sendSelectConditionForm(Player $player, Script $script, array $parentScripts) {
+        $session = Session::getSession($player);
+        $categoryName = $session->get("category_name") ?? "";
+        $conditions = $session->get("conditions") ?? [];
+        $form = FormAPI::createListForm(Language::get("form.script.selectCondition.title", [$categoryName]))
+            ->setContent("@form.selectButton")->addButton(new Button("@form.back"));
+        foreach ($conditions as $condition) {
+            $form->addButton(new Button($condition->getName()));
+        }
+
+        $form->onRecive(function (Player $player, ?int $data) use ($conditions, $script, $parentScripts) {
+            $session = Session::getSession($player);
+            if ($data === null) {
+                $session->setValid(false);
+                return;
+            }
+            if ($data === 0) {
+                $this->sendSelectConditionCategoryForm($player, $script, $parentScripts);
+                return;
+            }
+            $data -= 1;
+            $condition = $conditions[$data];
+            var_dump($condition);
+            if (!($condition instanceof Conditionable)) return; // TODO: error message
+            $condition = clone $condition;
+
+            if ($condition instanceof Script) {
+                $parentScripts[] = [$script];
+                $condition->sendEditForm($player, true, $parentScripts);
+                return;
+            }
+            $condition->getEditForm()
+                ->addArgs($script, $condition, $parentScripts)
+                ->onRecive([$this, "onAddConditionForm"])
+                ->show($player);
+        })->show($player);
+    }
+
+    public function onAddConditionForm(Player $player, ?array $data, Script $script, Conditionable $condition, array $parentScripts) {
+        $session = Session::getSession($player);
+        if ($data === null) {
+            $session->setValid(false);
+            return;
+        }
+        $datas = $condition->parseFromFormData($data);
+        if ($datas["cancel"]) {
+            $this->sendSelectConditionForm($player, $script, $parentScripts);
+            return;
+        }
+        if ($datas["status"] === null) {
+            $condition->getEditForm($datas["errors"])
+                ->addArgs($script, $condition, $parentScripts)
+                ->onRecive([$this, "onAddConditionForm"])
+                ->show($player);
+            return;
+        }
+        $condition->parseFromConditionSaveData($datas["contents"]);
+        $script->addCondition($condition);
+        $this->sendEditConditionForm($player, $script, $parentScripts, ["@form.changed"]);
+    }
+
+    public function onUpdateConditionForm(Player $player, ?array $data, Script $script, Conditionable $condition, array $parentScripts) {
+        $session = Session::getSession($player);
+        if ($data === null) {
+            $session->setValid(false);
+            return;
+        }
+        $datas = $condition->parseFromFormData($data);
+        if ($datas["cancel"]) {
+            $this->sendEditConditionForm($player, $script, $parentScripts, ["@form.cancelled"]);
+            return;
+        }
+        if ($datas["delete"]) {
+            $form = (new IFForm)->getConfirmDeleteForm();
+            $form->addArgs($script, $parentScripts)->onRecive([$this, "onDeleteCondition"])->show($player);
+            return;
+        }
+        if ($datas["status"] === null) {
+            $condition->getEditForm($datas["errors"])
+                ->addContent(new Toggle("@form.action.delete"))
+                ->addArgs($script, $condition, $parentScripts)
+                ->onRecive([$this, "onUpdateConditionForm"])
+                ->show($player);
+            return;
+        }
+        $condition->parseFromConditionSaveData($datas["contents"]);
+        $this->sendEditConditionForm($player, $script, $parentScripts, ["@form.changed"]);
+    }
+
+    public function onDeleteCondition(Player $player, bool $data, Script $script, array $parentScripts) {
+        $session = Session::getSession($player);
         if ($data) {
-            $manager->remove($session->get("if_key"));
+            $script->removeCondition($session->get("contents_select_place"));
             $player->sendMessage(Language::get("form.delete.success"));
+            $this->sendEditConditionForm($player, $script, $parentScripts, ["@form.delete.success"]);
         } else {
             $player->sendMessage(Language::get("form.cancelled"));
+            $this->sendEditConditionForm($player, $script, $parentScripts, ["@form.cancelled"]);
         }
-        $session->setValid(false);
-    }*/
+    }
 }

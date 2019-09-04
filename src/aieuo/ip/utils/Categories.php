@@ -22,6 +22,7 @@ class Categories {
     public static function getConditionCategories(): array {
         return [
             self::CATEGORY_CONDITION_OTHER => "other",
+            self::CATEGORY_CONDITION_SCRIPT => "script",
         ];
     }
 }

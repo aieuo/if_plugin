@@ -5,15 +5,15 @@ namespace aieuo\ip\condition;
 use aieuo\ip\utils\Categories;
 use pocketmine\Player;
 
-class IsOp extends Condition {
-    protected $id = self::IS_OP;
-    protected $name = "@condition.isop.name";
-    protected $description = "@condition.isop.description";
-    protected $detail = "@condition.isop.detail";
+class CheckNothing extends Condition {
+    protected $id = self::CHECK_NOTHING;
+    protected $name = "@condition.nocheck.name";
+    protected $description = "@condition.nocheck.description";
+    protected $detail = "@condition.nocheck.detail";
     protected $category = Categories::CATEGORY_CONDITION_OTHER;
 
     public function execute(Player $player): ?bool {
-        return $player->isOp();
+        return true;
     }
 
     public function parseFromConditionSaveData(array $data): ?self {
