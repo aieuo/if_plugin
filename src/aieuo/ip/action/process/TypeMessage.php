@@ -2,14 +2,11 @@
 
 namespace aieuo\ip\action\process;
 
-use pocketmine\Player;
 use aieuo\ip\utils\Language;
 use aieuo\ip\utils\Categories;
-use aieuo\ip\recipe\IFRecipe;
 use aieuo\ip\form\elements\Toggle;
 use aieuo\ip\form\elements\Label;
 use aieuo\ip\form\elements\Input;
-use aieuo\ip\form\IFForm;
 use aieuo\ip\form\FormAPI;
 
 abstract class TypeMessage extends Process {
@@ -40,11 +37,11 @@ abstract class TypeMessage extends Process {
         return Language::get($this->detail, [$this->getMessage()]);
     }
 
-    public function getEditForm(array $messages = []) {
+    public function getEditForm(array $messages = [], array $default = []) {
         return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),
-                new Input(Language::get("process.message.form.message"), Language::get("input.example", ["aieuo"]), $this->getMessage() ?? ""),
+                new Input(Language::get("process.message.form.message"), Language::get("input.example", ["aieuo"]), $default[0] ?? $this->getMessage()),
                 new Toggle(Language::get("form.cancel"))
             );
     }
@@ -53,7 +50,7 @@ abstract class TypeMessage extends Process {
         $status = true;
         $errors = [];
         if ($data[1] === "") {
-            $status = null;
+            $status = false;
             $errors = [["@form.insufficient", 1]];
         }
         return ["status" => $status, "contents" => [$data[1]], "cancel" => $data[2], "delete" => $data[3] ?? false, "errors" => $errors];

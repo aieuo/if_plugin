@@ -59,7 +59,7 @@ abstract class Condition implements Conditionable, ConditionNames {
         return true;
     }
 
-    public function getEditForm(array $messages = []) {
+    public function getEditForm(array $messages = [], array $default = []) {
         return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),

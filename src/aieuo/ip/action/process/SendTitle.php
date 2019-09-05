@@ -79,12 +79,12 @@ class SendTitle extends Process {
         return true;
     }
 
-    public function getEditForm(array $messages = []) {
+    public function getEditForm(array $messages = [], array $default = []) {
         return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),
-                new Input(Language::get("process.sendtitle.form.title"), Language::get("input.example", ["aieuo"]), $this->getTitle()),
-                new Input(Language::get("process.sendtitle.form.subtitle"), Language::get("input.example", ["aieuo"]), $this->getSubTitle()),
+                new Input(Language::get("process.sendtitle.form.title"), Language::get("input.example", ["aieuo"]), $default[0] ?? $this->getTitle()),
+                new Input(Language::get("process.sendtitle.form.subtitle"), Language::get("input.example", ["aieuo"]), $default[1] ?? $this->getSubTitle()),
                 new Toggle(Language::get("form.cancel"))
             );
     }
@@ -93,7 +93,7 @@ class SendTitle extends Process {
         $status = true;
         $errors = [];
         if ($data[1] === "") {
-            $status = null;
+            $status = false;
             $errors = [["@form.insufficient", 1]];
         }
         return ["status" => $status, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "delete" => $data[4] ?? false, "errors" => $errors];

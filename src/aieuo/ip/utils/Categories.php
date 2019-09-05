@@ -10,6 +10,8 @@ class Categories {
 
     const CATEGORY_CONDITION_OTHER = 1000;
     const CATEGORY_CONDITION_SCRIPT = 1001;
+    const CATEGORY_CONDITION_MONEY = 1002;
+    const CATEGORY_CONDITION_ITEM = 1003;
 
     public static function getActionCategories(): array {
         return [
@@ -23,6 +25,8 @@ class Categories {
         return [
             self::CATEGORY_CONDITION_OTHER => "other",
             self::CATEGORY_CONDITION_SCRIPT => "script",
+            self::CATEGORY_CONDITION_MONEY => "money",
+            self::CATEGORY_CONDITION_ITEM => "item",
         ];
     }
 }

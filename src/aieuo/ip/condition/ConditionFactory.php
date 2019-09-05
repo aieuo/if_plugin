@@ -7,9 +7,15 @@ class ConditionFactory {
 
     public static function init() {
         self::register(new CheckNothing());
+        self::register(new OverMoney());
+        self::register(new LessMoney());
+        self::register(new TakeMoney());
         self::register(new IsSneaking());
         self::register(new IsOp());
         self::register(new IsFlying());
+        self::register(new CanAddItem());
+        self::register(new ExistsItem());
+        self::register(new InHand());
     }
 
     /**

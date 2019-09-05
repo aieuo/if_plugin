@@ -60,7 +60,7 @@ abstract class Process implements Action, ProcessNames {
         return true;
     }
 
-    public function getEditForm(array $messages = []) {
+    public function getEditForm(array $messages = [], array $default = []) {
         return FormAPI::createCustomForm($this->getName())->addErrors($messages)
             ->addContent(
                 new Label($this->getDescription()),

@@ -254,8 +254,8 @@ class IFForm {
             $this->sendSelectActionForm($player, $recipe, $session->get("actions"), $session->get("category_name"));
             return;
         }
-        if ($datas["status"] === null) {
-            $action->getEditForm($datas["errors"])
+        if ($datas["status"] === false) {
+            $action->getEditForm($datas["errors"], $datas["contents"])
                 ->addArgs($recipe, $action)
                 ->onRecive([$this, "onAddActionForm"])
                 ->show($player);
@@ -282,8 +282,8 @@ class IFForm {
             $form->addArgs($recipe)->onRecive([$this, "onDeleteContent"])->show($player);
             return;
         }
-        if ($datas["status"] === null) {
-            $action->getEditForm($datas["errors"])
+        if ($datas["status"] === false) {
+            $action->getEditForm($datas["errors"], $datas["contents"])
                 ->addContent(new Toggle("@form.action.delete"))
                 ->addArgs($recipe, $action)
                 ->onRecive([$this, "onUpdateActionForm"])

@@ -141,8 +141,8 @@ class ScriptForm {
             $this->sendSelectIfScriptActionForm($player, $script, $parentScripts);
             return;
         }
-        if ($datas["status"] === null) {
-            $action->getEditForm($datas["errors"])
+        if ($datas["status"] === false) {
+            $action->getEditForm($datas["errors"], $datas["contents"])
                 ->addArgs($script, $action, $parentScripts)
                 ->onRecive([$this, "onAddIfScriptActionForm"])
                 ->show($player);
@@ -169,8 +169,8 @@ class ScriptForm {
             $form->addArgs($script, $parentScripts)->onRecive([$this, "onDeleteAction"])->show($player);
             return;
         }
-        if ($datas["status"] === null) {
-            $action->getEditForm($datas["errors"])
+        if ($datas["status"] === false) {
+            $action->getEditForm($datas["errors"], $datas["contents"])
                 ->addContent(new Toggle("@form.action.delete"))
                 ->addArgs($script, $action, $parentScripts)
                 ->onRecive([$this, "onUpdateIfScriptActionForm"])
@@ -333,8 +333,8 @@ class ScriptForm {
             $this->sendSelectConditionForm($player, $script, $parentScripts);
             return;
         }
-        if ($datas["status"] === null) {
-            $condition->getEditForm($datas["errors"])
+        if ($datas["status"] === false) {
+            $condition->getEditForm($datas["errors"], $datas["contents"])
                 ->addArgs($script, $condition, $parentScripts)
                 ->onRecive([$this, "onAddConditionForm"])
                 ->show($player);
@@ -361,8 +361,8 @@ class ScriptForm {
             $form->addArgs($script, $parentScripts)->onRecive([$this, "onDeleteCondition"])->show($player);
             return;
         }
-        if ($datas["status"] === null) {
-            $condition->getEditForm($datas["errors"])
+        if ($datas["status"] === false) {
+            $condition->getEditForm($datas["errors"], $datas["contents"])
                 ->addContent(new Toggle("@form.action.delete"))
                 ->addArgs($script, $condition, $parentScripts)
                 ->onRecive([$this, "onUpdateConditionForm"])
