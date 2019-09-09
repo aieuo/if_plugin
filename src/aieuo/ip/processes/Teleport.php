@@ -14,7 +14,7 @@ class Teleport extends TypePosition {
 
     public function getDetail(): string {
         $pos = $this->getPosition();
-        if ($pos === false) return false;
+        if ($pos === false or $pos->level === null) return false;
         return Language::get("process.teleport.detail", [$pos->x.",".$pos->y.",".$pos->z.",".$pos->level->getFolderName()]);
     }
 
