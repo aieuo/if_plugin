@@ -49,4 +49,6 @@ interface ProcessIds {
     const CLEAR_INVENTORY = 143;
     const EQUIP_ARMOR = 144;
     const DELAYED_COOPERATION = 144;
+    const SHOW_BOSSBAR = 155;
+    const REMOVE_BOSSBAR = 156;
 }
