@@ -67,7 +67,6 @@ class InArea extends Condition {
             $areas = ["x" => $default, "y" => "", "z" => ""];
             if ($default !== "") $mes .= Language::get("form.error");
         }
-        var_dump($default);
 
         $content = [Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes))];
         foreach (["x", "y", "z"] as $axis) {
