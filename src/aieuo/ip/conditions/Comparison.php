@@ -16,8 +16,8 @@ class Comparison extends Condition {
     const EQUAL = 0;
     const NOT_EQUAL = 1;
     const GREATER = 2;
-    const GREATER_EQUAL = 3;
-    const LESS = 4;
+    const LESS = 3;
+    const GREATER_EQUAL = 4;
     const LESS_EQUAL = 5;
     const CONTAINS = 6;
     const NOT_CONTAINS = 7;

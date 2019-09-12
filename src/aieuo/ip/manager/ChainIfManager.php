@@ -7,9 +7,9 @@ use aieuo\ip\variable\NumberVariable;
 
 class ChainIfManager extends IFManager {
 
-	public function __construct($owner) {
-		parent::__construct($owner ,"chains");
-	}
+    public function __construct($owner) {
+        parent::__construct($owner, "chains");
+    }
 
     public function set($key, $datas = [], $options = []) {
         $datas = $this->repairIF($datas);
@@ -18,8 +18,8 @@ class ChainIfManager extends IFManager {
 
     public function getReplaceDatas($datas) {
         $variables = parent::getReplaceDatas($datas);
-        if(isset($datas["count"])) $variables["i"] = new NumberVariable("i", $datas["count"]);
-        if(isset($datas["origin"])) {
+        if (isset($datas["count"])) $variables["i"] = new NumberVariable("i", $datas["count"]);
+        if (isset($datas["origin"])) {
             $origin = $datas["origin"];
             $add = [
                 "origin_name" => new StringVariable("origin_name", $origin->getName()),
@@ -31,6 +31,7 @@ class ChainIfManager extends IFManager {
             ];
             $variables = array_merge($variables, $add);
         }
+        if (isset($datas["replaces"])) $variables = array_merge($datas["replaces"], $variables);
         return $variables;
     }
 }

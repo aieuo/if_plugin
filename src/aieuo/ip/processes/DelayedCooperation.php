@@ -45,7 +45,7 @@ class DelayedCooperation extends Process {
             $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
             return;
         }
-        IFPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCooperationTask($player, $name, $this->getEvent()), $time*20);
+        IFPlugin::getInstance()->getScheduler()->scheduleDelayedTask(new DelayedCooperationTask($player, $name, $this->getEvent(), $this->replaceDatas), $time*20);
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
