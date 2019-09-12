@@ -8,10 +8,11 @@ use aieuo\ip\utils\Language;
 use aieuo\ip\IFPlugin;
 
 class DelayedCooperationTask extends Task {
-    public function __construct(Player $player, string $name, ?Event $event) {
+    public function __construct(Player $player, string $name, ?Event $event, ?array $replaces) {
         $this->player = $player;
         $this->name = $name;
         $this->event = $event;
+        $this->replaceDatas = $replaces;
     }
 
     public function onRun(int $currentTick) {
@@ -25,6 +26,7 @@ class DelayedCooperationTask extends Task {
             "player" => $this->player,
         ];
         if ($this->event instanceof Event) $options["event"] = $this->event;
+        $options["replaces"] = $this->replaceDatas;
         $manager->executeIfMatchCondition(
             $this->player,
             $datas["if"],

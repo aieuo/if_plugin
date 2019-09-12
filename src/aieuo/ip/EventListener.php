@@ -50,13 +50,12 @@ class EventListener implements Listener {
         if ($event->isCancelled()) return;
         $cmd = mb_substr($event->getMessage(), 1);
         $manager = $this->getOwner()->getCommandManager();
-        if ($manager->exists($cmd)) {
-            if ($manager->isSubCommand($cmd) and !$manager->exists($cmd)) {
-                $subcommands = implode(" | ", $manager->getSubcommands($cmd));
-                $event->getPlayer()->sendMessage(Language::get("if.command.subCommandNotFound", [$manager->getOriginCommand($cmd), $subcommands]));
-                return;
-            }
+        $original = $manager->getOriginCommand($cmd);
+        if ($manager->exists($original)) {
             $datas = $manager->get($cmd);
+            if ($datas === null) {
+                $datas = $manager->get($original);
+            }
             if ($datas["permission"] == "ifplugin.customcommand.op" and !$event->getPlayer()->isOp()) return;
             $manager->executeIfMatchCondition(
                 $event->getPlayer(),

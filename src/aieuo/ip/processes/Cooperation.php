@@ -41,6 +41,7 @@ class Cooperation extends Process {
             "player" => $player,
         ];
         if ($this->getEvent() instanceof Event) $options["event"] = $this->getEvent();
+        $options["replaces"] = $this->replaceDatas;
         $manager->executeIfMatchCondition(
             $player,
             $datas["if"],
