@@ -53,6 +53,7 @@ class ProcessFactory {
         self::register(new Kick());
         self::register(new ShowBossbar());
         self::register(new RemoveBossbar());
+        self::register(new GenerateRandomNumber());
     }
 
     /**
