@@ -51,4 +51,5 @@ interface ProcessIds {
     const DELAYED_COOPERATION = 144;
     const SHOW_BOSSBAR = 155;
     const REMOVE_BOSSBAR = 156;
+    const GENERATE_RANDOM_NUMBER = 157;
 }
