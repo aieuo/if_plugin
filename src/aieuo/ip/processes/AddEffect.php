@@ -18,7 +18,7 @@ class AddEffect extends Process {
     public function getDetail(): string {
         $effect = $this->getEffect();
         if (!($effect instanceof EffectInstance)) return false;
-        return Language::get("process.addeffect.detail", [$effect->getId(), $effect->getAmplifier(), $effect->getDuration() / 20]);
+        return Language::get("process.addeffect.detail", [$effect->getId(), $effect->getAmplifier() + 1, $effect->getDuration() / 20]);
     }
 
     public function getEffect() {
@@ -31,7 +31,7 @@ class AddEffect extends Process {
 
     public function parse(string $content) {
         $args = explode(",", $content);
-        if (!isset($args[1]) or (int)$args[1] <= 0) $args[1] = 1;
+        if (!isset($args[1])) $args[1] = 1;
         if (!isset($args[2]) or (float)$args[2] <= 0) $args[2] = 30;
         $effect = Effect::getEffectByName($args[0]);
         $args[1] --;
