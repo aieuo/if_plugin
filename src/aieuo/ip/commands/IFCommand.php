@@ -13,6 +13,7 @@ use aieuo\ip\form\Form;
 use aieuo\ip\Session;
 use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
+use pocketmine\Player;
 
 class IFCommand extends PluginCommand implements CommandExecutor {
 
@@ -34,8 +35,12 @@ class IFCommand extends PluginCommand implements CommandExecutor {
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
-        if (!$sender->isOp() or $sender->getName() === "CONSOLE") return true;
-        $name = $sender->getName();
+        if (!$sender->isOp()) return true;
+
+        if (!($sender instanceof Player)) {
+            $sender->sendMessage(Language::get("command.noconsole"));
+            return true;
+        }
 
         if (!isset($args[0])) {
             $form = $this->form->getSelectIfTypeForm();

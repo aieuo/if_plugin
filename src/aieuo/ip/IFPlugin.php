@@ -38,11 +38,11 @@ class IFPlugin extends PluginBase implements Listener {
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,
             "save_time" => 10*20*60,
-            "language" => "jpn",
+            "language" => "eng",
         ]);
         $this->config->save();
         $this->wait = $this->config->get("wait");
-        $language = $this->config->get("language", "jpn");
+        $language = $this->config->get("language", "eng");
         $languages = [];
         foreach ($this->getResources() as $resource) {
             $filename = $resource->getFilename();
