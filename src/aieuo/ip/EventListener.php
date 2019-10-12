@@ -4,6 +4,7 @@ namespace aieuo\ip;
 
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\InteractPacket;
+use pocketmine\event\server\CommandEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -44,11 +45,13 @@ class EventListener implements Listener {
         return $this->owner;
     }
 
-    public function commandProcess(PlayerCommandPreprocessEvent $event) {
-        $this->onEvent($event, "PlayerCommandPreprocessEvent");
+    public function command(CommandEvent $event) {
+        $sender = $event->getSender();
+        if (!($sender instanceof Player)) return;
 
         if ($event->isCancelled()) return;
-        $cmd = mb_substr($event->getMessage(), 1);
+
+        $cmd = $event->getCommand();
         $manager = $this->getOwner()->getCommandManager();
         $original = $manager->getOriginCommand($cmd);
         if ($manager->exists($original)) {
@@ -56,19 +59,23 @@ class EventListener implements Listener {
             if ($datas === null) {
                 $datas = $manager->get($original);
             }
-            if ($datas["permission"] == "ifplugin.customcommand.op" and !$event->getPlayer()->isOp()) return;
+            if ($datas["permission"] == "ifplugin.customcommand.op" and !$sender->isOp()) return;
             $manager->executeIfMatchCondition(
-                $event->getPlayer(),
+                $sender,
                 $datas["if"],
                 $datas["match"],
                 $datas["else"],
                 [
-                    "player" => $event->getPlayer(),
+                    "player" => $sender,
                     "command" => $cmd,
                     "event" => $event
                 ]
             );
         }
+    }
+
+    public function commandProcess(PlayerCommandPreprocessEvent $event) {
+        $this->onEvent($event, "PlayerCommandPreprocessEvent");
     }
 
     public function chat(PlayerChatEvent $event) {
