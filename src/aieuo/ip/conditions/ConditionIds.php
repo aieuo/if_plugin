@@ -19,4 +19,5 @@ interface ConditionIds {
     const EXISTS_VARIABLE = 13;
     const LESSMONEY = 14;
     const CAN_ADD_ITEM = 15;
+    const IN_AREA_AXIS = 16;
 }
