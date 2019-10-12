@@ -56,12 +56,13 @@ class InArea extends Condition {
             return self::ERROR;
         }
         foreach ($areas as $axis => $area) {
-            if ($player->$axis < $area[0] and $player->$axis > $area[1]) return self::NOT_MATCHED;
+            if ($player->$axis < $area[0] or $player->$axis > $area[1]) return self::NOT_MATCHED;
         }
         return self::MATCHED;
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
+        $mes .= Language::get("condition.inarea.error");
         $areas = $this->parse($default);
         if ($areas === false) {
             $areas = ["x" => $default, "y" => "", "z" => ""];

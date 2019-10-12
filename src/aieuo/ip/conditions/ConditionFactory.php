@@ -19,6 +19,7 @@ class ConditionFactory {
         self::register(new IsFlying());
         self::register(new GameMode());
         self::register(new InArea());
+        self::register(new InAreaWithAxis());
         self::register(new RandomNumber());
         self::register(new Comparison());
         self::register(new ExistsVariable());
