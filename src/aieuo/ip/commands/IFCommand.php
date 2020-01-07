@@ -37,18 +37,15 @@ class IFCommand extends PluginCommand implements CommandExecutor {
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
         if (!$sender->isOp()) return true;
 
-        if (!($sender instanceof Player)) {
-            $sender->sendMessage(Language::get("command.noconsole"));
-            return true;
-        }
-
-        if (!isset($args[0])) {
+        if (!isset($args[0]) and $sender instanceof Player) {
             $form = $this->form->getSelectIfTypeForm();
             Form::sendForm($sender, $form, $this->form, "onSelectIfType");
             return true;
+        } elseif (!isset($args[0])) {
+            $sender->sendMessage(Language::get("command.if.usage.console"));
+            return true;
         }
 
-        $session = Session::getSession($sender);
         switch ($args[0]) {
             case "language":
                 if (!isset($args[1])) {
@@ -72,7 +69,21 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 $this->getOwner()->config->set("language", $args[1]);
                 $sender->sendMessage(Language::get("language.selected", [Language::get("language.name")]));
                 break;
+            case "save":
+                $this->getOwner()->getBlockManager()->save();
+                $this->getOwner()->getCommandManager()->save();
+                $this->getOwner()->getEventManager()->save();
+                $this->getOwner()->getChainManager()->save();
+                $this->getOwner()->getFormIFManager()->save();
+                $this->getOwner()->getVariableHelper()->save();
+                $sender->sendMessage(Language::get("command.save.success"));
+                break;
             case 'block':
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
+                $session = Session::getSession($sender);
                 if (!isset($args[1])) {
                     $form = $this->form->getBlockForm()->getSelectActionForm();
                     Form::sendForm($sender, $form, $this->form->getBlockForm(), "onSelectAction");
@@ -102,6 +113,11 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 $session->setValid()->set("if_type", IFManager::BLOCK)->set("action", $args[1]);
                 break;
             case 'command':
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
+                $session = Session::getSession($sender);
                 if (!isset($args[1])) {
                     $form = $this->form->getCommandForm()->getSelectActionForm();
                     Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectAction");
@@ -173,10 +189,19 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 }
                 break;
             case 'event':
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
                 $form = $this->form->getEventForm()->getSelectEventForm();
                 Form::sendForm($sender, $form, $this->form->getEventForm(), "onSelectEvent");
                 break;
             case "chain":
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
+                $session = Session::getSession($sender);
                 if (isset($args[1])) {
                     $session = Session::getSession($sender);
                     switch ($args[1]) {
@@ -212,6 +237,11 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
                 return true;
             case "form":
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
+                $session = Session::getSession($sender);
                 $session->setValid(true)->set("if_type", Session::FORM);
                 if (!isset($args[1])) {
                     $form = $this->form->getFormIFForm()->getSelectActionForm();
@@ -237,10 +267,18 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 }
                 break;
             case "import":
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
                 $form = $this->form->getImportForm()->getImportListForm();
                 Form::sendForm($sender, $form, $this->form->getImportForm(), "onImportList");
                 break;
             default:
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.if.usage.console"));
+                    return true;
+                }
                 $data = $this->form->getSelectIfTypeForm();
                 Form::sendForm($sender, $data, $this->form, "onSelectIfType");
                 break;
