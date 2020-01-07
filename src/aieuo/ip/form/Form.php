@@ -382,8 +382,8 @@ class Form {
             "type" => "modal",
             "title" => Language::get("form.form.confirmDelete.title"),
             "content" => Language::get("form.form.confirmDelete.content"),
-            "button1" => Language::get("form.form.confirmDelete.yes"),
-            "button2" => Language::get("form.form.confirmDelete.no")
+            "button1" => Language::get("form.yes"),
+            "button2" => Language::get("form.no")
         ];
         $data = self::encodeJson($data);
         return $data;
