@@ -103,6 +103,7 @@ class IFPlugin extends PluginBase implements Listener {
         $this->formif->save();
         $this->variables->save();
         $this->config->save();
+        $this->getLogger()->info(Language::get("command.save.success"));
     }
 
     public static function getInstance(): self {
