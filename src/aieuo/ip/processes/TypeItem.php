@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\processes;
 
+use aieuo\ip\IFPlugin;
 use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
@@ -28,14 +29,14 @@ class TypeItem extends Process {
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
-        $item = $this->parse($default);
+        $item = explode(":", $default);
         $id = $default;
         $count = "";
         $name = "";
-        if ($item instanceof Item) {
-            $id = $item->getId().":".$item->getDamage();
-            $count = $item->getCount();
-            $name = $item->hasCustomName() ? $item->getName() : "";
+        if (count($item) == 4) {
+            $id = $item[0].":".$item[1];
+            $count = $item[2];
+            $name = $item[3];
             if ($count === 0) $mes .= Language::get("process.item.form.zero");
         } elseif ($default !== "") {
             $mes .= Language::get("process.item.form.invalid");
@@ -52,8 +53,7 @@ class TypeItem extends Process {
                 Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 
     public function parseFormData(array $data) {
@@ -63,7 +63,7 @@ class TypeItem extends Process {
         $ids_str = $id[0].":".$id[1].":".$data[2].":".$data[3];
         if ($data[1] === "" or $data[2] === "") {
             $status = null;
-        } else {
+        } elseif (IFPlugin::getInstance()->getVariableHelper()->containsVariable($ids_str)) {
             $ids = $this->parse($ids_str);
             if ($ids === false) $status = false;
         }
