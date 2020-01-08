@@ -18,8 +18,8 @@ class Session {
      * @param  Player $player
      * @return Session|null
      */
-    public static function getSession(Player $player): ?Session {
-        if (!isset(self::$sessions[$player->getName()])) return null;
+    public static function getSession(Player $player): Session {
+        if (!isset(self::$sessions[$player->getName()])) self::createSession($player);
         return self::$sessions[$player->getName()];
     }
 
