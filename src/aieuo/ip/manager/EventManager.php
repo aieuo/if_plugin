@@ -2,6 +2,8 @@
 
 namespace aieuo\ip\manager;
 
+use pocketmine\event\Event;
+use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\block\SignPost;
@@ -100,6 +102,7 @@ class EventManager extends IFManager {
 
     public function getReplaceData($data) {
         $result = parent::getReplaceData($data);
+        /** @var Event $event */
         $event = $data["event"];
         $eventname = $data["eventname"];
         $variables = [];
@@ -132,7 +135,8 @@ class EventManager extends IFManager {
             $variables["cmd"] = new StringVariable("cmd", array_shift($args));
             $variables["args"] = new ListVariable("args", $args);
         }
-        if ($eventname == "PlayerDropItemEvent") {
+        if ($eventname == "PlayerDropItemEvent" or $eventname == "InventoryPickupItemEvent") {
+            /** @var Item $item */
             $item = $event->getItem();
             $variables["item"] = new StringVariable("item", $item->__toString());
             $variables["item_name"] = new StringVariable("item_name", $item->getName());

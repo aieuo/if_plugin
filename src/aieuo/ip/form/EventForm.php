@@ -25,6 +25,7 @@ class EventForm {
         "EntityLevelChangeEvent" => "form.event.EntityLevelChangeEvent",
         "CraftItemEvent" => "form.event.CraftItemEvent",
         "PlayerDropItemEvent" => "form.event.PlayerDropItemEvent",
+        "InventoryPickupItemEvent" => "form.event.InventoryPickupItemEvent"
     ];
 
     public function getEvents() {
