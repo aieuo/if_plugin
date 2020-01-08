@@ -29,6 +29,23 @@ class IFPlugin extends PluginBase implements Listener {
     private static $instance;
 
     private $loaded = false;
+    public $language;
+    /* @var bool */
+    public $saveOnChange;
+    /* @var CommandManager */
+    private $command;
+    /* @var BlockManager */
+    private $block;
+    /* @var EventManager */
+    private $event;
+    /* @var ChainIfManager */
+    private $chain;
+    /* @var FormIFManager */
+    private $formif;
+    /* @var \aieuo\ip\IFAPI */
+    public $api;
+    /* @var VariableHelper */
+    public $variables;
 
     public function onEnable() {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
@@ -38,8 +55,10 @@ class IFPlugin extends PluginBase implements Listener {
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "wait" => 0,
             "save_time" => 10*20*60,
+            "saveOnChange" => false,
             "language" => "eng",
         ]);
+        $this->saveOnChange = $this->config->get("saveOnChange", false);
         $this->config->save();
         $this->wait = $this->config->get("wait");
         $language = $this->config->get("language", "eng");
@@ -83,8 +102,10 @@ class IFPlugin extends PluginBase implements Listener {
         $this->variables = new VariableHelper($this);
         $this->variables->loadDataBase();
 
-        $savetime = (int)$this->config->get("save_time", 10*20*60);
-        $this->getScheduler()->scheduleRepeatingTask(new SaveTask($this), (int)$savetime);
+        $saveTime = (int)$this->config->get("save_time", 10*20*60);
+        if ($saveTime > 0 and !$this->saveOnChange) {
+            $this->getScheduler()->scheduleRepeatingTask(new SaveTask($this), (int)$saveTime);
+        }
 
         self::$instance = $this;
 
@@ -95,7 +116,7 @@ class IFPlugin extends PluginBase implements Listener {
     }
 
     public function onDisable() {
-        if (!$this->loaded) return;
+        if (!$this->loaded or $this->saveOnChange) return;
         $this->command->save();
         $this->block->save();
         $this->event->save();
