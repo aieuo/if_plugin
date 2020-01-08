@@ -78,6 +78,7 @@ class IFAPI {
     }
 
     public function getReplaceData($data) {
+        /** @var Player $player */
         $player = $data["player"];
         $server = Server::getInstance();
         $onlines = [];
@@ -88,7 +89,7 @@ class IFAPI {
         foreach ($server->getOps()->getAll() as $p => $value) {
             $ops[] = $p;
         }
-        $variables = [
+        return [
             "player" => new StringVariable("player", $player->__toString()),
             "player_name" => new StringVariable("player_name", $player->getName()),
             "nametag" => new StringVariable("nametag", $player->getDisplayName()),
@@ -97,6 +98,8 @@ class IFAPI {
             "player_y" => new NumberVariable("player_y", $player->y),
             "player_z" => new NumberVariable("player_z", $player->z),
             "player_level" => new StringVariable("player_level", $player->level->getFolderName()),
+            "health" => new NumberVariable("health", $player->getHealth()),
+            "max_health" => new NumberVariable("max_health", $player->getMaxHealth()),
             "firstplayed" => new NumberVariable("firstplayed", $player->getFirstPlayed()),
             "lastplayed" => new NumberVariable("lastplayed", $player->getLastPlayed()),
             "hand_index" => new NumberVariable("hand_index", $player->getInventory()->getHeldItemIndex()),
@@ -113,7 +116,6 @@ class IFAPI {
             "onlines" => new ListVariable("onlines", $onlines),
             "ops" => new ListVariable("ops", $ops)
         ];
-        return $variables;
     }
 
     public static function createIFMessage(array $ifs, array $matchs, array $others): string {
