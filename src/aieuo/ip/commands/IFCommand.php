@@ -81,6 +81,30 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 $this->getOwner()->getVariableHelper()->save();
                 $sender->sendMessage(Language::get("command.save.success"));
                 break;
+            case "saveOnChange":
+                if (!isset($args[1])) {
+                    $sender->sendMessage($this->getOwner()->saveOnChange ? "true" : "false");
+                    return true;
+                }
+                switch ($args[1]) {
+                    case "true":
+                    case "on":
+                        $this->getOwner()->saveOnChange = true;
+                        $this->getOwner()->getConfig()->set("saveOnChange", true);
+                        $this->getOwner()->getConfig()->save();
+                        break;
+                    case "false":
+                    case "off":
+                        $this->getOwner()->saveOnChange = false;
+                        $this->getOwner()->getConfig()->set("saveOnChange", false);
+                        $this->getOwner()->getConfig()->save();
+                        break;
+                    default:
+                        $sender->sendMessage(Language::get("command.saveOnChange.usage"));
+                        return true;
+                }
+                $sender->sendMessage(Language::get("form.changed"));
+                break;
             case 'block':
                 if (!($sender instanceof Player)) {
                     $sender->sendMessage(Language::get("command.noconsole"));
