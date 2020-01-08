@@ -52,14 +52,14 @@ class TypePosition extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "") {
+        if ($data[1] === "") {
             $status = null;
         } else {
-            $pos = $this->parse($datas[1]);
+            $pos = $this->parse($data[1]);
             if ($pos === false) $status = false;
         }
-        return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+        return ["status" => $status, "contents" => $data[1], "delete" => $data[2], "cancel" => $data[3]];
     }
 }

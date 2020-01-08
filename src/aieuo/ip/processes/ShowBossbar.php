@@ -93,15 +93,15 @@ class ShowBossbar extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $contents = $datas[1]."[max]".$datas[2]."[value]".$datas[3]."[id]".$datas[4];
-        if ($datas[1] === "" or $datas[2] === "" or $datas[3] === "" or $datas[3] === "") {
+        $contents = $data[1]."[max]".$data[2]."[value]".$data[3]."[id]".$data[4];
+        if ($data[1] === "" or $data[2] === "" or $data[3] === "" or $data[3] === "") {
             $status = null;
         } else {
             $result = $this->parse($contents);
             if ($result === false) $status = false;
         }
-        return ["status" => $status, "contents" => $contents, "delete" => $datas[5], "cancel" => $datas[6]];
+        return ["status" => $status, "contents" => $contents, "delete" => $data[5], "cancel" => $data[6]];
     }
 }

@@ -8,6 +8,7 @@ use aieuo\ip\form\Form;
 use aieuo\ip\form\Elements;
 use aieuo\ip\Session;
 use aieuo\ip\utils\Language;
+use pocketmine\Player;
 
 class SendForm extends Process {
 
@@ -39,10 +40,10 @@ class SendForm extends Process {
         }
         $form = json_encode($manager->getForm($name, $this->replaceDatas));
         Session::getSession($player)->set("form_name", $name);
-        Form::sendForm($player, $form, $this, "onRecive", false);
+        Form::sendForm($player, $form, $this, "onReceive", false);
     }
 
-    public function onRecive($player, $data) {
+    public function onReceive(Player $player, $data) {
         $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
@@ -54,14 +55,14 @@ class SendForm extends Process {
             $player->sendMessage(Language::get("process.sendform.notfound", [$this->getName()]));
             return;
         }
-        $datas = $manager->getIF($formName);
+        $data1 = $manager->getIF($formName);
         $form = $manager->getForm($formName, $this->replaceDatas);
-        foreach ($datas["ifs"] as $ifdata) {
+        foreach ($data1["ifs"] as $ifData) {
             $manager->executeIfMatchCondition(
                 $player,
-                $ifdata["if"],
-                $ifdata["match"],
-                $ifdata["else"],
+                $ifData["if"],
+                $ifData["match"],
+                $ifData["else"],
                 [
                     "player" => $player,
                     "form" => $form,
@@ -87,9 +88,9 @@ class SendForm extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "") $status = null;
-        return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+        if ($data[1] === "") $status = null;
+        return ["status" => $status, "contents" => $data[1], "delete" => $data[2], "cancel" => $data[3]];
     }
 }

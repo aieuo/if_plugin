@@ -53,17 +53,17 @@ class TypeItem extends Condition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $id = explode(":", $datas[1]);
+        $id = explode(":", $data[1]);
         if (!isset($id[1])) $id[1] = 0;
-        $ids_str = $id[0].":".$id[1].":".$datas[2].":".$datas[3];
-        if ($datas[1] === "" or $datas[2] === "") {
+        $ids_str = $id[0].":".$id[1].":".$data[2].":".$data[3];
+        if ($data[1] === "" or $data[2] === "") {
             $status = null;
         } else {
             $ids = $this->parse($ids_str);
             if ($ids === false) $status = false;
         }
-        return ["status" => $status, "contents" => $ids_str, "delete" => $datas[4], "cancel" => $datas[5]];
+        return ["status" => $status, "contents" => $ids_str, "delete" => $data[4], "cancel" => $data[5]];
     }
 }

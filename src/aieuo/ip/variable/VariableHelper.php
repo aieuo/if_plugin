@@ -31,8 +31,8 @@ class VariableHelper {
      */
     public function exists(String $name, $save = false) {
         if (isset($this->variables[$name]) and !$save)return true;
-        $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
-        return !empty($datas);
+        $data = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
+        return !empty($data);
     }
 
     /**
@@ -43,8 +43,8 @@ class VariableHelper {
     public function get(String $name, $save = false) {
         if (isset($this->variables[$name]) and !$save) return $this->variables[$name];
         if (!$this->exists($name, true)) return "";
-        $datas = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
-        return Variable::create($datas["name"], $this->currentType($datas["value"]), $datas["type"]);
+        $data = $this->db->query("SELECT * FROM variables WHERE name=\"$name\"")->fetchArray();
+        return Variable::create($data["name"], $this->currentType($data["value"]), $data["type"]);
     }
 
     /**

@@ -18,90 +18,90 @@ class EventManager extends IFManager {
     }
 
     public function get(string $key, array $args = []): ?array {
-        $datass = $this->getFromEvent($args["eventname"]);
-        if (!isset($datass[$key]))return [];
-        $datas = $datass[$key];
-        $datas = $this->repairIF($datas);
-        return $datas;
+        $data1 = $this->getFromEvent($args["eventname"]);
+        if (!isset($data1[$key]))return [];
+        $data = $data1[$key];
+        $data = $this->repairIF($data);
+        return $data;
     }
 
     public function add($key, $type, $id, $content, $args = []) {
-        $datas = $this->getFromEvent($args["eventname"]);
-        $datas[$key][$type][] = [
+        $data = $this->getFromEvent($args["eventname"]);
+        $data[$key][$type][] = [
             "id" => $id,
             "content" => $content
         ];
-        $this->set($args["eventname"], $datas);
+        $this->set($args["eventname"], $data);
     }
 
     public function getCount($event) {
-        $datas = $this->getFromEvent($event);
-        return count($datas);
+        $data = $this->getFromEvent($event);
+        return count($data);
     }
 
     public function addEmpty($event) {
-        $datas = $this->getFromEvent($event);
-        $data = [
+        $data = $this->getFromEvent($event);
+        $ifData = [
             "if" => [],
             "match" => [],
             "else" => []
         ];
-        $datas[] = $data;
-        $this->set($event, $datas);
-        return count($datas) -1;
+        $data[] = $ifData;
+        $this->set($event, $data);
+        return count($data) -1;
     }
 
     public function getFromEvent($event) {
-        $datas = [];
-        if (isset(($all = $this->getAll())[$event]))$datas = $all[$event];
-        return $datas;
+        $data = [];
+        if (isset(($all = $this->getAll())[$event]))$data = $all[$event];
+        return $data;
     }
 
     public function addByEvent($event, $add) {
         $add = $this->repairIF($add);
-        $datas = $this->getFromEvent($event);
-        $datas[] = $add;
-        $this->set($event, $datas);
+        $data = $this->getFromEvent($event);
+        $data[] = $add;
+        $this->set($event, $data);
     }
 
     public function del($key, $type, $num, $options = []) {
-        $datas = $this->getFromEvent($options["eventname"]);
-        if (!isset($datas[$key]))return false;
-        unset($datas[$key][$type][$num]);
-        $datas[$key][$type] = array_merge($datas[$key][$type]);
-        $this->set($options["eventname"], $datas);
+        $data = $this->getFromEvent($options["eventname"]);
+        if (!isset($data[$key]))return false;
+        unset($data[$key][$type][$num]);
+        $data[$key][$type] = array_merge($data[$key][$type]);
+        $this->set($options["eventname"], $data);
         return true;
     }
 
     public function updateContent($key, $type, $num, $new, $options = []) {
-        $datas = $this->getFromEvent($options["eventname"]);
-        if (!isset($datas[$key])) return false;
-        $datas[$key][$type][$num]["content"] = $new;
-        $this->set($options["eventname"], $datas);
+        $data = $this->getFromEvent($options["eventname"]);
+        if (!isset($data[$key])) return false;
+        $data[$key][$type][$num]["content"] = $new;
+        $this->set($options["eventname"], $data);
         return true;
     }
 
     public function remove($key, $options = []) {
-        $datas = $this->getFromEvent($options["eventname"]);
-        if (!isset($datas[$key])) return false;
-        unset($datas[$key]);
-        $datas = array_merge($datas);
-        $this->set($options["eventname"], $datas);
+        $data = $this->getFromEvent($options["eventname"]);
+        if (!isset($data[$key])) return false;
+        unset($data[$key]);
+        $data = array_merge($data);
+        $this->set($options["eventname"], $data);
         return true;
     }
 
     public function setName($key, $name, $options = []) {
-        $datas = $this->getFromEvent($options["eventname"]);
-        if (!isset($datas[$key])) return false;
-        $datas[$key]["name"] = $name;
-        $this->set($options["eventname"], $datas);
+        $data = $this->getFromEvent($options["eventname"]);
+        if (!isset($data[$key])) return false;
+        $data[$key]["name"] = $name;
+        $this->set($options["eventname"], $data);
         return true;
     }
 
-    public function getReplaceDatas($datas) {
-        $result = parent::getReplaceDatas($datas);
-        $event = $datas["event"];
-        $eventname = $datas["eventname"];
+    public function getReplaceData($data) {
+        $result = parent::getReplaceData($data);
+        $event = $data["event"];
+        $eventname = $data["eventname"];
         $variables = [];
         if ($eventname == "PlayerInteractEvent"
             or $eventname == "BlockBreakEvent"

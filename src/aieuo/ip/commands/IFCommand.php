@@ -19,6 +19,8 @@ class IFCommand extends PluginCommand implements CommandExecutor {
 
     /** @var IFPlugin */
     private $owner;
+    /* @var Form */
+    private $form;
 
     public function __construct(IFPlugin $owner) {
         parent::__construct('if', $owner);
@@ -143,8 +145,8 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                             break;
                         }
                         $session->set("if_key", $args[2]);
-                        $datas = $manager->get($args[2]);
-                        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
+                        $data = $manager->get($args[2]);
+                        $mes = IFAPI::createIFMessage($data["if"], $data["match"], $data["else"]);
                         $form = $this->form->getCommandForm()->getEditIfForm($mes);
                         Form::sendForm($sender, $form, $this->form->getCommandForm(), "onEditIf");
                         break;
@@ -159,8 +161,8 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                             $session->setValid(false);
                             break;
                         }
-                        $datas = $manager->get($args[2]);
-                        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
+                        $data = $manager->get($args[2]);
+                        $mes = IFAPI::createIFMessage($data["if"], $data["match"], $data["else"]);
                         $sender->sendMessage($mes);
                         $session->setValid(false);
                         break;

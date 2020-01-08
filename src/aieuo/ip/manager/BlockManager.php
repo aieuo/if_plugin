@@ -15,19 +15,19 @@ class BlockManager extends IFManager {
         parent::__construct($owner, "blocks");
     }
 
-    public function set(string $key, array $datas = [], array $options = []) {
-        $datas = $this->repairIF($datas);
-        parent::set($key, $datas);
+    public function set(string $key, array $data = [], array $options = []) {
+        $data = $this->repairIF($data);
+        parent::set($key, $data);
     }
 
     public function getPosition($block){
         return $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
     }
 
-    public function getReplaceDatas($datas) {
-        $variables = parent::getReplaceDatas($datas);
-        $block = $datas["block"];
-        $event = $datas["event"];
+    public function getReplaceData($data) {
+        $variables = parent::getReplaceData($data);
+        $block = $data["block"];
+        $event = $data["event"];
         $add = [
             "block" => new StringVariable("block", $block->__toString()),
             "block_name" => new StringVariable("block_name", $block->getName()),

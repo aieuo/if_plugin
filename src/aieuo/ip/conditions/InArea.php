@@ -90,17 +90,17 @@ class InArea extends Condition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $area_str = $datas[1] !== "" ? "x(".$datas[1].")" : "";
-        $area_str .= $datas[2] !== "" ? "y(".$datas[2].")" : "";
-        $area_str .= $datas[3] !== "" ? "z(".$datas[3].")" : "";
-        if ($datas[1] === "" and $datas[2] === "" and $datas[3] === "") {
+        $area_str = $data[1] !== "" ? "x(".$data[1].")" : "";
+        $area_str .= $data[2] !== "" ? "y(".$data[2].")" : "";
+        $area_str .= $data[3] !== "" ? "z(".$data[3].")" : "";
+        if ($data[1] === "" and $data[2] === "" and $data[3] === "") {
             $status = null;
         } else {
             $areas = $this->parse($area_str);
             if ($areas == false) $status = false;
         }
-        return ["status" => $status, "contents" => $area_str, "delete" => $datas[4], "cancel" => $datas[5]];
+        return ["status" => $status, "contents" => $area_str, "delete" => $data[4], "cancel" => $data[5]];
     }
 }

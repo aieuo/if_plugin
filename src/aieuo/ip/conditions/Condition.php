@@ -102,8 +102,8 @@ class Condition implements ConditionIds {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
-        return ["status" => true, "contents" => "", "delete" => $datas[1], "cancel" => $datas[2]];
+    public function parseFormData(array $data) {
+        return ["status" => true, "contents" => "", "delete" => $data[1], "cancel" => $data[2]];
     }
 
     public function check() {

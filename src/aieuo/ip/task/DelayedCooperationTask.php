@@ -21,7 +21,7 @@ class DelayedCooperationTask extends Task {
             $this->player->sendMessage(Language::get("process.cooperation.notfount"));
             return;
         }
-        $datas = $manager->get($this->name);
+        $data = $manager->get($this->name);
         $options = [
             "player" => $this->player,
         ];
@@ -29,9 +29,9 @@ class DelayedCooperationTask extends Task {
         $options["replaces"] = $this->replaceDatas;
         $manager->executeIfMatchCondition(
             $this->player,
-            $datas["if"],
-            $datas["match"],
-            $datas["else"],
+            $data["if"],
+            $data["match"],
+            $data["else"],
             $options
         );
     }
