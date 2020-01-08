@@ -40,9 +40,9 @@ class TypeMoney extends Condition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "") $status = null;
-        return ["status" => $status, "contents" => $datas[1], "delete" => $datas[2], "cancel" => $datas[3]];
+        if ($data[1] === "") $status = null;
+        return ["status" => $status, "contents" => $data[1], "delete" => $data[2], "cancel" => $data[3]];
     }
 }

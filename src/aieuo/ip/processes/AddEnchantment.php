@@ -81,10 +81,10 @@ class AddEnchantment extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $enchant_str = $datas[1].",".$datas[2];
-        if ($datas[1] === "" or $datas[2] === "") $status = null;
-        return ["status" => $status, "contents" => $enchant_str, "delete" => $datas[3], "cancel" => $datas[4]];
+        $enchant_str = $data[1].",".$data[2];
+        if ($data[1] === "" or $data[2] === "") $status = null;
+        return ["status" => $status, "contents" => $enchant_str, "delete" => $data[3], "cancel" => $data[4]];
     }
 }

@@ -83,15 +83,15 @@ class RandomNumber extends Condition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $num_str = $datas[1].",".$datas[2].",".$datas[3];
-        if ($datas[1] === "" or $datas[2] === "" or $datas[3] === "") {
+        $num_str = $data[1].",".$data[2].",".$data[3];
+        if ($data[1] === "" or $data[2] === "" or $data[3] === "") {
             $status = null;
         } else {
             $num = $this->parse($num_str);
             if ($num === false) $status = false;
         }
-        return ["status" => $status, "contents" => $num_str, "delete" => $datas[4], "cancel" => $datas[5]];
+        return ["status" => $status, "contents" => $num_str, "delete" => $data[4], "cancel" => $data[5]];
     }
 }

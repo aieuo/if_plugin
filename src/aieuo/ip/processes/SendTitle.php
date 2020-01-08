@@ -29,10 +29,10 @@ class SendTitle extends Process {
     }
 
     public function parse(string $content) {
-        $datas = explode("[subtitle]", $content);
-        $title = $datas[0];
-        $subtitls = $datas[1] ?? "";
-        return [$title, $subtitls];
+        $data = explode("[subtitle]", $content);
+        $title = $data[0];
+        $subtitles = $data[1] ?? "";
+        return [$title, $subtitles];
     }
 
     public function execute() {
@@ -59,14 +59,14 @@ class SendTitle extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "" or $datas[2] === "") {
+        if ($data[1] === "" or $data[2] === "") {
             $status = null;
         } else {
-            $names = $this->parse($datas[1]."[subtitle]".$datas[2]);
+            $names = $this->parse($data[1]."[subtitle]".$data[2]);
             if ($names === false) $status = false;
         }
-        return ["status" => $status, "contents" => $datas[1]."[subtitle]".$datas[2], "delete" => $datas[3], "cancel" => $datas[4]];
+        return ["status" => $status, "contents" => $data[1]."[subtitle]".$data[2], "delete" => $data[3], "cancel" => $data[4]];
     }
 }

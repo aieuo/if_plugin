@@ -11,16 +11,16 @@ class ChainIfManager extends IFManager {
         parent::__construct($owner, "chains");
     }
 
-    public function set($key, $datas = [], $options = []) {
-        $datas = $this->repairIF($datas);
-        parent::set($key, $datas);
+    public function set($key, $data = [], $options = []) {
+        $data = $this->repairIF($data);
+        parent::set($key, $data);
     }
 
-    public function getReplaceDatas($datas) {
-        $variables = parent::getReplaceDatas($datas);
-        if (isset($datas["count"])) $variables["i"] = new NumberVariable("i", $datas["count"]);
-        if (isset($datas["origin"])) {
-            $origin = $datas["origin"];
+    public function getReplaceData($data) {
+        $variables = parent::getReplaceData($data);
+        if (isset($data["count"])) $variables["i"] = new NumberVariable("i", $data["count"]);
+        if (isset($data["origin"])) {
+            $origin = $data["origin"];
             $add = [
                 "origin_name" => new StringVariable("origin_name", $origin->getName()),
                 "origin_pos" => new StringVariable("origin_pos", $origin->x.",".$origin->y.",".$origin->z.",".$origin->level->getFolderName()),
@@ -31,7 +31,7 @@ class ChainIfManager extends IFManager {
             ];
             $variables = array_merge($variables, $add);
         }
-        if (isset($datas["replaces"])) $variables = array_merge($datas["replaces"], $variables);
+        if (isset($data["replaces"])) $variables = array_merge($data["replaces"], $variables);
         return $variables;
     }
 }

@@ -3,6 +3,7 @@
 namespace aieuo\ip;
 
 use pocketmine\event\Event;
+use pocketmine\Player;
 use pocketmine\Server;
 
 use aieuo\ip\variable\StringVariable;
@@ -14,16 +15,16 @@ use aieuo\ip\conditions\Condition;
 
 class IFAPI {
 
-    public function checkCondition($player, $datas, $options = []) {
+    public function checkCondition($player, $data, $options = []) {
         $matched = true;
-        foreach ($datas as $data) {
-            $result = ($co = Condition::get($data["id"]))
+        foreach ($data as $value) {
+            $result = ($co = Condition::get($value["id"]))
                         ->setPlayer($player)
                         ->setValues(
                             $co->parse(
                                 str_replace("\\n", "\n", IFPlugin::getInstance()
                                   ->getVariableHelper()
-                                  ->replaceVariables($data["content"], $this->getReplaceDatas($options)))
+                                  ->replaceVariables($value["content"], $this->getReplaceData($options)))
                             )
                         )->check();
             if ($result === Condition::ERROR or $result === Condition::NOT_FOUND) {
@@ -36,7 +37,7 @@ class IFAPI {
     }
 
     public function executeProcess($player, $datas, $options) {
-        $replaceDatas = $this->getReplaceDatas($options);
+        $replaceDatas = $this->getReplaceData($options);
         foreach ($datas as $data) {
             $process = Process::get($data["id"]);
             $process->replaceDatas = $replaceDatas;
@@ -56,27 +57,28 @@ class IFAPI {
         }
     }
 
-    public function executeIfMatchCondition($player, $datas1, $datas2, $datas3, $options = []) {
-        $match = $this->checkCondition($player, $datas1, $options);
+    public function executeIfMatchCondition(Player $player, $data1, $data2, $data3, $options = []) {
+        $match = $this->checkCondition($player, $data1, $options);
         switch ($match) {
             case Condition::MATCHED:
-                $datas = $datas2;
+                $data = $data2;
                 break;
             case Condition::NOT_MATCHED:
-                $datas = $datas3;
+                $data = $data3;
                 break;
             case Condition::NOT_FOUND:
-                $player->sendMessage(Language::get("if.contents.notFound", [$datas["id"]]));
+                $player->sendMessage(Language::get("if.contents.notFound", [$data1["id"]]));
+                return false;
             case Condition::ERROR:
             default:
                 return false;
         }
-        $this->executeProcess($player, $datas, $options);
+        $this->executeProcess($player, $data, $options);
         return true;
     }
 
-    public function getReplaceDatas($datas) {
-        $player = $datas["player"];
+    public function getReplaceData($data) {
+        $player = $data["player"];
         $server = Server::getInstance();
         $onlines = [];
         foreach ($server->getOnlinePlayers() as $p) {

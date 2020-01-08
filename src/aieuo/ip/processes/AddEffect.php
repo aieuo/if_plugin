@@ -81,10 +81,10 @@ class AddEffect extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $effect_str = $datas[1].",".$datas[2].",".$datas[3];
-        if ($datas[1] === "" or $datas[2] === "" or $datas[3] === "") $status = null;
-        return ["status" => $status, "contents" => $effect_str, "delete" => $datas[4], "cancel" => $datas[5]];
+        $effect_str = $data[1].",".$data[2].",".$data[3];
+        if ($data[1] === "" or $data[2] === "" or $data[3] === "") $status = null;
+        return ["status" => $status, "contents" => $effect_str, "delete" => $data[4], "cancel" => $data[5]];
     }
 }

@@ -17,24 +17,24 @@ class CommandManager extends IFManager {
         $this->registerCommands();
     }
 
-    public function set($key, $datas = [], $options = []) {
-        $datas = $this->repairIF($datas);
+    public function set($key, $data = [], $options = []) {
+        $data = $this->repairIF($data);
         if ($options["desc"] === "") $options["desc"] = Language::get("form.command.description.default");
         if ($options["perm"] === "") $options["perm"] = "ifplugin.customcommand.op";
-        $datas["description"] = $options["desc"];
-        $datas["permission"] = $options["perm"];
-        parent::set($key, $datas);
+        $data["description"] = $options["desc"];
+        $data["permission"] = $options["perm"];
+        parent::set($key, $data);
     }
 
     public function add($key, $type, $id, $content, $args = []) {
-        $datas = [];
-        if ($this->exists($key))$datas = $this->get($key);
-        $datas[$type][] = [
+        $data = [];
+        if ($this->exists($key))$data = $this->get($key);
+        $data[$type][] = [
             "id" => $id,
             "content" => $content
         ];
         $this->register($key, $args["desc"], $args["perm"]);
-        $this->set($key, $datas, $args);
+        $this->set($key, $data, $args);
     }
 
     public function remove($key) {
@@ -123,9 +123,9 @@ class CommandManager extends IFManager {
         return $commands[0];
     }
 
-    public function getReplaceDatas($datas) {
-        $result = parent::getReplaceDatas($datas);
-        $command = $datas["command"];
+    public function getReplaceData($data) {
+        $result = parent::getReplaceData($data);
+        $command = $data["command"];
         $cmds = explode(" ", substr($command, 1));
         $result["cmd"] = new StringVariable("cmd", array_shift($cmds));
         $result["args"] = new ListVariable("args", $cmds);

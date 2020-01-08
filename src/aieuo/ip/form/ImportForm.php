@@ -13,17 +13,16 @@ class ImportForm {
         $files = glob(IFPlugin::getInstance()->getDataFolder()."imports/*.json");
         foreach ($files as $file) {
             if (is_dir($file)) continue;
-            $datas = json_decode(file_get_contents($file), true);
-            $buttons[] = Elements::getButton($datas["name"]." | ".$datas["author"]);
+            $data = json_decode(file_get_contents($file), true);
+            $buttons[] = Elements::getButton($data["name"]." | ".$data["author"]);
         }
-        $data = [
+        $ifData = [
             "type" => "form",
             "title" => Language::get("form.import.selectFile.title"),
             "content" => ($mes === "" ? "" : $mes."\n").Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($ifData);
     }
 
     public function onImportList($player, $data) {

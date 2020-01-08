@@ -181,15 +181,15 @@ class Calculation extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $values_str = $datas[1]."[ope:".$datas[2]."]".$datas[3].";".$datas[4];
-        if ($datas[1] === "" or $datas[2] === "" or $datas[3] === "") {
+        $values_str = $data[1]."[ope:".$data[2]."]".$data[3].";".$data[4];
+        if ($data[1] === "" or $data[2] === "" or $data[3] === "") {
             $status = null;
         } else {
             $values = $this->parse($values_str);
             if ($values === false) $status = false;
         }
-        return ["status" => $status, "contents" => $values_str, "delete" => $datas[5], "cancel" => $datas[6]];
+        return ["status" => $status, "contents" => $values_str, "delete" => $data[5], "cancel" => $data[6]];
     }
 }

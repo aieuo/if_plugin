@@ -89,16 +89,16 @@ class EquipArmor extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $ids_str = $datas[1]."[item]".$datas[2];
-        if ($datas[2] === "") {
+        $ids_str = $data[1]."[item]".$data[2];
+        if ($data[2] === "") {
             $status = null;
         } else {
             $ids = $this->parse($ids_str);
             if ($ids === false) $status = false;
         }
-        if ($datas[1] === "" or $datas[2] === "") $status = null;
-        return ["status" => $status, "contents" => $ids_str, "delete" => $datas[3], "cancel" => $datas[4]];
+        if ($data[1] === "" or $data[2] === "") $status = null;
+        return ["status" => $status, "contents" => $ids_str, "delete" => $data[3], "cancel" => $data[4]];
     }
 }

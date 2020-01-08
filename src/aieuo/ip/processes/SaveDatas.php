@@ -7,9 +7,9 @@ use aieuo\ip\IFPlugin;
 class SaveDatas extends Process {
 
     protected $id = self::SAVE_DATAS;
-    protected $name = "@process.savedatas.name";
-    protected $description = "@process.savedatas.description";
-    protected $detail = "@process.savedatas.detail";
+    protected $name = "@process.saveData.name";
+    protected $description = "@process.saveData.description";
+    protected $detail = "@process.saveData.detail";
 
     public function execute() {
         IFPlugin::getInstance()->getBlockManager()->save();

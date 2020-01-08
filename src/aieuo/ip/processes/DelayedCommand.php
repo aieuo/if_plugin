@@ -74,14 +74,14 @@ class DelayedCommand extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "" or $datas[2] === "") {
+        if ($data[1] === "" or $data[2] === "") {
             $status = null;
         } else {
-            $value = $this->parse($datas[2].",".$datas[1]);
+            $value = $this->parse($data[2].",".$data[1]);
             if ($value === false) $status = false;
         }
-        return ["status" => $status, "contents" => $datas[2].",".$datas[1], "delete" => $datas[3], "cancel" => $datas[4]];
+        return ["status" => $status, "contents" => $data[2].",".$data[1], "delete" => $data[3], "cancel" => $data[4]];
     }
 }

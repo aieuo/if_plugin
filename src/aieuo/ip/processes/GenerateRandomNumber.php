@@ -33,12 +33,12 @@ class GenerateRandomNumber extends Process {
     }
 
     public function parse(string $content) {
-        $datas = explode("[max]", $content);
-        $min = (int)$datas[0];
-        if (!isset($datas[1])) return false;
-        $datas = explode("[result]", $datas[1]);
-        $max = (int)$datas[0];
-        $result = empty($datas[1]) ? "result" : $datas[1];
+        $data = explode("[max]", $content);
+        $min = (int)$data[0];
+        if (!isset($data[1])) return false;
+        $data = explode("[result]", $data[1]);
+        $max = (int)$data[0];
+        $result = empty($data[1]) ? "result" : $data[1];
         return [min($min, $max), max($min, $max), $result];
     }
 
@@ -84,15 +84,15 @@ class GenerateRandomNumber extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $contents = $datas[1]."[max]".$datas[2]."[result]".$datas[3];
-        if ($datas[1] === "" or $datas[2] === "") {
+        $contents = $data[1]."[max]".$data[2]."[result]".$data[3];
+        if ($data[1] === "" or $data[2] === "") {
             $status = null;
         } else {
             $result = $this->parse($contents);
             if ($result === false) $status = false;
         }
-        return ["status" => $status, "contents" => $contents, "delete" => $datas[4], "cancel" => $datas[5]];
+        return ["status" => $status, "contents" => $contents, "delete" => $data[4], "cancel" => $data[5]];
     }
 }

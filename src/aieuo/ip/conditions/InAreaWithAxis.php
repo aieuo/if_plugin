@@ -33,13 +33,13 @@ class InAreaWithAxis extends Condition {
     }
 
     public function parse(string $areas) {
-        $datas = explode("[min]", $areas);
-        $axis = (int)$datas[0];
-        if (!isset($datas[1])) return false;
-        $datas = explode("[max]", $datas[1]);
-        $min = $datas[0];
-        if (!isset($datas[1])) return false;
-        $max = $datas[1];
+        $data = explode("[min]", $areas);
+        $axis = (int)$data[0];
+        if (!isset($data[1])) return false;
+        $data = explode("[max]", $data[1]);
+        $min = $data[0];
+        if (!isset($data[1])) return false;
+        $max = $data[1];
         return [$axis, $min == "" ? null : (float)$min, $max == "" ? null : (float)$max];
     }
 
@@ -63,11 +63,11 @@ class InAreaWithAxis extends Condition {
 
     public function getEditForm(string $default = "", string $mes = "") {
         $settings = $this->parse($default);
-        $datas1 = explode("[min]", $default);
-        $axis = (int)$datas1[0];
-        $datas2 = explode("[max]", $datas1[1] ?? $default);
-        $min = $datas2[0];
-        $max = $datas2[1] ?? $datas1[1] ?? $default;
+        $data1 = explode("[min]", $default);
+        $axis = (int)$data1[0];
+        $data2 = explode("[max]", $data1[1] ?? $default);
+        $min = $data2[0];
+        $max = $data2[1] ?? $data1[1] ?? $default;
         if ($settings !== false) {
             $axis = $settings[0];
             $min = (string)$settings[1];
@@ -97,15 +97,15 @@ class InAreaWithAxis extends Condition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $contents = $datas[1]."[min]".$datas[2]."[max]".$datas[3];
-        if ($datas[2] === "" and $datas[3] === "") {
+        $contents = $data[1]."[min]".$data[2]."[max]".$data[3];
+        if ($data[2] === "" and $data[3] === "") {
             $status = null;
         } else {
             $areas = $this->parse($contents);
             if ($areas == false) $status = false;
         }
-        return ["status" => $status, "contents" => $contents, "delete" => $datas[4], "cancel" => $datas[5]];
+        return ["status" => $status, "contents" => $contents, "delete" => $data[4], "cancel" => $data[5]];
     }
 }

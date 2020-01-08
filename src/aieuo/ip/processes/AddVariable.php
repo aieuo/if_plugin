@@ -31,11 +31,11 @@ class AddVariable extends Process {
     }
 
     public function parse(string $content) {
-        $datas = explode(";", $content);
-        if (!isset($datas[1]) or $datas[1] === "") return false;
+        $data = explode(";", $content);
+        if (!isset($data[1]) or $data[1] === "") return false;
         $helper = IFPlugin::getInstance()->getVariableHelper();
-        $value = $helper->currentType($datas[1]);
-        return Variable::create($datas[0], $value, $helper->getType($datas[1]));
+        $value = $helper->currentType($data[1]);
+        return Variable::create($data[0], $value, $helper->getType($data[1]));
     }
 
     public function execute() {
@@ -79,15 +79,15 @@ class AddVariable extends Process {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        $var_str = $datas[1].";".$datas[2];
-        if ($datas[1] === "" or $datas[2] === "") {
+        $var_str = $data[1].";".$data[2];
+        if ($data[1] === "" or $data[2] === "") {
             $status = null;
         } else {
             $var = $this->parse($var_str);
             if ($var === false) $status = false;
         }
-        return ["status" => $status, "contents" => $var_str, "delete" => $datas[3], "cancel" => $datas[4]];
+        return ["status" => $status, "contents" => $var_str, "delete" => $data[3], "cancel" => $data[4]];
     }
 }

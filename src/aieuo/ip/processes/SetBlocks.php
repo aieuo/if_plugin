@@ -123,14 +123,14 @@ class SetBlocks extends TypePosition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "" or $datas[2] === "" or $datas[3] === "" or $datas[4] === "") {
+        if ($data[1] === "" or $data[2] === "" or $data[3] === "" or $data[4] === "") {
             $status = null;
         } else {
-            $settings = $this->parse($datas[1].";".$datas[2].";".$datas[3].";".$datas[4]);
+            $settings = $this->parse($data[1].";".$data[2].";".$data[3].";".$data[4]);
             if ($settings === false) $status = false;
         }
-        return ["status" => $status, "contents" => $datas[1].";".$datas[2].";".$datas[3].";".$datas[4], "delete" => $datas[5], "cancel" => $datas[6]];
+        return ["status" => $status, "contents" => $data[1].";".$data[2].";".$data[3].";".$data[4], "delete" => $data[5], "cancel" => $data[6]];
     }
 }

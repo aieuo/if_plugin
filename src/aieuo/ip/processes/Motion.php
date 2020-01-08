@@ -58,14 +58,14 @@ class Motion extends TypePosition {
         return $json;
     }
 
-    public function parseFormData(array $datas) {
+    public function parseFormData(array $data) {
         $status = true;
-        if ($datas[1] === "" and $datas[2] === "" and $datas[3] === "") {
+        if ($data[1] === "" and $data[2] === "" and $data[3] === "") {
             $status = null;
         } else {
-            $pos = $this->parse($datas[1].",".$datas[2].",".$datas[3]);
+            $pos = $this->parse($data[1].",".$data[2].",".$data[3]);
             if ($pos === false) $status = false;
         }
-        return ["status" => $status, "contents" => $datas[1].",".$datas[2].",".$datas[3], "delete" => $datas[4], "cancel" => $datas[5]];
+        return ["status" => $status, "contents" => $data[1].",".$data[2].",".$data[3], "delete" => $data[4], "cancel" => $data[5]];
     }
 }
