@@ -52,4 +52,5 @@ interface ProcessIds {
     const SHOW_BOSSBAR = 155;
     const REMOVE_BOSSBAR = 156;
     const GENERATE_RANDOM_NUMBER = 157;
+    const SET_FOOD  = 108;
 }
