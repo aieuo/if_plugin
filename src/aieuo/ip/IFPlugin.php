@@ -103,7 +103,7 @@ class IFPlugin extends PluginBase implements Listener {
         $this->variables->loadDataBase();
 
         $saveTime = (int)$this->config->get("save_time", 10*20*60);
-        if ($saveTime > 0 and !$this->saveOnChange) {
+        if ($saveTime > 0) {
             $this->getScheduler()->scheduleRepeatingTask(new SaveTask($this), (int)$saveTime);
         }
 
@@ -116,13 +116,13 @@ class IFPlugin extends PluginBase implements Listener {
     }
 
     public function onDisable() {
+        $this->variables->save();
         if (!$this->loaded or $this->saveOnChange) return;
         $this->command->save();
         $this->block->save();
         $this->event->save();
         $this->chain->save();
         $this->formif->save();
-        $this->variables->save();
         $this->config->save();
         $this->getLogger()->info(Language::get("command.save.success"));
     }

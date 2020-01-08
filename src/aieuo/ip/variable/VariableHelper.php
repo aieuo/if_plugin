@@ -10,6 +10,9 @@ class VariableHelper {
 
     private $variables = [];
 
+    /** @var \SQLite3 */
+    private $db;
+
     public function __construct($owner) {
         $this->owner = $owner;
     }

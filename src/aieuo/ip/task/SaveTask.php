@@ -13,12 +13,13 @@ class SaveTask extends Task {
     }
 
     public function onRun(int $currentTick) {
+        $this->owner->getVariableHelper()->save();
+        if ($this->owner->saveOnChange) return;
         $this->owner->getBlockManager()->save();
         $this->owner->getCommandManager()->save();
         $this->owner->getEventManager()->save();
         $this->owner->getFormIFManager()->save();
         $this->owner->getChainManager()->save();
-        $this->owner->getVariableHelper()->save();
         $this->owner->config->save();
     }
 }
