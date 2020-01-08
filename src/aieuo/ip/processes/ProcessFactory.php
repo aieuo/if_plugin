@@ -49,6 +49,7 @@ class ProcessFactory {
         self::register(new SaveDatas());
         self::register(new SetHealth());
         self::register(new SetMaxHealth());
+        self::register(new SetFood());
         self::register(new Attack());
         self::register(new Kick());
         self::register(new ShowBossbar());
