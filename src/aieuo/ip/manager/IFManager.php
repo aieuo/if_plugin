@@ -75,9 +75,9 @@ class IFManager extends IFAPI {
      */
     public function get(string $key, array $options = []): ?array {
         if (!$this->exists($key)) return null;
-        $datas = $this->config->get($key);
-        $datas = $this->repairIF($datas);
-        return $datas;
+        $data = $this->config->get($key);
+        $data = $this->repairIF($data);
+        return $data;
     }
 
     /**
@@ -91,11 +91,12 @@ class IFManager extends IFAPI {
 
     /**
      * @param string $key
-     * @param array  $datas
+     * @param array  $data
      * @param array  $options
      */
-    public function set(string $key, array $datas = [], array $options = []) {
-        $this->config->set($key, $datas);
+    public function set(string $key, array $data = [], array $options = []) {
+        $this->config->set($key, $data);
+        if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
     }
 
     /**
@@ -113,14 +114,15 @@ class IFManager extends IFAPI {
      * @param array  $options
      */
     public function add($key, $type, $id, $content, $options = []) {
-        $datas = [];
-        if ($this->exists($key))$datas = $this->get($key);
-        $datas = $this->repairIF($datas);
-        $datas[$type][] = [
+        $data = [];
+        if ($this->exists($key))$data = $this->get($key);
+        $data = $this->repairIF($data);
+        $data[$type][] = [
             "id" => $id,
             "content" => $content
         ];
-        $this->config->set($key, $datas);
+        $this->config->set($key, $data);
+        if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
     }
 
     /**
@@ -131,24 +133,28 @@ class IFManager extends IFAPI {
      */
     public function del($key, $type, $num, $options = []) {
         if (!$this->exists($key)) return false;
-        $datas = $this->get($key);
-        unset($datas[$type][$num]);
-        $datas[$type] = array_merge($datas[$type]);
-        $this->config->set($key, $datas);
+        $data = $this->get($key);
+        unset($data[$type][$num]);
+        $data[$type] = array_merge($data[$type]);
+        $this->config->set($key, $data);
+        if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
         return true;
     }
 
     /**
-     * @param  string $key
-     * @param  string $type
-     * @param  int $num
+     * @param string $key
+     * @param string $type
+     * @param int $num
+     * @param $new
+     * @param array $options
      * @return bool
      */
     public function updateContent($key, $type, $num, $new, $options = []) {
         if (!$this->exists($key)) return false;
-        $datas = $this->get($key);
-        $datas[$type][$num]["content"] = $new;
-        $this->config->set($key, $datas);
+        $data = $this->get($key);
+        $data[$type][$num]["content"] = $new;
+        $this->config->set($key, $data);
+        if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
         return true;
     }
 
@@ -156,12 +162,14 @@ class IFManager extends IFAPI {
      * @param string $key
      * @param string $name
      * @param array $options
+     * @return bool
      */
     public function setName($key, $name, $options = []) {
         if (!$this->exists($key)) return false;
-        $datas = $this->get($key);
-        $datas["name"] = $name;
-        $this->config->set($key, $datas);
+        $data = $this->get($key);
+        $data["name"] = $name;
+        $this->config->set($key, $data);
+        if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
         return true;
     }
 
@@ -170,6 +178,7 @@ class IFManager extends IFAPI {
      */
     public function remove($key) {
         $this->config->remove($key);
+        if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
     }
 
     public function save() {
@@ -177,17 +186,17 @@ class IFManager extends IFAPI {
     }
 
     /**
-     * @param  array $datas
+     * @param  array $data
      * @return array
      */
-    public function repairIF($datas) {
-        if (!isset($datas["if"]))$datas["if"] = [];
-        if (!isset($datas["match"]))$datas["match"] = [];
-        if (!isset($datas["else"]))$datas["else"] = [];
-        return $datas;
+    public function repairIF($data) {
+        if (!isset($data["if"]))$data["if"] = [];
+        if (!isset($data["match"]))$data["match"] = [];
+        if (!isset($data["else"]))$data["else"] = [];
+        return $data;
     }
 
-    public function getReplaceDatas($datas) {
-        return parent::getReplaceDatas($datas);
+    public function getReplaceData($data) {
+        return parent::getReplaceData($data);
     }
 }

@@ -69,6 +69,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 }
                 $this->getOwner()->language->setMessages($messages);
                 $this->getOwner()->config->set("language", $args[1]);
+                if ($this->getOwner()->saveOnChange) $this->getOwner()->getConfig()->save();
                 $sender->sendMessage(Language::get("language.selected", [Language::get("language.name")]));
                 break;
             case "save":
