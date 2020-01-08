@@ -56,7 +56,7 @@ class IFPlugin extends PluginBase implements Listener {
             "wait" => 0,
             "save_time" => 10*20*60,
             "saveOnChange" => false,
-            "language" => "eng",
+            "language" => $this->getServer()->getLanguage()->getLang(),
         ]);
         $this->saveOnChange = $this->config->get("saveOnChange", false);
         $this->config->save();
