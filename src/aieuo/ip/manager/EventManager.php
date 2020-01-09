@@ -2,7 +2,9 @@
 
 namespace aieuo\ip\manager;
 
+use pocketmine\entity\object\ItemEntity;
 use pocketmine\event\Event;
+use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -137,7 +139,7 @@ class EventManager extends IFManager {
         }
         if ($eventname == "PlayerDropItemEvent" or $eventname == "InventoryPickupItemEvent") {
             /** @var Item $item */
-            $item = $event->getItem();
+            $item = $event instanceof InventoryPickupItemEvent ? $event->getItem()->getItem() : $event->getItem();
             $variables["item"] = new StringVariable("item", $item->__toString());
             $variables["item_name"] = new StringVariable("item_name", $item->getName());
             $variables["item_id"] = new NumberVariable("item_id", $item->getId());
