@@ -112,10 +112,10 @@ class Comparison extends Condition {
                 if ($value1 <= $value2) $result = self::MATCHED;
                 break;
             case self::CONTAINS:
-                if (strpos($value1, $value2) !== false) $result = self::MATCHED;
+                if (strpos((string) $value1, (string) $value2) !== false) $result = self::MATCHED;
                 break;
             case self::NOT_CONTAINS:
-                if (strpos($value1, $value2) === false) $result = self::MATCHED;
+                if (strpos((string) $value1, (string) $value2) === false) $result = self::MATCHED;
                 break;
             default:
                 $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
