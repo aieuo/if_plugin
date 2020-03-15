@@ -6,7 +6,7 @@ use aieuo\ip\IFPlugin;
 
 class SaveDatas extends Process {
 
-    protected $id = self::SAVE_DATAS;
+    protected $id = self::SAVE_DATA;
     protected $name = "@process.saveData.name";
     protected $description = "@process.saveData.description";
     protected $detail = "@process.saveData.detail";

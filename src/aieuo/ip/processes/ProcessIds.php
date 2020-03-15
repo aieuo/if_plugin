@@ -20,8 +20,7 @@ interface ProcessIds {
     const SET_NAMETAG = 114;
     const ADD_ENCHANTMENT = 115;
     const ADD_EFFECT = 116;
-    const EVENT_CANCELL = 117;
-    const SENDMESSAGE_TO_OP = 118;
+    const SEND_MESSAGE_TO_OP = 118;
     const SET_SLEEPING = 119;
     const SET_SITTING = 120;
     const ATTACK = 121;
@@ -35,9 +34,9 @@ interface ProcessIds {
     const SET_SCALE = 129;
     const EVENT_CANCEL = 130;
     const SET_ITEM = 131;
-    const SAVE_DATAS = 132;
-    const ADDMONEY = 133;
-    const TAKEMONEY = 134;
+    const SAVE_DATA = 132;
+    const ADD_MONEY = 133;
+    const TAKE_MONEY = 134;
     const COOPERATION = 135;
     const DELETE_VARIABLE = 136;
     const SET_BLOCKS = 137;
@@ -45,12 +44,14 @@ interface ProcessIds {
     const EXECUTE_OTHER_PLAYER = 139;
     const DELAYED_COMMAND_CONSOLE = 140;
     const SEND_FORM = 141;
-    const SETMONEY = 142;
+    const SET_MONEY = 142;
     const CLEAR_INVENTORY = 143;
     const EQUIP_ARMOR = 144;
     const DELAYED_COOPERATION = 144;
     const SHOW_BOSSBAR = 155;
     const REMOVE_BOSSBAR = 156;
     const GENERATE_RANDOM_NUMBER = 157;
-    const SET_FOOD  = 108;
+    const SET_FOOD  = 158;
+    const ADD_PARTICLE = 159;
+    const ADD_SOUND = 160;
 }

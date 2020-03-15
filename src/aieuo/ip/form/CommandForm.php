@@ -7,6 +7,7 @@ use aieuo\ip\form\Form;
 use aieuo\ip\Session;
 use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
+use pocketmine\Player;
 
 class CommandForm {
     public function getSelectActionForm() {
@@ -24,11 +25,10 @@ class CommandForm {
                 Elements::getButton(Language::get("form.back"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 
-    public function onSelectAction($player, $data) {
+    public function onSelectAction(Player $player, $data) {
         if ($data === null) return;
         $session = Session::getSession($player);
         switch ($data) {
@@ -74,7 +74,7 @@ class CommandForm {
     }
 
 
-    public function getAddCommandForm($mes = "") {
+    public function getAddCommandForm(string $mes = "") {
         $data = [
             "type" => "custom_form",
             "title" => Language::get("form.command.addCommand.title"),
@@ -85,11 +85,10 @@ class CommandForm {
                 Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 
-    public function onAddCommand($player, $data) {
+    public function onAddCommand(Player $player, $data) {
         $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
