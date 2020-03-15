@@ -23,6 +23,7 @@ class ProcessFactory {
         self::register(new SetMoney());
         self::register(new Teleport());
         self::register(new Motion());
+        self::register(new AddParticle());
         self::register(new SetScale());
         self::register(new Calculation());
         self::register(new AddVariable());
@@ -36,6 +37,7 @@ class ProcessFactory {
         self::register(new EquipArmor());
         self::register(new AddEnchantment());
         self::register(new AddEffect());
+        self::register(new AddSound());
         self::register(new SetNametag());
         self::register(new SetSleeping());
         self::register(new SetSitting());
