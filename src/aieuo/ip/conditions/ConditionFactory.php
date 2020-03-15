@@ -2,14 +2,19 @@
 
 namespace aieuo\ip\conditions;
 
+use aieuo\ip\economy\EconomyLoader;
+use aieuo\ip\IFPlugin;
+
 class ConditionFactory {
     private static $list = [];
 
     public static function init() {
+        $existsEconomy = IFPlugin::getInstance()->getEconomy() instanceof EconomyLoader;
+
         self::register(new NoCheck());
-        self::register(new TakeMoney());
-        self::register(new OverMoney());
-        self::register(new LessMoney());
+        if ($existsEconomy) self::register(new TakeMoney());
+        if ($existsEconomy) self::register(new OverMoney());
+        if ($existsEconomy) self::register(new LessMoney());
         self::register(new InHand());
         self::register(new ExistsItem());
         self::register(new RemoveItem());

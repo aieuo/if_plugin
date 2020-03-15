@@ -2,10 +2,14 @@
 
 namespace aieuo\ip\processes;
 
+use aieuo\ip\economy\EconomyLoader;
+use aieuo\ip\IFPlugin;
+
 class ProcessFactory {
     private static $list = [];
 
     public static function init() {
+        $existsEconomy = IFPlugin::getInstance()->getEconomy() instanceof EconomyLoader;
         self::register(new DoNothing());
         self::register(new SendMessage());
         self::register(new SendTip());
@@ -18,9 +22,9 @@ class ProcessFactory {
         self::register(new CommandConsole());
         self::register(new DelayedCommand());
         self::register(new DelayedCommandConsole());
-        self::register(new AddMoney());
-        self::register(new TakeMoney());
-        self::register(new SetMoney());
+        if ($existsEconomy) self::register(new AddMoney());
+        if ($existsEconomy) self::register(new TakeMoney());
+        if ($existsEconomy) self::register(new SetMoney());
         self::register(new Teleport());
         self::register(new Motion());
         self::register(new AddParticle());

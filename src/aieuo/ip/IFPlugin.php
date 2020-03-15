@@ -46,6 +46,7 @@ class IFPlugin extends PluginBase implements Listener {
     public $api;
     /* @var VariableHelper */
     public $variables;
+    private $economy;
 
     public function onEnable() {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
