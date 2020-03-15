@@ -2,6 +2,7 @@
 
 namespace aieuo\ip\processes;
 
+use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
@@ -45,10 +46,16 @@ class RemoveItem extends TypeItem {
         $id = $default;
         $count = "";
         $name = "";
+        $lore = "";
+        $enchant = "";
         if ($item instanceof Item) {
             $id = $item->getId().":".$item->getDamage();
             $count = $item->getCount();
             $name = $item->hasCustomName() ? $item->getName() : "";
+            $lore = implode(";", $item->getLore());
+            $enchant = implode(";", array_map(function (EnchantmentInstance $enchant) {
+                return $enchant->getId().",".$enchant->getLevel();
+            }, $item->getEnchantments()));
             if ($count === 0) $mes .= Language::get("process.removeitem.removeall");
         } elseif ($default !== "") {
             $mes .= Language::get("process.item.form.invalid");
@@ -61,11 +68,12 @@ class RemoveItem extends TypeItem {
                 Elements::getInput(Language::get("process.item.form.id"), Language::get("input.example", ["1:0"]), $id),
                 Elements::getInput(Language::get("process.removeitem.form.count"), Language::get("input.example", ["5"]), $count),
                 Elements::getInput(Language::get("process.item.form.name"), Language::get("input.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.item.form.lore"), Language::get("input.example", ["aiueo;aieuo;aeiuo"]), $lore),
+                Elements::getInput(Language::get("process.item.form.enchant"), Language::get("input.example", ["id,level;1,1;5,10"]), $enchant),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 }
