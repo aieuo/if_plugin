@@ -8,7 +8,7 @@ use aieuo\ip\utils\Language;
 
 class SendMessageToOp extends TypeMessage {
 
-    protected $id = self::SENDMESSAGE_TO_OP;
+    protected $id = self::SEND_MESSAGE_TO_OP;
     protected $name = "@process.sendmessagetoop.name";
     protected $description = "@process.sendmessagetoop.description";
 

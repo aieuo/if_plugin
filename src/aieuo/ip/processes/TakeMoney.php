@@ -7,7 +7,7 @@ use aieuo\ip\utils\Language;
 
 class TakeMoney extends TypeMoney {
 
-    protected $id = self::TAKEMONEY;
+    protected $id = self::TAKE_MONEY;
     protected $name = "@process.takemoney.name";
     protected $description = "@process.takemoney.description";
 

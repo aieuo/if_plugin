@@ -8,7 +8,7 @@ use aieuo\ip\utils\Language;
 
 class SetFood extends Process {
 
-    protected $id = self::SET_HEALTH;
+    protected $id = self::SET_FOOD;
     protected $name = "@process.setFood.name";
     protected $description = "@process.setFood.description";
 
@@ -29,8 +29,7 @@ class SetFood extends Process {
     }
 
     public function parse(string $content) {
-        $health = (int)$content;
-        return $health;
+        return (int)$content;
     }
 
     public function execute() {

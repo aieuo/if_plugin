@@ -106,10 +106,10 @@ class CommandManager extends IFManager {
         $command = explode(" ", $command)[0];
         $commands = $this->getAll();
         foreach ($commands as $cmd => $value) {
-            $cmds = explode(" ", $cmd);
-            if (array_shift($cmds) == $command) {
-                if (isset($cmds[0])) {
-                    $sub = implode(" ", $cmds);
+            $commands = explode(" ", $cmd);
+            if (array_shift($commands) == $command) {
+                if (isset($commands[0])) {
+                    $sub = implode(" ", $commands);
                     $array[] = $sub;
                 }
             }
@@ -126,9 +126,9 @@ class CommandManager extends IFManager {
     public function getReplaceData($data) {
         $result = parent::getReplaceData($data);
         $command = $data["command"];
-        $cmds = explode(" ", substr($command, 1));
-        $result["cmd"] = new StringVariable("cmd", array_shift($cmds));
-        $result["args"] = new ListVariable("args", $cmds);
+        $commands = explode(" ", substr($command, 1));
+        $result["cmd"] = new StringVariable("cmd", array_shift($commands));
+        $result["args"] = new ListVariable("args", $commands);
         return $result;
     }
 }

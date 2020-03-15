@@ -7,7 +7,7 @@ use aieuo\ip\IFPlugin;
 
 class SetMoney extends TypeMoney {
 
-    protected $id = self::SETMONEY;
+    protected $id = self::SET_MONEY;
     protected $name = "@process.setmoney.name";
     protected $description = "@process.setmoney.description";
 
