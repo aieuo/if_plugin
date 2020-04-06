@@ -17,15 +17,15 @@ class ExecuteOtherPlayer extends Process {
 
     public function getDetail(): string {
         $cname = $this->getCooperationName();
-        $pname = $this->getPlayerName();
-        return Language::get("process.executeotherplayer.detail", [$cname, $pname]);
+        $playerName = $this->getPlayerNames();
+        return Language::get("process.executeotherplayer.detail", [$cname, $playerName]);
     }
 
     public function getCooperationName() {
         return $this->getValues()[0];
     }
 
-    public function getPlayerName() {
+    public function getPlayerNames() {
         return $this->getValues()[1];
     }
 
@@ -34,11 +34,11 @@ class ExecuteOtherPlayer extends Process {
     }
 
     public function parse(string $content) {
-        $datas = explode(";", $content);
-        if (!isset($datas[1])) return false;
-        $pname = array_pop($datas);
-        $cname = implode(";", $datas);
-        return [$cname, $pname];
+        $data = explode(";", $content);
+        if (!isset($data[1])) return false;
+        $playerName = array_pop($data);
+        $cname = implode(";", $data);
+        return [$cname, $playerName];
     }
 
     public function execute() {
@@ -48,35 +48,38 @@ class ExecuteOtherPlayer extends Process {
             $player->sendMessage(Language::get("process.cooperation.notFound"));
             return;
         }
-        $playerName = $this->getPlayerName();
-        $target = Server::getInstance()->getPlayer($playerName);
-        if ($target === null) {
-            $player->sendMessage(Language::get("process.executeotherplayer.offline", [$playerName]));
-            return;
+        $playerNames = explode(",", $this->getPlayerNames());
+        foreach ($playerNames as $name) {
+            $name = trim($name);
+            $target = Server::getInstance()->getPlayer($name);
+            if ($target === null) {
+                $player->sendMessage(Language::get("process.executeotherplayer.offline", [$name]));
+                return;
+            }
+            $data = $manager->get($this->getCooperationName());
+            $manager->executeIfMatchCondition(
+                $target,
+                $data["if"],
+                $data["match"],
+                $data["else"],
+                [
+                    "player" => $target,
+                    "origin" => $player
+                ]
+            );
         }
-        $datas = $manager->get($this->getCooperationName());
-        $manager->executeIfMatchCondition(
-            $target,
-            $datas["if"],
-            $datas["match"],
-            $datas["else"],
-            [
-                "player" => $target,
-                "origin" => $player
-            ]
-        );
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
         $manager = IFPlugin::getInstance()->getChainManager();
         $names = $this->parse($default);
         $cname = $default;
-        $pname = "";
+        $playerName = "";
         if ($names === false and $default !== "") {
             $mes .= Language::get("form.error");
         } else {
             $cname = $names[0];
-            $pname = $names[1];
+            $playerName = $names[1];
         }
         if ($default !== "" and !$manager->exists($cname)) $mes .= Language::get("process.cooperation.notFound");
         $data = [
@@ -85,13 +88,12 @@ class ExecuteOtherPlayer extends Process {
             "content" => [
                 Elements::getLabel($this->getDescription().(empty($mes) ? "" : "\n".$mes)),
                 Elements::getInput(Language::get("process.executeotherplayer.form.name"), Language::get("input.example", ["aieuo"]), $cname),
-                Elements::getInput(Language::get("process.executeotherplayer.form.player"), Language::get("input.example", ["aiueo421"]), $pname),
+                Elements::getInput(Language::get("process.executeotherplayer.form.player"), Language::get("input.example", ["aiueo421, aiueo422, aiueo423"]), $playerName),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 
     public function parseFormData(array $data) {
