@@ -2,6 +2,9 @@
 
 namespace aieuo\ip\conditions;
 
+use aieuo\ip\IFPlugin;
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
 
 use aieuo\ip\form\Form;
@@ -9,8 +12,11 @@ use aieuo\ip\form\Elements;
 use aieuo\ip\utils\Language;
 
 class TypeItem extends Condition {
-    public function getItem() {
-        return $this->getValues();
+
+    public function getItem(): ?Item {
+        $item = $this->getValues();
+        if (!($item instanceof Item)) return null;
+        return $item;
     }
 
     public function setItem(Item $item) {
@@ -18,21 +24,50 @@ class TypeItem extends Condition {
     }
 
     public function parse(string $id) {
-        if (!preg_match("/\s*([0-9]+)\s*:?\s*([0-9]*)\s*:?\s*([0-9]*)\s*:?\s*(.*)\s*/", $id, $ids)) return false;
-        $item = Item::get((int)$ids[1], empty($ids[2]) ? 0 : (int)$ids[2], empty($ids[3]) ? 0 : (int)$ids[3]);
-        if (!empty($ids[4])) $item->setCustomName($ids[4]);
+        $ids = explode(":", $id);
+        $item = Item::get((int)$ids[0], empty($ids[1]) ? 0 : (int)$ids[1]);
+        if (isset($ids[2])) $item->setCount((int)$ids[2]);
+        if (!empty($ids[3])) $item->setCustomName($ids[3]);
+        if (!empty($ids[4])) $item->setLore(explode(";", $ids[4]));
+        if (!empty($ids[5])) {
+            $enchants1 = explode(";", $ids[5]);
+            foreach ($enchants1 as $enchant1) {
+                $enchants = explode(",", trim($enchant1));
+                if (is_numeric(trim($enchants[0]))){
+                    $enchant = Enchantment::getEnchantment(trim($enchants[0]));
+                } else {
+                    $enchant = Enchantment::getEnchantmentByName(trim($enchants[0]));
+                }
+
+                if(!($enchant instanceof Enchantment)) continue;
+
+                $level = (int)trim($enchants[1] ?? "1");
+                $item->addEnchantment(new EnchantmentInstance($enchant, $level));
+            }
+        }
         return $item;
     }
 
+    public function itemEquals(Item $baseItem, Item $targetItem) {
+        return $baseItem->equals($targetItem, true, false)
+            and (!$baseItem->hasCustomName() or $baseItem->getName() === $targetItem->getName())
+            and (empty($baseItem->getLore()) or $baseItem->getLore() === $targetItem->getLore())
+            and (!$baseItem->hasEnchantments() or $baseItem->getEnchantments() == $targetItem->getEnchantments());
+    }
+
     public function getEditForm(string $default = "", string $mes = "") {
-        $item = $this->parse($default);
+        $item = explode(":", $default);
         $id = $default;
         $count = "";
         $name = "";
-        if ($item instanceof Item) {
-            $id = $item->getId().":".$item->getDamage();
-            $count = $item->getCount();
-            $name = $item->hasCustomName() ? $item->getName() : "";
+        $lore = "";
+        $enchant = "";
+        if (count($item) >= 3) {
+            $id = $item[0].":".$item[1];
+            $count = $item[2];
+            $name = $item[3] ?? "";
+            $lore = $item[4] ?? "";
+            $enchant = $item[5] ?? "";
             if ($count === 0) $mes .= Language::get("condition.item.form.zero");
         } elseif ($default !== "") {
             $mes .= Language::get("condition.item.form.invalid");
@@ -45,25 +80,26 @@ class TypeItem extends Condition {
                 Elements::getInput(Language::get("condition.item.form.id"), Language::get("input.example", ["1:0"]), $id),
                 Elements::getInput(Language::get("condition.item.form.count"), Language::get("input.example", ["5"]), $count),
                 Elements::getInput(Language::get("condition.item.form.name"), Language::get("input.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.item.form.lore"), Language::get("input.example", ["aiueo;aieuo;aeiuo"]), $lore),
+                Elements::getInput(Language::get("process.item.form.enchant"), Language::get("input.example", ["id,level;1,1;5,10"]), $enchant),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 
     public function parseFormData(array $data) {
         $status = true;
         $id = explode(":", $data[1]);
         if (!isset($id[1])) $id[1] = 0;
-        $ids_str = $id[0].":".$id[1].":".$data[2].":".$data[3];
+        $ids_str = $id[0].":".$id[1].":".$data[2].":".$data[3].":".$data[4].":".$data[5];
         if ($data[1] === "" or $data[2] === "") {
             $status = null;
-        } else {
+        } elseif (!IFPlugin::getInstance()->getVariableHelper()->containsVariable($ids_str)) {
             $ids = $this->parse($ids_str);
             if ($ids === false) $status = false;
         }
-        return ["status" => $status, "contents" => $ids_str, "delete" => $data[4], "cancel" => $data[5]];
+        return ["status" => $status, "contents" => $ids_str, "delete" => $data[6], "cancel" => $data[7]];
     }
 }
