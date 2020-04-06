@@ -29,7 +29,7 @@ class DelayedCooperationTask extends Task {
 
         $manager = IFPlugin::getInstance()->getChainManager();
         if (!$manager->exists($this->name)) {
-            $this->player->sendMessage(Language::get("process.cooperation.notfount"));
+            $this->player->sendMessage(Language::get("process.cooperation.notFound"));
             return;
         }
         $data = $manager->get($this->name);
