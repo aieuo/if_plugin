@@ -28,6 +28,7 @@ class ProcessFactory {
         self::register(new Teleport());
         self::register(new Motion());
         self::register(new AddParticle());
+        self::register(new AddParticleRange());
         self::register(new SetScale());
         self::register(new Calculation());
         self::register(new AddVariable());

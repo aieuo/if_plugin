@@ -54,4 +54,5 @@ interface ProcessIds {
     const SET_FOOD  = 158;
     const ADD_PARTICLE = 159;
     const ADD_SOUND = 160;
+    const ADD_PARTICLE_RANGE = 162;
 }
