@@ -63,6 +63,7 @@ class ProcessFactory {
         self::register(new RemoveBossbar());
         self::register(new GenerateRandomNumber());
         self::register(new GetInventoryContents());
+        self::register(new ChangeItemData());
     }
 
     /**
