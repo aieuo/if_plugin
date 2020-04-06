@@ -45,7 +45,7 @@ class AddParticleRange extends Process {
         $pos2 = $this->getPosition2();
         $particle = $this->getValues()[2] ?? "";
         if (!($pos1 instanceof Position) or $pos1->level === null or !($pos2 instanceof Position) or empty($particle)) return false;
-        return Language::get("process.addParticle.detail", [
+        return Language::get("process.addParticleRange.detail", [
             $pos1->x, $pos1->y, $pos1->z, $pos1->level->getFolderName(), $pos2->x, $pos2->y, $pos2->z, $particle
         ]);
     }
