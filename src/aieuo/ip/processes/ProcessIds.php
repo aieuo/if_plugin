@@ -55,4 +55,5 @@ interface ProcessIds {
     const ADD_PARTICLE = 159;
     const ADD_SOUND = 160;
     const ADD_PARTICLE_RANGE = 162;
+    const GET_INVENTORY_CONTENTS = 163;
 }
