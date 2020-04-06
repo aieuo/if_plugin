@@ -62,6 +62,7 @@ class FormIFManager extends IFManager {
     public function setName($key, $name, $options = []) {
         if (!$this->exists($key)) return false;
         $data = $this->getIF($key);
+        $data["ifs"][$options["place"]] = $this->repairIF($data["ifs"][$options["place"]]);
         $data["ifs"][$options["place"]]["name"] = $name;
         $this->set($key, $data);
         return true;
