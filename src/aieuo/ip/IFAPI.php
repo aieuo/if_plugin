@@ -36,11 +36,11 @@ class IFAPI {
         return $matched ? Condition::MATCHED : Condition::NOT_MATCHED;
     }
 
-    public function executeProcess($player, $datas, $options) {
-        $replaceDatas = $this->getReplaceData($options);
-        foreach ($datas as $data) {
+    public function executeProcess($player, $ifData, $options) {
+        $replaceData = $this->getReplaceData($options);
+        foreach ($ifData as $data) {
             $process = Process::get($data["id"]);
-            $process->replaceDatas = $replaceDatas;
+            $process->replaceDatas = $replaceData;
             if (isset($options["event"]) and $options["event"] instanceof Event) $process->setEvent($options["event"]);
             if ($data["id"] === Process::EVENT_CANCEL) {
                 $process->setValues($options["event"])->execute();
@@ -51,7 +51,7 @@ class IFAPI {
                     $process->parse(
                         str_replace("\\n", "\n", IFPlugin::getInstance()
                         ->getVariableHelper()
-                        ->replaceVariables($data["content"], $replaceDatas))
+                        ->replaceVariables($data["content"], $replaceData))
                     )
                 )->execute();
         }
