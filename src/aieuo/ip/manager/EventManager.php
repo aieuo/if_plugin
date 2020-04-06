@@ -143,6 +143,7 @@ class EventManager extends IFManager {
             $variables["item"] = new StringVariable("item", $item->__toString());
             $variables["item_name"] = new StringVariable("item_name", $item->getName());
             $variables["item_id"] = new NumberVariable("item_id", $item->getId());
+            $variables["item_lore"] = new ListVariable("item_lore", $item->getLore());
             $variables["item_damage"] = new NumberVariable("item_damage", $item->getDamage());
             $variables["item_count"] = new NumberVariable("item_count", $item->getCount());
         }

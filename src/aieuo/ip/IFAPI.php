@@ -106,6 +106,7 @@ class IFAPI {
             "hand_item" => new StringVariable("hand_item", $player->getInventory()->getItemInHand()->__toString()),
             "hand_name" => new StringVariable("hand_name", $player->getInventory()->getItemInHand()->getName()),
             "hand_id" => new NumberVariable("hand_id", $player->getInventory()->getItemInHand()->getId()),
+            "hand_lore" => new ListVariable("hand_lore", $player->getInventory()->getItemInHand()->getLore()),
             "hand_damage" => new NumberVariable("hand_damage", $player->getInventory()->getItemInHand()->getDamage()),
             "hand_count" => new NumberVariable("hand_count", $player->getInventory()->getItemInHand()->getCount()),
             "server_name" => new StringVariable("server_name", $server->getName()),
