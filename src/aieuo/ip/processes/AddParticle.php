@@ -31,6 +31,7 @@ use pocketmine\level\particle\SporeParticle;
 use pocketmine\level\particle\WaterDripParticle;
 use pocketmine\level\particle\WaterParticle;
 use pocketmine\level\Position;
+use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
 
 class AddParticle extends Process {
@@ -52,13 +53,21 @@ class AddParticle extends Process {
         $pos = $this->getPosition();
         $particle = $this->getParticle();
         $amount = $this->getAmount() ?? 1;
-        if (!($pos instanceof Position) or !($particle instanceof Particle)) {
+        if (!($pos instanceof Position)) {
             $player->sendMessage(Language::get("input.invalid", [$this->getName()]));
             return;
         }
 
+        $isPMMPParticle = $particle instanceof Particle;
         for ($i=0; $i<$amount; $i++) {
-            $pos->level->addParticle($particle);
+            if ($isPMMPParticle) {
+                $pos->level->addParticle($particle);
+            } else {
+                $pk = new SpawnParticleEffectPacket();
+                $pk->position = $pos;
+                $pk->particleName = $this->getValues()[1] ?? "";
+                Server::getInstance()->broadcastPacket($pos->level->getPlayers(), $pk);
+            }
         }
     }
 
@@ -152,7 +161,7 @@ class AddParticle extends Process {
         $position = $positions[0];
         $particles = explode("[amount]", $positions[1] ?? $default);
         $particle = $particles[0];
-        $amount = $particles[1] ?? $titles[1] ?? $default;
+        $amount = $particles[1] ?? $positions[1] ?? $default;
         if ($settings !== false) {
             $position = $settings[0]->x.",".$settings[0]->y.",".$settings[0]->z.",".$settings[0]->level->getFolderName();
             $particle = $settings[1];
