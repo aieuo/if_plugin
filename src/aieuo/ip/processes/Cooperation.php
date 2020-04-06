@@ -33,7 +33,7 @@ class Cooperation extends Process {
         $player = $this->getPlayer();
         $manager = IFPlugin::getInstance()->getChainManager();
         if (!$manager->exists($this->getCooperationName())) {
-            $player->sendMessage(Language::get("process.cooperation.notfount"));
+            $player->sendMessage(Language::get("process.cooperation.notFound"));
             return;
         }
         $datas = $manager->get($this->getCooperationName());
@@ -53,7 +53,7 @@ class Cooperation extends Process {
 
     public function getEditForm(string $default = "", string $mes = "") {
         $manager = IFPlugin::getInstance()->getChainManager();
-        if ($default !== "" and !$manager->exists($default)) $mes .= Language::get("process.cooperation.notfount");
+        if ($default !== "" and !$manager->exists($default)) $mes .= Language::get("process.cooperation.notFound");
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),

@@ -56,7 +56,7 @@ class DelayedCooperation extends Process {
         if ($default !== "" and $names === false) {
             $mes .= Language::get("form.error");
         } elseif ($default !== "" and !$manager->exists($name)) {
-            $mes .= Language::get("process.cooperation.notfount");
+            $mes .= Language::get("process.cooperation.notFound");
         }
         $data = [
             "type" => "custom_form",

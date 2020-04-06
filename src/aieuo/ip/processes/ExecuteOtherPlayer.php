@@ -45,7 +45,7 @@ class ExecuteOtherPlayer extends Process {
         $player = $this->getPlayer();
         $manager = IFPlugin::getInstance()->getChainManager();
         if (!$manager->exists($this->getCooperationName())) {
-            $player->sendMessage(Language::get("process.cooperation.notfount"));
+            $player->sendMessage(Language::get("process.cooperation.notFound"));
             return;
         }
         $playerName = $this->getPlayerName();
@@ -78,7 +78,7 @@ class ExecuteOtherPlayer extends Process {
             $cname = $names[0];
             $pname = $names[1];
         }
-        if ($default !== "" and !$manager->exists($cname)) $mes .= Language::get("process.cooperation.notfount");
+        if ($default !== "" and !$manager->exists($cname)) $mes .= Language::get("process.cooperation.notFound");
         $data = [
             "type" => "custom_form",
             "title" => $this->getName(),
