@@ -75,7 +75,7 @@ class EventListener implements Listener {
     }
 
     public function commandProcess(PlayerCommandPreprocessEvent $event) {
-        if ($event->getMessage()[0] === "/") return;
+        if ($event->getMessage()[0] !== "/") return;
         $this->onEvent($event, "PlayerCommandPreprocessEvent");
     }
 
