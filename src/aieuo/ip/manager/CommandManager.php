@@ -126,7 +126,7 @@ class CommandManager extends IFManager {
     public function getReplaceData($data) {
         $result = parent::getReplaceData($data);
         $command = $data["command"];
-        $commands = explode(" ", substr($command, 1));
+        $commands = explode(" ", $command);
         $result["cmd"] = new StringVariable("cmd", array_shift($commands));
         $result["args"] = new ListVariable("args", $commands);
         return $result;
