@@ -592,7 +592,7 @@ class FormIFForm {
             return;
         }
         $session->set("form_place", $data - 2);
-        $datas = $datas["ifs"][$data-2];
+        $datas = $manager->repairIF($datas["ifs"][$data-2]);
         $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
         $form = $this->getEditIfForm($mes);
         Form::sendForm($player, $form, $this, "onEditIf");
