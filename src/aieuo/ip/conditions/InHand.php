@@ -26,11 +26,7 @@ class InHand extends TypeItem {
             return self::ERROR;
         }
         $hand = $player->getInventory()->getItemInHand();
-        if ($hand->getId() == $item->getId()
-            and $hand->getDamage() == $item->getDamage()
-            and $hand->getCount() >= $item->getCount()
-            and $hand->getName() == $item->getName()
-        ) {
+        if ($this->itemEquals($item, $hand) and $hand->getCount() >= $item->getCount()) {
             return self::MATCHED;
         }
         return self::NOT_MATCHED;

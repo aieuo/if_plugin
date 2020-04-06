@@ -89,7 +89,7 @@ class TypeItem extends Process {
         $ids_str = $id[0].":".$id[1].":".$data[2].":".$data[3].":".$data[4].":".$data[5];
         if ($data[1] === "" or $data[2] === "") {
             $status = null;
-        } elseif (IFPlugin::getInstance()->getVariableHelper()->containsVariable($ids_str)) {
+        } elseif (!IFPlugin::getInstance()->getVariableHelper()->containsVariable($ids_str)) {
             $ids = $this->parse($ids_str);
             if ($ids === false) $status = false;
         }

@@ -28,17 +28,8 @@ class RemoveItem extends TypeItem {
             return self::ERROR;
         }
         if ($item->getCount() === 0) {
-            $count = 0;
-            foreach ($player->getInventory()->getContents() as $item1) {
-                if ($item1->getId() == $item->getId()
-                    and $item1->getDamage() == $item->getDamage()
-                    and $item1->getName() == $item->getName()
-                ) {
-                    $count += $item1->getCount();
-                }
-            }
-            if ($count == 0) return self::NOT_MATCHED;
-            $item->setCount($count);
+            $player->getInventory()->remove($item);
+            return self::MATCHED;
         }
         if ($player->getInventory()->contains($item)) {
             $player->getInventory()->removeItem($item);
@@ -48,14 +39,18 @@ class RemoveItem extends TypeItem {
     }
 
     public function getEditForm(string $default = "", string $mes = "") {
-        $item = $this->parse($default);
+        $item = explode(":", $default);
         $id = $default;
         $count = "";
         $name = "";
-        if ($item instanceof Item) {
-            $id = $item->getId().":".$item->getDamage();
-            $count = $item->getCount();
-            $name = $item->hasCustomName() ? $item->getName() : "";
+        $lore = "";
+        $enchant = "";
+        if (count($item) >= 3) {
+            $id = $item[0].":".$item[1];
+            $count = $item[2];
+            $name = $item[3] ?? "";
+            $lore = $item[4] ?? "";
+            $enchant = $item[5] ?? "";
             if ($count === 0) $mes .= Language::get("condition.removeitem.all");
         } elseif ($default !== "") {
             $mes .= Language::get("condition.item.form.invalid");
@@ -68,11 +63,12 @@ class RemoveItem extends TypeItem {
                 Elements::getInput(Language::get("condition.item.form.id"), Language::get("input.example", ["1:0"]), $id),
                 Elements::getInput(Language::get("condition.removeitem.form.count"), Language::get("input.example", ["5"]), $count),
                 Elements::getInput(Language::get("condition.item.form.name"), Language::get("input.example", ["aieuo"]), $name),
+                Elements::getInput(Language::get("process.item.form.lore"), Language::get("input.example", ["aiueo;aieuo;aeiuo"]), $lore),
+                Elements::getInput(Language::get("process.item.form.enchant"), Language::get("input.example", ["id,level;1,1;5,10"]), $enchant),
                 Elements::getToggle(Language::get("form.delete")),
                 Elements::getToggle(Language::get("form.cancel"))
             ]
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 }
