@@ -121,6 +121,9 @@ class EventManager extends IFManager {
             $variables["block_damage"] = new NumberVariable("block_damage", $block->getDamage());
             $variables["block_ids"] = new StringVariable("block_ids", $block->getId().":".$block->getDamage());
             $variables["block_pos"] = new StringVariable("block_pos", $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName());
+            $variables["block_x"] = new NumberVariable("block_x", $block->x);
+            $variables["block_y"] = new NumberVariable("block_y", $block->y);
+            $variables["block_z"] = new NumberVariable("block_z", $block->z);
             $variables["block_level"] = new StringVariable("block_level", $block->level->getFolderName());
             if ($block instanceof SignPost) {
                 $sign = $block->level->getTile($block);
