@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\ip\formAPI\element;
 
 class Slider extends Element {
 
@@ -8,11 +8,11 @@ class Slider extends Element {
     protected $type = self::ELEMENT_SLIDER;
 
     /** @var float */
-    private $min = [];
+    private $min = 0;
     /** @var float */
-    private $max = [];
+    private $max = 0;
     /** @var float */
-    private $step  = [];
+    private $step  = 1;
     /** @var float */
     private $default = 0.0;
 

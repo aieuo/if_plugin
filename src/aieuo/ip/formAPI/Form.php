@@ -1,19 +1,19 @@
 <?php
 
-namespace aieuo\mineflow\formAPI;
+namespace aieuo\ip\formAPI;
 
-use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Element;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Slider;
-use aieuo\mineflow\formAPI\element\StepSlider;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\ip\utils\Language;
+use aieuo\ip\formAPI\element\Button;
+use aieuo\ip\formAPI\element\Dropdown;
+use aieuo\ip\formAPI\element\Element;
+use aieuo\ip\formAPI\element\Input;
+use aieuo\ip\formAPI\element\Label;
+use aieuo\ip\formAPI\element\Slider;
+use aieuo\ip\formAPI\element\StepSlider;
+use aieuo\ip\formAPI\element\Toggle;
 use pocketmine\utils\TextFormat;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
 
 abstract class Form implements PMForm {
 
@@ -30,15 +30,15 @@ abstract class Form implements PMForm {
     private $name;
 
     /** @var callable|null */
-    private $callable = null;
+    private $onReceive = null;
+    /* @var callable|null */
+    private $onClose = null;
     /** @var array */
     private $args = [];
     /** @var array */
     protected $messages = [];
     /** @var array */
     protected $highlights = [];
-    /** @var string[][] */
-    private $recipes;
 
     public function __construct(string $title = "") {
         $this->title = $title;
@@ -88,7 +88,16 @@ abstract class Form implements PMForm {
      * @return self
      */
     public function onReceive(callable $callable): self {
-        $this->callable = $callable;
+        $this->onReceive = $callable;
+        return $this;
+    }
+
+    /**
+     * @param callable $callable
+     * @return self
+     */
+    public function onClose(callable $callable): self {
+        $this->onClose = $callable;
         return $this;
     }
 
@@ -177,9 +186,13 @@ abstract class Form implements PMForm {
     abstract public function reflectErrors(array $form): array;
 
     public function handleResponse(Player $player, $data): void {
-        if (!is_callable($this->callable)) return;
-
-        call_user_func_array($this->callable, array_merge([$player, $data], $this->args));
+        if ($data === null) {
+            if (!is_callable($this->onClose)) return;
+            call_user_func_array($this->onClose, array_merge([$player], $this->args));
+        } else {
+            if (!is_callable($this->onReceive)) return;
+            call_user_func_array($this->onReceive, array_merge([$player, $data], $this->args));
+        }
     }
 
     public static function createFromArray(array $data, string $name = ""): ?self {
@@ -240,23 +253,5 @@ abstract class Form implements PMForm {
         }
         $form->setName($name);
         return $form;
-    }
-
-    public function addRecipe(string $name, string $button = "") {
-        if (!isset($this->recipes[$button])) $this->recipes[$button] = [];
-        if (!in_array($name, $this->recipes[$button])) {
-            $this->recipes[$button][] = $name;
-        }
-    }
-
-    public function removeRecipe(string $name, string $button = "") {
-        if (isset($this->recipes[$button])) {
-            $this->recipes[$button] = array_diff([$name], $this->recipes[$button]);
-            if (empty($this->recipes[$button])) unset($this->recipes[$button]);
-        }
-    }
-
-    public function getRecipes($button = ""): array {
-        return $this->recipes[$button] ?? [];
     }
 }

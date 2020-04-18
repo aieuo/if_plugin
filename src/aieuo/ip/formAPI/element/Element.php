@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\ip\formAPI\element;
 
-use aieuo\mineflow\utils\Language;
+use aieuo\ip\utils\Language;
 use pocketmine\utils\UUID;
 
 abstract class Element implements \JsonSerializable {

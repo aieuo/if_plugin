@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\ip\formAPI\element;
 
 class Dropdown extends Element {
     /** @var string */
