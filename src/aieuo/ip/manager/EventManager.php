@@ -169,7 +169,7 @@ class EventManager extends IFManager {
         }
         if ($eventname == "EntityDamageEvent") {
             $variables["event_damage"] = new NumberVariable("event_damage", $event->getBaseDamage());
-            $variables["event_cause"] = new NumberVariable("evant_cause", $event->getCause());
+            $variables["event_cause"] = new NumberVariable("event_cause", $event->getCause());
             if ($event instanceof EntityDamageByEntityEvent) {
                 $damager = $event->getDamager();
                 if ($damager instanceof Player) {
@@ -185,7 +185,7 @@ class EventManager extends IFManager {
         }
         if ($eventname == "EntityAttackEvent") {
             $variables["event_damage"] = new NumberVariable("event_damage", $event->getBaseDamage());
-            $variables["evant_cause"] = new NumberVariable("evant_cause", $event->getCause());
+            $variables["event_cause"] = new NumberVariable("event_cause", $event->getCause());
             if ($event instanceof EntityDamageByEntityEvent) {
                 $player = $event->getEntity();
                 if ($player instanceof Player) {
