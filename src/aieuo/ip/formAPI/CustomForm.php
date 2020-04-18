@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\formAPI;
+namespace aieuo\ip\formAPI;
 
-use aieuo\mineflow\formAPI\element\Element;
+use aieuo\ip\formAPI\element\Element;
 use pocketmine\utils\TextFormat;
 
 class CustomForm extends Form {
@@ -42,10 +42,6 @@ class CustomForm extends Form {
         return $this->contents[$index] ?? null;
     }
 
-    /**
-     * @param Element[] $contents
-     * @return self
-     */
     public function addContents(Element ...$contents): self {
         $this->contents = array_merge($this->contents, $contents);
         return $this;
@@ -57,7 +53,6 @@ class CustomForm extends Form {
             "title" => $this->checkTranslate($this->title),
             "content" => $this->contents
         ];
-        if (!empty($this->getRecipes())) $form["recipes"] = $this->getRecipes();
         $form = $this->reflectErrors($form);
         return $form;
     }
