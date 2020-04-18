@@ -129,7 +129,7 @@ class Calculation extends Process {
                 return;
         }
         if ($result->getName() == "ERROR") {
-            $player->sendMessage(Language::get("process.calculation.error"), [$this->getName(), $result->getValue()]);
+            $player->sendMessage(Language::get("process.calculation.error", [$this->getName(), $result->getValue()]));
             return;
         }
         IFPlugin::getInstance()->getVariableHelper()->add($result);

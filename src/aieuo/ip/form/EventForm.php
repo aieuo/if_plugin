@@ -43,8 +43,7 @@ class EventForm {
             "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($data);
     }
 
     public function onSelectEvent($player, $data) {
@@ -67,19 +66,18 @@ class EventForm {
 
     public function getIfListForm($event) {
         $manager = IFPlugin::getInstance()->getEventManager();
-        $datas = $manager->getFromEvent($event);
+        $data = $manager->getFromEvent($event);
         $buttons = [Elements::getButton(Language::get("form.back")), Elements::getButton(Language::get("form.event.IFList.add"))];
-        foreach ($datas as $n => $data) {
-            $buttons[] = Elements::getButton(empty($data["name"]) ? $n : $data["name"]);
+        foreach ($data as $n => $value) {
+            $buttons[] = Elements::getButton(empty($value["name"]) ? $n : $value["name"]);
         }
-        $data = [
+        $form = [
             "type" => "form",
             "title" => Language::get("form.event.IFList.title", [Language::get("form.event.".$event)]),
             "content" => Language::get("form.selectButton"),
             "buttons" => $buttons
         ];
-        $json = Form::encodeJson($data);
-        return $json;
+        return Form::encodeJson($form);
     }
 
     public function onSelectIf($player, $data) {
@@ -98,16 +96,16 @@ class EventForm {
         if ($data === 1) {
             $key = $manager->addEmpty($eventname);
             $session->set("if_key", $key);
-            $datas = $manager->repairIF([]);
-            $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
-            $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
+            $ifData = $manager->repairIF([]);
+            $mes = IFAPI::createIFMessage($ifData["if"], $ifData["match"], $ifData["else"]);
+            $form = (new Form)->getEditIfForm($mes, $ifData["name"] ?? null);
             Form::sendForm($player, $form, new Form(), "onEditIf");
             return;
         }
         $session->set("if_key", $data - 2);
-        $datas = $manager->get(strval($data - 2), ["eventname" => $eventname]);
-        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
-        $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
+        $ifData = $manager->get(strval($data - 2), ["eventname" => $eventname]);
+        $mes = IFAPI::createIFMessage($ifData["if"], $ifData["match"], $ifData["else"]);
+        $form = (new Form)->getEditIfForm($mes, $ifData["name"] ?? null);
         Form::sendForm($player, $form, new Form(), "onEditIf");
     }
 }

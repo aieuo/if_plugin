@@ -36,6 +36,7 @@ class EventListener implements Listener {
 
     /** @var IFPlugin */
     private $owner;
+    private $touch;
 
     public function __construct($owner) {
         $this->owner = $owner;
@@ -211,13 +212,13 @@ class EventListener implements Listener {
                     case 'edit':
                         $session->set("if_key", $pos);
                         if ($manager->exists($pos)) {
-                            $datas = $manager->get($pos);
+                            $data = $manager->get($pos);
                         } else {
-                            $datas = $manager->repairIF([]);
+                            $data = $manager->repairIF([]);
                             $manager->set($pos);
                         }
-                        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
-                        $form = (new Form)->getEditIfForm($mes, $datas["name"] ?? null);
+                        $mes = IFAPI::createIFMessage($data["if"], $data["match"], $data["else"]);
+                        $form = (new Form)->getEditIfForm($mes, $data["name"] ?? null);
                         Form::sendForm($player, $form, new Form(), "onEditIf");
                         return;
                     case 'check':
@@ -226,8 +227,8 @@ class EventListener implements Listener {
                             $player->sendMessage(Language::get("if.block.notFound"));
                             return;
                         }
-                        $datas = $manager->get($pos);
-                        $mes = IFAPI::createIFMessage($datas["if"], $datas["match"], $datas["else"]);
+                        $data = $manager->get($pos);
+                        $mes = IFAPI::createIFMessage($data["if"], $data["match"], $data["else"]);
                         $player->sendMessage($mes);
                         break;
                     case 'copy':
@@ -265,12 +266,12 @@ class EventListener implements Listener {
             }
         }
         if ($manager->exists($pos)) {
-            $datas = $manager->get($pos);
+            $data = $manager->get($pos);
             $manager->executeIfMatchCondition(
                 $player,
-                $datas["if"],
-                $datas["match"],
-                $datas["else"],
+                $data["if"],
+                $data["match"],
+                $data["else"],
                 [
                     "player" => $player,
                     "block" => $block,

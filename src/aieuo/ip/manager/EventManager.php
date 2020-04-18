@@ -2,10 +2,11 @@
 
 namespace aieuo\ip\manager;
 
-use pocketmine\entity\object\ItemEntity;
+use pocketmine\block\Block;
 use pocketmine\event\Event;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\item\Item;
+use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\block\SignPost;
@@ -112,6 +113,7 @@ class EventManager extends IFManager {
             or $eventname == "BlockBreakEvent"
             or $eventname == "BlockPlaceEvent"
         ) {
+            /** @var Block $block */
             $block = $event->getBlock();
             $variables["block"] = new StringVariable("block", $block->__toString());
             $variables["block_name"] = new StringVariable("block_name", $block->getName());
@@ -148,38 +150,40 @@ class EventManager extends IFManager {
             $variables["item_count"] = new NumberVariable("item_count", $item->getCount());
         }
         if ($eventname == "CraftItemEvent") {
+            /** @var Item[] $inputs */
             $inputs = $event->getInputs();
+            /** @var Item[] $outputs */
             $outputs = $event->getOutputs();
-            $inputnames = [];
-            $inputids = [];
+            $inputNames = [];
+            $inputIds = [];
             foreach ($inputs as $input) {
-                $inputnames[] = $input->getName();
-                $inputids[] = $input->getId().":".$input->getDamage();
+                $inputNames[] = $input->getName();
+                $inputIds[] = $input->getId().":".$input->getDamage();
             }
-            $outputnames = [];
-            $outputids = [];
+            $outputNames = [];
+            $outputIds = [];
             foreach ($outputs as $output) {
-                $outputnames[] = $output->getName();
-                $outputids[] = $output->getId().":".$output->getDamage();
+                $outputNames[] = $output->getName();
+                $outputIds[] = $output->getId().":".$output->getDamage();
             }
-            $variables["input_name"] = new ListVariable("input_name", $inputnames);
-            $variables["input_id"] = new ListVariable("input_id", $inputids);
-            $variables["output_name"] = new ListVariable("output_name", $outputnames);
-            $variables["output_id"] = new ListVariable("output_id", $outputids);
+            $variables["input_name"] = new ListVariable("input_name", $inputNames);
+            $variables["input_id"] = new ListVariable("input_id", $inputIds);
+            $variables["output_name"] = new ListVariable("output_name", $outputNames);
+            $variables["output_id"] = new ListVariable("output_id", $outputIds);
         }
         if ($eventname == "EntityDamageEvent") {
             $variables["event_damage"] = new NumberVariable("event_damage", $event->getBaseDamage());
             $variables["event_cause"] = new NumberVariable("event_cause", $event->getCause());
             if ($event instanceof EntityDamageByEntityEvent) {
-                $damager = $event->getDamager();
-                if ($damager instanceof Player) {
-                    $variables["attacker"] = new StringVariable("attacker", $damager->__toString());
-                    $variables["attacker_name"] = new StringVariable("attacker_name", $damager->getName());
-                    $variables["attacker_pos"] = new StringVariable("attacker_pos", $damager->x.",".$damager->y.",".$damager->z.",".$damager->level->getFolderName());
-                    $variables["attacker_x"] = new NumberVariable("attacker_x", $damager->x);
-                    $variables["attacker_y"] = new NumberVariable("attacker_y", $damager->y);
-                    $variables["attacker_z"] = new NumberVariable("attacker_z", $damager->z);
-                    $variables["attacker_level"] = new StringVariable("attacker_level", $damager->level->getFolderName());
+                $attacker = $event->getDamager();
+                if ($attacker instanceof Player) {
+                    $variables["attacker"] = new StringVariable("attacker", $attacker->__toString());
+                    $variables["attacker_name"] = new StringVariable("attacker_name", $attacker->getName());
+                    $variables["attacker_pos"] = new StringVariable("attacker_pos", $attacker->x.",".$attacker->y.",".$attacker->z.",".$attacker->level->getFolderName());
+                    $variables["attacker_x"] = new NumberVariable("attacker_x", $attacker->x);
+                    $variables["attacker_y"] = new NumberVariable("attacker_y", $attacker->y);
+                    $variables["attacker_z"] = new NumberVariable("attacker_z", $attacker->z);
+                    $variables["attacker_level"] = new StringVariable("attacker_level", $attacker->level->getFolderName());
                 }
             }
         }
