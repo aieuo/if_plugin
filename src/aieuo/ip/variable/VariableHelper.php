@@ -118,6 +118,7 @@ class VariableHelper {
      */
     public function replaceVariables($string, $variables = []) {
         foreach (["/\[({[^{}]+})\]/" => 2, "/({[^{}]+})/" => 1] as $pattern => $n) {
+            $limit = 10;
             while (preg_match_all($pattern, $string, $matches)) {
                 foreach ($matches[0] as $name) {
                     $name = mb_substr($name, $n, -$n);
@@ -128,6 +129,7 @@ class VariableHelper {
                     }
                     $string = $this->replace($string, $val);
                 }
+                if ($limit -- < 0) break;
             }
         }
         return $string;
