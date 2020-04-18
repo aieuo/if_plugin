@@ -21,6 +21,7 @@ class EventForm {
         "EntityDamageEvent" => "form.event.EntityDamageEvent",
         "EntityAttackEvent" => "form.event.EntityAttackEvent",
         "PlayerToggleFlightEvent" => "form.event.PlayerToggleFlightEvent",
+        "PlayerToggleSneakEvent" => "form.event.PlayerToggleSneakEvent",
         "PlayerDeathEvent" => "form.event.PlayerDeathEvent",
         "EntityLevelChangeEvent" => "form.event.EntityLevelChangeEvent",
         "CraftItemEvent" => "form.event.CraftItemEvent",

@@ -5,6 +5,7 @@ namespace aieuo\ip;
 use pocketmine\event\Event;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\inventory\PlayerInventory;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\InteractPacket;
@@ -102,6 +103,10 @@ class EventListener implements Listener {
         $this->onEvent($event, "PlayerToggleFlightEvent");
     }
 
+    public function toggleSneak(PlayerToggleSneakEvent $event) {
+        $this->onEvent($event, "PlayerToggleSneakEvent");
+    }
+
     public function blockBreak(BlockBreakEvent $event) {
         $this->onEvent($event, "BlockBreakEvent");
     }
@@ -149,6 +154,7 @@ class EventListener implements Listener {
             case 'PlayerJoinEvent':
             case 'PlayerQuitEvent':
             case 'PlayerToggleFlightEvent':
+            case 'PlayerToggleSneakEvent':
             case 'PlayerDropItemEvent':
             case 'BlockBreakEvent':
             case 'BlockPlaceEvent':
