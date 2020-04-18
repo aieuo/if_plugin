@@ -51,6 +51,7 @@ class ExecuteOtherPlayer extends Process {
         $playerNames = explode(",", $this->getPlayerNames());
         foreach ($playerNames as $name) {
             $name = trim($name);
+            if (empty($name)) continue;
             $target = Server::getInstance()->getPlayer($name);
             if ($target === null) {
                 $player->sendMessage(Language::get("process.executeotherplayer.offline", [$name]));
