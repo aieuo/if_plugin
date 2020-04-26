@@ -54,8 +54,7 @@ class EventForm {
             return;
         }
         if ($data === 0) {
-            $form = (new Form())->getSelectIfTypeForm();
-            Form::sendForm($player, $form, new Form(), "onSelectIfType");
+            (new Form())->sendSelectIfTypeForm($player);
             return;
         }
         $eventname = key(array_slice($this->getEvents(), $data-1, 1, true));
@@ -98,15 +97,11 @@ class EventForm {
             $key = $manager->addEmpty($eventname);
             $session->set("if_key", $key);
             $ifData = $manager->repairIF([]);
-            $mes = IFAPI::createIFMessage($ifData["if"], $ifData["match"], $ifData["else"]);
-            $form = (new Form)->getEditIfForm($mes, $ifData["name"] ?? null);
-            Form::sendForm($player, $form, new Form(), "onEditIf");
+            (new Form)->sendEditIfForm($player, $ifData);
             return;
         }
         $session->set("if_key", $data - 2);
         $ifData = $manager->get(strval($data - 2), ["eventname" => $eventname]);
-        $mes = IFAPI::createIFMessage($ifData["if"], $ifData["match"], $ifData["else"]);
-        $form = (new Form)->getEditIfForm($mes, $ifData["name"] ?? null);
-        Form::sendForm($player, $form, new Form(), "onEditIf");
+        (new Form)->sendEditIfForm($player, $ifData);
     }
 }

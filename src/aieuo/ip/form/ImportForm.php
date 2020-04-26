@@ -6,6 +6,7 @@ use aieuo\ip\Session;
 use aieuo\ip\IFPlugin;
 use aieuo\ip\IFAPI;
 use aieuo\ip\utils\Language;
+use pocketmine\Player;
 
 class ImportForm {
     public function getImportListForm($mes = "") {
@@ -25,15 +26,14 @@ class ImportForm {
         return Form::encodeJson($ifData);
     }
 
-    public function onImportList($player, $data) {
+    public function onImportList(Player $player, ?int $data) {
         $session = Session::getSession($player);
         if ($data === null) {
             $session->setValid(false, false);
             return;
         }
         if ($data == 0) {
-            $data = (new Form())->getSelectIfTypeForm();
-            Form::sendForm($player, $data, new Form(), "onSelectIfType");
+            (new Form())->sendSelectIfTypeForm($player);
             return;
         }
         $files = glob(IFPlugin::getInstance()->getDataFolder()."imports/*.json");

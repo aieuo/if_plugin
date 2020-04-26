@@ -55,8 +55,7 @@ class FormIFForm {
                 return;
             case 5:
                 $session->setValid(false);
-                $form = (new Form())->getSelectIfTypeForm();
-                Form::sendForm($player, $form, new Form(), "onSelectIfType");
+                (new Form())->sendSelectIfTypeForm($player);
                 return;
         }
         Form::sendForm($player, $this->getSelectIFformForm(), $this, "onSelectIFformForm");
@@ -176,8 +175,7 @@ class FormIFForm {
             $session->set("form", json_decode($form, true));
             Form::sendForm($player, $this->getEditIFformForm(json_decode($form, true)), $this, "onEditIFformForm");
         } elseif ($action == "del") {
-            $form = (new Form())->getConfirmDeleteForm();
-            Form::sendForm($player, $form, $this, "onDeleteIf");
+            (new Form())->confirmDelete($player, [$this, "onDeleteIf"]);
         }
     }
 
@@ -379,14 +377,12 @@ class FormIFForm {
                         $session->set("form_place", count($datas["ifs"]));
                         $options = IFPlugin::getInstance()->getOptionsBySession($session);
                         $manager->add($session->get("if_key"), "if", Condition::COMPARISON, "{form_data}[ope:0]".($partsname === "button1" ? "true" : "false"), $options);
-                        $ifdata = $manager->get($session->get("if_key"), $options);
+                        $ifData = $manager->get($session->get("if_key"), $options);
                     } else {
-                        $ifdata = array_shift($responses);
-                        $session->set("form_place", array_keys($datas["ifs"], $ifdata)[0]);
+                        $ifData = array_shift($responses);
+                        $session->set("form_place", array_keys($datas["ifs"], $ifData)[0]);
                     }
-                    $mes = IFAPI::createIFMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
-                    $form = (new Form)->getEditIfForm($mes);
-                    Form::sendForm($player, $form, new Form(), "onEditIf");
+                    (new Form)->sendEditIfForm($player, $ifData);
                     return;
                 }
                 break;
@@ -424,14 +420,12 @@ class FormIFForm {
                                 $session->set("form_place", count($datas["ifs"]));
                                 $options = IFPlugin::getInstance()->getOptionsBySession($session);
                                 $manager->add($session->get("if_key"), "if", Condition::COMPARISON, "{form_data}[ope:0]$place", $options);
-                                $ifdata = $manager->get($session->get("if_key"), $options);
+                                $ifData = $manager->get($session->get("if_key"), $options);
                             } else {
-                                $ifdata = array_shift($responses);
-                                $session->set("form_place", array_keys($datas["ifs"], $ifdata)[0]);
+                                $ifData = array_shift($responses);
+                                $session->set("form_place", array_keys($datas["ifs"], $ifData)[0]);
                             }
-                            $mes = IFAPI::createIFMessage($ifdata["if"], $ifdata["match"], $ifdata["else"]);
-                            $form = (new Form)->getEditIfForm($mes);
-                            Form::sendForm($player, $form, new Form(), "onEditIf");
+                            (new Form)->sendEditIfForm($player, $ifData);
                             return;
                         }
                         break;
@@ -693,27 +687,24 @@ class FormIFForm {
         $manager = IFManager::getBySession($session);
         $options = IFPlugin::getInstance()->getOptionsBySession($session);
         $key = $session->get("if_key");
-        $datas = $manager->get($key, $options);
+        $ifData = $manager->get($key, $options);
         if ($data == 0) {
-            $form = (new Form)->getEditContentsForm($datas["if"], "", "if");
             $session->set("type", "if");
+            (new Form)->sendEditContentsForm($player, $ifData["if"], "if");
         } elseif ($data == 1) {
-            $form = (new Form)->getEditContentsForm($datas["match"], "", "match");
             $session->set("type", "match");
+            (new Form)->sendEditContentsForm($player, $ifData["match"], "match");
         } elseif ($data == 2) {
-            $form = (new Form)->getEditContentsForm($datas["else"], "", "else");
             $session->set("type", "else");
+            (new Form)->sendEditContentsForm($player, $ifData["else"], "else");
         } elseif ($data == 3) {
-            $form = (new Form)->getConfirmDeleteForm();
-            Form::sendForm($player, $form, (new Form), "onDeleteIf");
+            (new Form)->confirmDelete($player, [new Form, "onDeleteIf"]);
             return;
         } elseif ($data == 4) {
-            $form = (new Form)->getChangeNameForm(isset($datas["name"]) ? $datas["name"] : "");
-            Form::sendForm($player, $form, (new Form), "onChangeName");
+            (new Form)->sendChangeNameForm($player, $ifData["name"] ?? "");
             return;
         } elseif ($data == 5) {
-            $form = (new Form)->getExportForm()->getExportForm();
-            Form::sendForm($player, $form, (new Form)->getExportForm(), "onExport");
+            (new Form)->getExportForm()->sendExportForm($player);
             return;
         } elseif ($data == 6) {
             Form::sendForm($player, $this->getIfListForm($session->get("if_key")), $this, "onSelectIf");
@@ -722,6 +713,5 @@ class FormIFForm {
             $session->setValid(false);
             return;
         }
-        Form::sendForm($player, $form, (new Form), "onEditIfContents");
     }
 }

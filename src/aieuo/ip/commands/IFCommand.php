@@ -40,8 +40,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
         if (!$sender->isOp()) return true;
 
         if (!isset($args[0]) and $sender instanceof Player) {
-            $form = $this->form->getSelectIfTypeForm();
-            Form::sendForm($sender, $form, $this->form, "onSelectIfType");
+            $this->form->sendSelectIfTypeForm($sender);
             return true;
         } elseif (!isset($args[0])) {
             $sender->sendMessage(Language::get("command.if.usage.console"));
@@ -112,8 +111,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 }
                 $session = Session::getSession($sender);
                 if (!isset($args[1])) {
-                    $form = $this->form->getBlockForm()->getSelectActionForm();
-                    Form::sendForm($sender, $form, $this->form->getBlockForm(), "onSelectAction");
+                    $this->form->getBlockForm()->sendSelectActionForm($sender);
                     break;
                 }
                 switch ($args[1]) {
@@ -146,8 +144,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 }
                 $session = Session::getSession($sender);
                 if (!isset($args[1])) {
-                    $form = $this->form->getCommandForm()->getSelectActionForm();
-                    Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectAction");
+                    $this->form->getCommandForm()->sendSelectActionForm($sender);
                     break;
                 }
                 $session->setValid()->set("if_type", IFManager::COMMAND)->set("action", $args[1]);
@@ -155,13 +152,11 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                 switch ($args[1]) {
                     case "add":
                     case "add_empty":
-                        $form = $this->form->getCommandForm()->getAddCommandForm();
-                        Form::sendForm($sender, $form, $this->form->getCommandForm(), "onAddCommand");
+                        $this->form->getCommandForm()->sendAddCommandForm($sender);
                         break;
                     case "edit":
                         if (!isset($args[2])) {
-                            $form = $this->form->getCommandForm()->getSelectCommandForm();
-                            Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectCommand");
+                            $this->form->getCommandForm()->sendSelectCommandForm($sender);
                             break;
                         }
                         if (!$manager->exists($args[2])) {
@@ -177,8 +172,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                         break;
                     case "check":
                         if (!isset($args[2])) {
-                            $form = $this->form->getCommandForm()->getSelectCommandForm();
-                            Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectCommand");
+                            $this->form->getCommandForm()->sendSelectCommandForm($sender);
                             break;
                         }
                         if (!$manager->exists($args[2])) {
@@ -193,8 +187,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                         break;
                     case "del":
                         if (!isset($args[2])) {
-                            $form = $this->form->getCommandForm()->getSelectCommandForm();
-                            Form::sendForm($sender, $form, $this->form->getCommandForm(), "onSelectCommand");
+                            $this->form->getCommandForm()->sendSelectCommandForm($sender);
                             break;
                         }
                         if (!$manager->exists($args[2])) {
@@ -203,8 +196,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                             break;
                         }
                         $session->set("if_key", $args[2]);
-                        $form = $this->form->getConfirmDeleteForm();
-                        Form::sendForm($sender, $form, $this->form, "onDeleteIf");
+                        $this->form->confirmDelete($sender, [$this->form, "onDeleteIf"]);
                         break;
                     case "cancel":
                         $session->setValid(false);
@@ -234,34 +226,28 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                     switch ($args[1]) {
                         case 'add':
                             $session->set("action", "add");
-                            $form = $this->form->getChainForm()->getAddChainIfForm();
-                            Form::sendForm($sender, $form, $this->form->getChainForm(), "onAddChainIf");
+                            $this->form->getChainForm()->sendAddChainIfForm($sender);
                             break;
                         case 'edit':
                             $session->set("action", "edit");
-                            $form = $this->form->getChainForm()->getEditChainIfForm();
-                            Form::sendForm($sender, $form, $this->form->getChainForm(), "onEditChainIf");
+                            $this->form->getChainForm()->sendEditChainIfForm($sender);
                             break;
                         case 'del':
                             $session->set("action", "del");
-                            $form = $this->form->getChainForm()->getEditChainIfForm();
-                            Form::sendForm($sender, $form, $this->form->getChainForm(), "onEditChainIf");
+                            $this->form->getChainForm()->sendEditChainIfForm($sender);
                             break;
                         case 'list':
-                            $form = $this->form->getChainForm()->getChainIfListForm();
-                            Form::sendForm($sender, $form, $this->form->getChainForm(), "onChainIfList");
+                            $this->form->getChainForm()->sendChainIfListForm($sender);
                             break;
                         default:
-                            $form = $this->form->getChainForm()->getSelectActionForm();
-                            Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
+                            $this->form->getChainForm()->sendSelectActionForm($sender);
                             break;
                     }
                     $session->set("if_type", Session::CHAIN);
                     $session->setValid();
                     return true;
                 }
-                $form = $this->form->getChainForm()->getSelectActionForm();
-                Form::sendForm($sender, $form, $this->form->getChainForm(), "onselectAction");
+                $this->form->getChainForm()->sendSelectActionForm($sender);
                 return true;
             case "form":
                 if (!($sender instanceof Player)) {
@@ -306,8 +292,7 @@ class IFCommand extends PluginCommand implements CommandExecutor {
                     $sender->sendMessage(Language::get("command.if.usage.console"));
                     return true;
                 }
-                $data = $this->form->getSelectIfTypeForm();
-                Form::sendForm($sender, $data, $this->form, "onSelectIfType");
+                $this->form->sendSelectIfTypeForm($sender);
                 break;
         }
         return true;
