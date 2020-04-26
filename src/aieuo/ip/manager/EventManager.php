@@ -86,7 +86,7 @@ class EventManager extends IFManager {
         return true;
     }
 
-    public function remove($key, $options = []) {
+    public function remove(string $key, array $options = []) {
         $data = $this->getFromEvent($options["eventname"]);
         if (!isset($data[$key])) return false;
         unset($data[$key]);

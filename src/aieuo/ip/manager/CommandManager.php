@@ -37,7 +37,7 @@ class CommandManager extends IFManager {
         $this->set($key, $data, $args);
     }
 
-    public function remove($key) {
+    public function remove(string $key, array $options = []) {
         $this->unregister($key);
         parent::remove($key);
     }
