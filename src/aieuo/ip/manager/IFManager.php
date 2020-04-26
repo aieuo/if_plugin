@@ -174,9 +174,10 @@ class IFManager extends IFAPI {
     }
 
     /**
-     * @param  string $key
+     * @param string $key
+     * @param array $options
      */
-    public function remove($key) {
+    public function remove(string $key, array $options = []) {
         $this->config->remove($key);
         if (IFPlugin::getInstance()->saveOnChange) $this->config->save();
     }

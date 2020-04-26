@@ -77,7 +77,7 @@ class FormIFManager extends IFManager {
         return true;
     }
 
-    public function remove($key, $options = []) {
+    public function remove(string $key, array $options = []) {
         if (!$this->exists($key)) return false;
         $data = $this->getIF($key);
         unset($data["ifs"][$options["place"]]);
