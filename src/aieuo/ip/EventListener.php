@@ -223,9 +223,7 @@ class EventListener implements Listener {
                             $data = $manager->repairIF([]);
                             $manager->set($pos);
                         }
-                        $mes = IFAPI::createIFMessage($data["if"], $data["match"], $data["else"]);
-                        $form = (new Form)->getEditIfForm($mes, $data["name"] ?? null);
-                        Form::sendForm($player, $form, new Form(), "onEditIf");
+                        (new Form)->sendEditIfForm($player, $data);
                         return;
                     case 'check':
                         $pos = $manager->getPosition($block);
@@ -263,8 +261,7 @@ class EventListener implements Listener {
                             return;
                         }
                         $session->set("if_key", $pos);
-                        $form = (new Form())->getConfirmDeleteForm();
-                        Form::sendForm($player, $form, new Form(), "onDeleteIf");
+                        (new Form())->confirmDelete($player, [new Form(), "onDeleteIf"]);
                         return;
                 }
                 $session->setValid(false);
@@ -294,7 +291,7 @@ class EventListener implements Listener {
         if ($pk instanceof ModalFormResponsePacket) {
             $json = str_replace([",]",",,"], [",\"\"]",",\"\","], $pk->formData);
             $data = json_decode($json);
-            Form::onRecive($pk->formId, $player, $data);
+            Form::onReceive($pk->formId, $player, $data);
         } elseif ($pk instanceof InteractPacket) {
             if ($pk->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
                 SetSitting::leave($player);
